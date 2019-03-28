@@ -5,6 +5,7 @@
 #include "kernel/ports.h"
 #include "kernel/io.h"
 #include "drivers/screen.h"
+#include "string.h"
 
 #define	COLONE_MAX	80
 #define ROW_MAX		25
@@ -30,12 +31,12 @@ static int	get_cursor_offset() {
 	offset = offset << 8;
 	port_write_byte(VGA_SCREEN_CTRL, VGA_CURSOR_POSITION_LOW);
 	offset += port_read_byte(VGA_DATA_REG);
-	offset *= 2;
+	offset = offset << 1;
 	return offset;
 }
 
 static void	set_cursor_offset(int offset) {
-	offset = offset / 2;
+	offset = offset >> 1;
 	port_write_byte(VGA_SCREEN_CTRL, VGA_CURSOR_POSITION_HIGHT);
 	port_write_byte(VGA_DATA_REG, (unsigned char)(offset >> 8));
 	port_write_byte(VGA_SCREEN_CTRL, VGA_CURSOR_POSITION_LOW);
@@ -62,14 +63,20 @@ void	printk_at(char c, int x, int y) {
  */
 void	printk_char(char c) {
 	int offset = get_cursor_offset();
-	if (c == '\n') {
+	if ((offset >> 1) % COLONE_MAX == COLONE_MAX - 1) {
+		VIDEO_MEMORY_BUFFER_PTR[offset] = '\\';
+		VIDEO_MEMORY_BUFFER_PTR[offset + 1] = cursor_color;
+		set_cursor_offset(offset + 2);
+		printk_char(c);
+	}
+	else if (c == '\n') {
 		offset = offset - (offset % COLONE_MAX);
 		set_cursor_offset(offset + (2 * COLONE_MAX));
 	}
 	else {
 		VIDEO_MEMORY_BUFFER_PTR[offset] = c;
 		VIDEO_MEMORY_BUFFER_PTR[offset + 1] = cursor_color;
-		set_cursor_offset(offset+2);
+		set_cursor_offset(offset + 2);
 	}
 }
 
@@ -89,8 +96,8 @@ void	screen_set_color(char color) {
 
 void	screen_clear() {
 	for (int counter = 0; counter < COLONE_MAX * ROW_MAX; counter++) {
-		VIDEO_MEMORY_BUFFER_PTR[counter * 2] = 0x00;
-		VIDEO_MEMORY_BUFFER_PTR[counter * 2 + 1] = 0x0f;
+		VIDEO_MEMORY_BUFFER_PTR[counter << 1] = 0x00;
+		VIDEO_MEMORY_BUFFER_PTR[(counter << 1) + 1] = 0x0f;
 	}
 	set_cursor_offset(0);
 }
