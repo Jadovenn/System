@@ -6,6 +6,7 @@ KERNEL		=	netero
 KERNEL_IMG	=	vmnetero.img
 KERNEL_SYM	=	kernel.elf
 BOOTLOADER	=	bootloader.bin
+ROOT		=	../..
 
 BOOTLOADER_SRC	=	boot/bootloader.s
 
@@ -20,13 +21,15 @@ KERNEL_C_SRC	=	kernel/kernel.c \
 KERNEL_ASM_OBJ	=	$(KERNEL_ASM_SRC:.s=.o)
 KERNEL_C_OBJ	=	$(KERNEL_C_SRC:.c=.o)
 
-LIBC_SRC	=	lib/libc/memory.c
+LIBC_SRC	=	$(ROOT)/lib/libc/memory.c
 
 LIBC_OBJ	=	$(LIBC_SRC:.c=.o)
 
 UNAME		:=	$(shell uname)
 
-FLAGS		=	-Iinclude -Ilib/libc/include
+FLAGS		=	-Iinclude \
+			-I$(ROOT)/lib/libc/include \
+			-I$(ROOT)/include
 
 ifeq ($(UNAME), Darwin)
 	CC	=	i386-elf-gcc -g
