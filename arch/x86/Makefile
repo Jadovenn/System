@@ -10,8 +10,12 @@ BOOTLOADER	=	bootloader.bin
 BOOTLOADER_SRC	=	boot/bootloader.s
 
 KERNEL_ASM_SRC	=	kernel/kernel_entry.s
-KERNEL_C_SRC	=	kernel/kernel.c\
-			kernel/io/ports.c
+KERNEL_C_SRC	=	kernel/kernel.c \
+			kernel/io/ports.c \
+			kernel/logs/log.c \
+			kernel/init/init.c \
+			kernel/init/screen_init.c \
+			drivers/screen/screen.c
 
 KERNEL_ASM_OBJ	=	$(KERNEL_ASM_SRC:.s=.o)
 KERNEL_C_OBJ	=	$(KERNEL_C_SRC:.c=.o)

@@ -29,7 +29,7 @@ load_kernel:
 	call	print16_str
 
 	mov	bx, KERNEL_OFFSET	;; write the data at 0x1000
-	mov	dh, 0x02		;; load 2 sectors	
+	mov	dh, 0x05		;; load 5 sectors
 	mov	dl, [boot_drv]		;; from the given boot_drive
 	call	read_disk_sector
 	ret
