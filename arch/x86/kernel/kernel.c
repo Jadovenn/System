@@ -12,5 +12,3 @@ void	kmain() {
 	k_init();
 }
 
-
-

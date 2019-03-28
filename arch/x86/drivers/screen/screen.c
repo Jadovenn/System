@@ -44,6 +44,22 @@ static void	set_cursor_offset(int offset) {
 	offset = get_cursor_offset();
 }
 
+static void	scroll_down() {
+	int	dest_offset = (COLONE_MAX * ROW_MAX - COLONE_MAX) << 1;
+	for (unsigned count = 0; count < dest_offset; count += COLONE_MAX << 1) {
+		memcpy(VIDEO_MEMORY_BUFFER_PTR + count,
+				VIDEO_MEMORY_BUFFER_PTR + count + (COLONE_MAX << 1),
+				COLONE_MAX << 1);
+	}
+	int offset = dest_offset;
+	dest_offset = (COLONE_MAX * ROW_MAX) << 1;
+	while (offset < dest_offset) {
+		VIDEO_MEMORY_BUFFER_PTR[offset] = 0x00;
+		VIDEO_MEMORY_BUFFER_PTR[offset + 1] = 0x0f;
+		offset += 2;
+	}
+} // O(n) = COLONE_MAX * ROW_MAX
+
 void	screen_set_cursor_position(struct s_cursor_position *s_cp) {
 	int 	offset = get_offset_from_chartesian(s_cp->x, s_cp->y);
 	set_cursor_offset(offset);
@@ -63,17 +79,34 @@ void	printk_at(char c, int x, int y) {
  */
 void	printk_char(char c) {
 	int offset = get_cursor_offset();
-	if ((offset >> 1) % COLONE_MAX == COLONE_MAX - 1) {
-		VIDEO_MEMORY_BUFFER_PTR[offset] = '\\';
-		VIDEO_MEMORY_BUFFER_PTR[offset + 1] = cursor_color;
-		set_cursor_offset(offset + 2);
-		printk_char(c);
+	if ((offset >> 1) % COLONE_MAX == COLONE_MAX - 1) { // Special Case: border of the screen
+		if ((offset >> 1) / COLONE_MAX == 24) { // Special Case: bottom of the screen
+			VIDEO_MEMORY_BUFFER_PTR[offset] = '\\';
+			VIDEO_MEMORY_BUFFER_PTR[offset + 1] = cursor_color;
+			scroll_down();
+			offset = (COLONE_MAX * ROW_MAX - COLONE_MAX) * 2;
+			set_cursor_offset(offset);
+			printk_char(c);
+		}
+		else { // Special Case: border of the screen, perform carriage return
+			VIDEO_MEMORY_BUFFER_PTR[offset] = '\\';
+			VIDEO_MEMORY_BUFFER_PTR[offset + 1] = cursor_color;
+			set_cursor_offset(offset + 2);
+			printk_char(c);
+		}
 	}
-	else if (c == '\n') {
-		offset = offset - (offset % COLONE_MAX);
-		set_cursor_offset(offset + (2 * COLONE_MAX));
+	else if (c == '\n') { // Special Case: carriage return
+		if ((offset >> 1) / COLONE_MAX == 24) { // Special Case: bottom of the screen
+			scroll_down();
+			offset = offset - (offset % COLONE_MAX);
+			set_cursor_offset(offset);
+		}
+		else { // Special Case: carriage return
+			offset = offset - (offset % COLONE_MAX);
+			set_cursor_offset(offset + (2 * COLONE_MAX));
+		}
 	}
-	else {
+	else { // Regular Case
 		VIDEO_MEMORY_BUFFER_PTR[offset] = c;
 		VIDEO_MEMORY_BUFFER_PTR[offset + 1] = cursor_color;
 		set_cursor_offset(offset + 2);
@@ -100,5 +133,5 @@ void	screen_clear() {
 		VIDEO_MEMORY_BUFFER_PTR[(counter << 1) + 1] = 0x0f;
 	}
 	set_cursor_offset(0);
-}
+} // O(n) = COLONE_MAX * ROW_MAX
 

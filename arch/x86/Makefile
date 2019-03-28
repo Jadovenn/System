@@ -20,9 +20,13 @@ KERNEL_C_SRC	=	kernel/kernel.c \
 KERNEL_ASM_OBJ	=	$(KERNEL_ASM_SRC:.s=.o)
 KERNEL_C_OBJ	=	$(KERNEL_C_SRC:.c=.o)
 
+LIBC_SRC	=	lib/libc/memory.c
+
+LIBC_OBJ	=	$(LIBC_SRC:.c=.o)
+
 UNAME		:=	$(shell uname)
 
-FLAGS		=	-Iinclude
+FLAGS		=	-Iinclude -Ilib/libc/include
 
 ifeq ($(UNAME), Darwin)
 	CC	=	i386-elf-gcc -g
@@ -45,8 +49,8 @@ run:	all qemue
 $(BOOTLOADER):
 	nasm -f bin $(BOOTLOADER_SRC) -o $(BOOTLOADER)
 
-$(KERNEL):	$(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ)
-	$(LD) -o $(KERNEL) -Ttext 0x1000 $(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) --oformat binary
+$(KERNEL):	$(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ)
+	$(LD) -o $(KERNEL) -Ttext 0x1000 $(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ) --oformat binary
 
 .c.o:
 	$(CC) $(FLAGS) -ffreestanding -c $< -o $@
@@ -59,6 +63,7 @@ clean:
 	rm -f	$(BOOTLOADER)
 	rm -f	$(KERNEL_C_OBJ)
 	rm -f	$(KERNEL_ASM_OBJ)
+	rm -f	$(LIBC_OBJ)
 qemue:
 	qemu-system-i386 -fda $(KERNEL_IMG)
 
