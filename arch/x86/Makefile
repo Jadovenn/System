@@ -37,8 +37,8 @@ ifeq ($(UNAME), Darwin)
 	NASM	=	nasm
 endif
 ifeq ($(UNAME), Linux)
-	CC	=	gcc
-	LD	=	ld
+	CC	=	gcc -m32 -fno-pie -fno-stack-protector
+	LD	=	ld -melf_i386
 	NASM	=	nasm
 endif
 
@@ -71,7 +71,7 @@ qemue:
 	qemu-system-i386 -fda $(KERNEL_IMG)
 
 kernel_symbole: all
-	$(LD) -o $(KERNEL_SYM) -Ttext 0x1000 $(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ)
+	$(LD) -o $(KERNEL_SYM) -Ttext 0x1000 $(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ)
 
 qemue-debug:	kernel_symbole
 	qemu-system-i386 -s -S -fda $(KERNEL_IMG) &
