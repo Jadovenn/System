@@ -36,10 +36,10 @@ struct s_cursor_position {
 void	printk(char *s);
 void	printk_char(char c);
 void	printk_at(char c, int x, int y);
-void	screen_clear();
-void	screen_set_color(char color);
-void	screen_set_cursor_position(struct s_cursor_position *s_cp);
-void	screen_get_cursor_position(struct s_cursor_position *s_cp);
+void	monitor_clear();
+void	monitor_set_color(char color);
+void	monitor_set_cursor_position(struct s_cursor_position *s_cp);
+void	monitor_get_cursor_position(struct s_cursor_position *s_cp);
 
 #endif // SCREEN_H_
 

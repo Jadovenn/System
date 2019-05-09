@@ -12,5 +12,5 @@ void	k_init();
  * only call by k_init, they must be called in their declaration order
  */
 
-int	init_screen();
+int	init_monitor();
 

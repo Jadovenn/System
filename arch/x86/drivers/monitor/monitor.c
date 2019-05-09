@@ -4,7 +4,7 @@
 
 #include "kernel/ports.h"
 #include "kernel/io.h"
-#include "drivers/screen.h"
+#include "drivers/monitor.h"
 #include "string.h"
 
 #define	COLONE_MAX	80
@@ -60,7 +60,7 @@ static void	scroll_down() {
 	}
 } // O(n) = COLONE_MAX * ROW_MAX
 
-void	screen_set_cursor_position(struct s_cursor_position *s_cp) {
+void	monitor_set_cursor_position(struct s_cursor_position *s_cp) {
 	int 	offset = get_offset_from_chartesian(s_cp->x, s_cp->y);
 	set_cursor_offset(offset);
 }
@@ -69,7 +69,7 @@ void	printk_at(char c, int x, int y) {
 	struct s_cursor_position	cp;
 	cp.x = x;
 	cp.y = y;
-	screen_set_cursor_position(&cp);
+	monitor_set_cursor_position(&cp);
 	printk_char(c);
 }
 
@@ -123,11 +123,11 @@ void	printk(char *s) {
 		printk_char(s[i]);
 }
 
-void	screen_set_color(char color) {
+void	monitor_set_color(char color) {
 	cursor_color = (char)color;
 }
 
-void	screen_clear() {
+void	monitor_clear() {
 	for (int counter = 0; counter < COLONE_MAX * ROW_MAX; counter++) {
 		VIDEO_MEMORY_BUFFER_PTR[counter << 1] = 0x00;
 		VIDEO_MEMORY_BUFFER_PTR[(counter << 1) + 1] = 0x0f;

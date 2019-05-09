@@ -24,10 +24,10 @@ clean:
 	$(MAKE) -C ./arch/$(ARCH) clean
 	rm -rf bin
 
-qemue:
+run:
 	qemu-system-i386 -fda ./bin/iso/$(KERNEL_IMG)
 
-qemue-debug:
+debug:
 	qemu-system-i386 -s -S -fda ./bin/iso/$(KERNEL_IMG) &
 	gdb -ex "target remote localhost:1234" -ex "symbol-file ./bin/$(KERNEL_SYM)"
 

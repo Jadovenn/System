@@ -9,6 +9,6 @@
 #include "init.h"
 
 void	k_init() {
-	klog_init(init_screen(), "screen"); 
+	klog_init(init_monitor(), "monitor"); 
 }
 
