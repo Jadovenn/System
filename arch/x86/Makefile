@@ -11,7 +11,10 @@ ROOT		=	../..
 BOOTLOADER_SRC	=	boot/bootloader.s
 
 KERNEL_ASM_SRC	=	asm/kernel_entry.s \
-			asm/gdt_flush.s
+			asm/gdt_flush.s \
+			asm/idt_flush.s \
+			asm/interrupt.s \
+			asm/isr_proxy.s
 
 KERNEL_C_SRC	=	kernel/kernel.c \
 			kernel/io/ports.c \
@@ -19,7 +22,8 @@ KERNEL_C_SRC	=	kernel/kernel.c \
 			kernel/init/init.c \
 			kernel/init/monitor_init.c \
 			kernel/init/descriptor_tables_init.c \
-			drivers/monitor/monitor.c
+			drivers/monitor/monitor.c \
+			cpu/isr_handler.c
 
 KERNEL_ASM_OBJ	=	$(KERNEL_ASM_SRC:.s=.o)
 KERNEL_C_OBJ	=	$(KERNEL_C_SRC:.c=.o)
@@ -31,6 +35,7 @@ LIBC_OBJ	=	$(LIBC_SRC:.c=.o)
 UNAME		:=	$(shell uname)
 
 FLAGS		=	-Iinclude \
+			-Icpu \
 			-I$(ROOT)/lib/libc/include \
 			-I$(ROOT)/include
 
