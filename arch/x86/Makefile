@@ -10,12 +10,15 @@ ROOT		=	../..
 
 BOOTLOADER_SRC	=	boot/bootloader.s
 
-KERNEL_ASM_SRC	=	kernel/kernel_entry.s
+KERNEL_ASM_SRC	=	asm/kernel_entry.s \
+			asm/gdt_flush.s
+
 KERNEL_C_SRC	=	kernel/kernel.c \
 			kernel/io/ports.c \
 			kernel/logs/log.c \
 			kernel/init/init.c \
 			kernel/init/monitor_init.c \
+			kernel/init/descriptor_tables_init.c \
 			drivers/monitor/monitor.c
 
 KERNEL_ASM_OBJ	=	$(KERNEL_ASM_SRC:.s=.o)
