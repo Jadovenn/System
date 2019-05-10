@@ -12,5 +12,9 @@ void	k_init();
  * only call by k_init, they must be called in their declaration order
  */
 
+//	init monitor
 int	init_monitor();
+
+//	init descriptor tables
+int	init_descriptor_tables();
 

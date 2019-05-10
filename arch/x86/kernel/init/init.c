@@ -10,5 +10,6 @@
 
 void	k_init() {
 	klog_init(init_monitor(), "monitor"); 
+	klog_init(init_descriptor_tables(), "reset descriptor tables");
 }
 
