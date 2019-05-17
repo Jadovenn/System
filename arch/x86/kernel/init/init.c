@@ -8,8 +8,9 @@
 // private header
 #include "init.h"
 
-void	k_init() {
+void	early_stage() {
+	init_descriptor_tables();
 	klog_init(init_monitor(), "monitor"); 
-	klog_init(init_descriptor_tables(), "set gdt/idt tables");
+	asm volatile ("sti");
 }
 

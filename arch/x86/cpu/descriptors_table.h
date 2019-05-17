@@ -7,6 +7,28 @@
 
 #include <kernel/types.h>
 
+typedef struct gdt_entry_struct {
+	uint16_t	limit_low;	// lower 16bits of the limit
+	uint16_t	base_low;	// lower 16bits of the base
+	uint8_t		base_middle;	// next 8bits of the base
+	uint8_t		access;		// Access flags, determine in which ring this segment can be used
+	uint8_t		granularity;
+	uint8_t		base_hight;	// last 8bits of the base
+} __attribute__((packed))	gdt_entry_t;	
+
+typedef struct gdt_pointer_struct {
+	uint16_t	limit;	// upper 16 bits of all sector limits
+	uint32_t	base;	// address of the first gdt_entry_t
+} __attribute__((packed)) gdt_ptr_t;
+
+enum gdt_segment {
+	NULL_SEGMENT = 0,
+	CODE_SEGMENT = 1,
+	DATA_SEGMENT = 2,
+	USER_MODE_CODE_SEGMENT = 3,
+	USER_MODE_DATA_SEGMENT = 4,
+};
+
 typedef struct idt_entry_struct {
 	uint16_t	base_lo;	// lowest 16 bit of the address to jump
 	uint16_t	sel;		// kernel segment selector
@@ -52,6 +74,23 @@ extern void	isr28();
 extern void	isr29();
 extern void	isr30();
 extern void	isr31();
+extern void	irq0();
+extern void	irq1();
+extern void	irq2();
+extern void	irq3();
+extern void	irq4();
+extern void	irq5();
+extern void	irq6();
+extern void	irq7();
+extern void	irq8();
+extern void	irq9();
+extern void	irq10();
+extern void	irq11();
+extern void	irq12();
+extern void	irq13();
+extern void	irq14();
+extern void	irq15();
+
 
 #endif // IDT_H_
 

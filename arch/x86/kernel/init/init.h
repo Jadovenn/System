@@ -3,7 +3,7 @@
  */
 
 // invok by kmain
-void	k_init();
+void	early_stage();
 
 /**
  * Note

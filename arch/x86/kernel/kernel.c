@@ -4,8 +4,10 @@
 
 // private header
 #include "init/init.h"
+#include <kernel/timer.h>
 
 void	kmain() {
-	k_init();
+	early_stage();
+	init_timer(50);
 }
 
