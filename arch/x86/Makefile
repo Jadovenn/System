@@ -17,6 +17,7 @@ KERNEL_ASM_SRC	=	asm/kernel_entry.s \
 KERNEL_C_SRC	=	kernel/kernel.c \
 			kernel/timer.c \
 			kernel/io/ports.c \
+			kernel/io/printk.c \
 			kernel/logs/log.c \
 			kernel/init/init.c \
 			kernel/init/monitor_init.c \
