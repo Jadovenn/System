@@ -25,9 +25,6 @@ _start:
 	jmp	$ ;; never supposed to be executed or somthing went really wrong
 
 load_kernel:
-	mov	si, load_msg
-	call	print16_str
-
 	mov	bx, KERNEL_OFFSET	;; write the data at 0x1000
 	mov	dh, 0x0c		;; load 12 sectors
 	mov	dl, [boot_drv]		;; from the given boot_drive
@@ -61,8 +58,7 @@ _start_protected_mode:
 
 ;; Data - 16 bits
 boot_drv	db 0
-start_msg	db 'Booting Netero...', 13, 10, 0
-load_msg	db 'Loading Netero kernel...', 13, 10, 0
+start_msg	db 'Booting System...', 13, 10, 0
 debug		db 'debug', 13, 10, 0
 cr_char		db 13, 10, 0
 
