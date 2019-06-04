@@ -2,10 +2,11 @@
  * Timer
  */
 
-#include <netero.h>
+#include <system.h>
 #include <isr.h>
 #include <kernel/types.h>
 #include <kernel/io.h>
+#include <kernel/stdio.h>
 #include <kernel/ports.h>
 #include <drivers/monitor.h>
 
@@ -13,7 +14,10 @@ uint32_t	tick;
 
 static void __timer_callback(registers_t regs) {
 	tick++;
-	printk("timer tick\n");
+	printk("timer tick %d\n", tick);
+	if (tick == 15) {
+		register_interrupt_handler(IRQ_0, NULL);
+	}
 }
 
 void	init_timer(uint32_t frequency) {
