@@ -65,19 +65,19 @@ void	monitor_set_cursor_position(struct s_cursor_position *s_cp) {
 	set_cursor_offset(offset);
 }
 
-void	printk_at(char c, int x, int y) {
+void	monitor_write_at(char c, int x, int y) {
 	struct s_cursor_position	cp;
 	cp.x = x;
 	cp.y = y;
 	monitor_set_cursor_position(&cp);
-	printk_char(c);
+	monitor_write(c);
 }
 
 /**
  * Note
  * Manage overflow and scrolling here
  */
-void	printk_char(char c) {
+void	monitor_write(char c) {
 	int offset = get_cursor_offset();
 	if ((offset >> 1) % COLONE_MAX == COLONE_MAX - 1) { // Special Case: border of the screen
 		if ((offset >> 1) / COLONE_MAX == 24) { // Special Case: bottom of the screen
@@ -86,13 +86,13 @@ void	printk_char(char c) {
 			scroll_down();
 			offset = (COLONE_MAX * ROW_MAX - COLONE_MAX) * 2;
 			set_cursor_offset(offset);
-			printk_char(c);
+			monitor_write(c);
 		}
 		else { // Special Case: border of the screen, perform carriage return
 			VIDEO_MEMORY_BUFFER_PTR[offset] = '\\';
 			VIDEO_MEMORY_BUFFER_PTR[offset + 1] = cursor_color;
 			set_cursor_offset(offset + 2);
-			printk_char(c);
+			monitor_write(c);
 		}
 	}
 	else if (c == '\n') { // Special Case: carriage return
@@ -111,16 +111,6 @@ void	printk_char(char c) {
 		VIDEO_MEMORY_BUFFER_PTR[offset + 1] = cursor_color;
 		set_cursor_offset(offset + 2);
 	}
-}
-
-/**
- * Note
- * This will manage only string until, a better version is written.
- * If you want to do it make it looks like printf
- */
-void	printk(char *s) {
-	for (register unsigned i = 0; s[i]; i++)
-		printk_char(s[i]);
 }
 
 void	monitor_set_color(char color) {
