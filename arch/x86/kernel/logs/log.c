@@ -2,11 +2,12 @@
  * log
  */
 
-#include "drivers/monitor.h"
+#include <drivers/monitor.h>
+#include <kernel/stdio.h>
 
 void	klog_init(int status, char *msg) {
 	monitor_set_color(BLACK_GREY);
-	printk("[");
+	monitor_write('[');
 	if (status == 0) {
 		monitor_set_color(BLACK_GREEN_H);
 		printk("pass");
@@ -16,11 +17,11 @@ void	klog_init(int status, char *msg) {
 		printk("failed");
 	}
 	monitor_set_color(BLACK_GREY);
-	printk("]");
+	monitor_write(']');
 	monitor_set_color(BLACK_WHITE);
-	printk(" ");
+	monitor_write(' ');
 	printk(msg);
-	printk("\n");
+	monitor_write('\n');
 	monitor_set_color(BLACK_GREY);
 }
 

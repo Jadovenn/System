@@ -2,8 +2,9 @@
  * Screen init
  */
 
-#include "netero.h"
-#include "drivers/monitor.h"
+#include <system.h>
+#include <drivers/monitor.h>
+#include <kernel/stdio.h>
 
 /**
  * Note

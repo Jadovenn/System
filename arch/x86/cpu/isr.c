@@ -2,10 +2,10 @@
  * Interruptions request
  */
 
-#include <netero.h>
+#include <system.h>
 #include <kernel/compiler.h>
 #include <kernel/ports.h>
-#include <drivers/monitor.h>
+#include <kernel/stdio.h>
 #include "isr.h"
 
 isr_t	interrupt_handlers_map[256];

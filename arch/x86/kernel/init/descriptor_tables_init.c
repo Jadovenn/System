@@ -2,7 +2,7 @@
  * Init descriptor table
  */
 
-#include <netero.h>
+#include <system.h>
 #include <kernel/ports.h>
 #include <descriptors_table.h>
 #include <isr.h>
