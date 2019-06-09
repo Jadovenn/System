@@ -1,5 +1,9 @@
-;; bootloader_32bites_switch
 [BITS 16]
+
+;; --------------------------------------
+;; bootloader_32bits_switch.s - proc to set cpu in 32 bits mode
+;; System sources under license MIT
+;; --------------------------------------
 
 switch_to_protected_mode:
 	cli	;; disable interuption

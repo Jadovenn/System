@@ -1,5 +1,6 @@
 ##
-##	Makefile
+## Makefile - top level makefile
+## System sources under license MIT
 ##
 
 KERNEL		=	system

@@ -1,5 +1,6 @@
 /**
- * Programable Interrupt Controller 8259
+ * pic.c - Programable Interrupt Controller 8259 API
+ * System sources under license MIT
  */
 
 #include <kernel/io.h>

@@ -1,9 +1,10 @@
 /**
- * Interrupt Descriptor Table
+ * desciptors_table.h - gtd/idt structurs, iterruption handler declaration
+ * System sources under license MIT
  */
 
-#ifndef IDT_H_
-# define IDT_H_
+#ifndef DESCRIPTORS_TABLE_H_
+# define DESCRIPTORS_TABLE_H_
 
 #include <kernel/types.h>
 
@@ -91,5 +92,5 @@ extern void	irq13();
 extern void	irq14();
 extern void	irq15();
 
-#endif // IDT_H_
+#endif // DESCRIPTORS_TABLE_H_
 

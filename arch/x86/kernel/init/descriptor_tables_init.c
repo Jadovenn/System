@@ -1,5 +1,6 @@
 /**
- * Init descriptor table
+ * descriptor_tables_init.c - init gdt/idt
+ * System sources under license MIT
  */
 
 #include <system.h>

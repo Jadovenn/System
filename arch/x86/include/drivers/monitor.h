@@ -1,9 +1,10 @@
 /**
- *	VGA - screen driver
- */ 
+ * monitor.h - monitor driver API
+ * System sources under license MIT
+ */
 
-#ifndef SCREEN_H_
-# define SCREEN_H_
+#ifndef MONITOR_H_
+# define MONITOR_H_
 
 #define VIDEO_MEMORY_BUFFER_PTR		((char*)0xb8000)
 
@@ -30,7 +31,6 @@ enum s_screen_color {
 struct s_cursor_position {
 	int	x;
 	int	y;
-
 };
 
 void	monitor_write(char c);
@@ -40,5 +40,5 @@ void	monitor_set_color(char color);
 void	monitor_set_cursor_position(struct s_cursor_position *s_cp);
 void	monitor_get_cursor_position(struct s_cursor_position *s_cp);
 
-#endif // SCREEN_H_
+#endif // MONITOR_H_
 

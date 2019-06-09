@@ -1,6 +1,10 @@
-;; bootloader.s
 [BITS 16]
 [ORG 0x7c00]
+
+;; --------------------------------------
+;; bootloader.s - standalone bootloader
+;; System sources under license MIT
+;; --------------------------------------
 
 KERNEL_OFFSET	equ	0x1000
 

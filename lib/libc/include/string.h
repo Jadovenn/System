@@ -1,5 +1,6 @@
 /**
- * Netero - C library Strings
+ * string.h - C library string
+ * System sources under license MIT
  */
 
 /**

@@ -1,5 +1,6 @@
 /**
- * Screen init
+ * monitor_init.c - clear monitor and print kernel version
+ * System sources under license MIT
  */
 
 #include <system.h>

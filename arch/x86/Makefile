@@ -1,5 +1,6 @@
 ##
-##	Makefile
+## x86/Makefile - specific i386 makefile
+## System sources under license MIT
 ##
 
 KERNEL		=	system

@@ -1,5 +1,6 @@
 /**
- * Types
+ * types.h - types
+ * System sources under license MIT
  */
 
 #ifndef TYPES_H_

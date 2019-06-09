@@ -1,5 +1,6 @@
 /**
- * Standard ouput/input for the kernel
+ * stdio.h - standard i/o for kernel space
+ * System sources under license MIT
  */
 
 #ifndef STDIO_H_

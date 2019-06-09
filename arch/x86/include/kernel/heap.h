@@ -1,5 +1,6 @@
 /**
- * heap allocation kernel interface
+ * heap.h - kernel memory allocation API
+ * System sources under license MIT
  */
 
 #ifndef HEAP_H_

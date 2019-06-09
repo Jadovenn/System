@@ -1,5 +1,6 @@
 /**
- *	System Kernel main include
+ * system.h - kernel general purpose
+ * System sources under license MIT
  */
 
 #ifndef SYSTEM_H_

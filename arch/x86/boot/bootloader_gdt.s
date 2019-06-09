@@ -1,5 +1,10 @@
-;; bootloader_gdt.s
 [BITS 32]
+
+;; --------------------------------------
+;; boatloader_gdt.s - set a tmp gdt to be able to jmp to c compiled code
+;;		      the gdt is reset by the kernel later
+;; System sources under license MIT
+;; --------------------------------------
 
 gdt_start:	;; A null gdt_segment as first
 	dd	0x0 ;; 4 bytes null

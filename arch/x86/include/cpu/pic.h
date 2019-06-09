@@ -1,5 +1,6 @@
 /**
- * Programable Interupt Controller 8259
+ * pic.h - Programable Interrupt Controller 8259
+ * System sources under license MIT
  */
 
 #ifndef PIC_H_

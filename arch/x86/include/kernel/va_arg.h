@@ -1,5 +1,6 @@
 /**
- * va args - i386 implementation
+ * va_arg.h - x86 variadic function arguments
+ * System sources under license MIT
  */
 
 #ifndef VA_ARG_H_

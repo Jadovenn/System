@@ -1,5 +1,6 @@
 /**
- * Netero - C library Memory
+ * memory.c - C library Memory
+ * System sources under license MIT
  */
 
 /**

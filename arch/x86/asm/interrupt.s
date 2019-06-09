@@ -2,6 +2,11 @@
 [EXTERN isr_stub]
 [EXTERN irq_stub]
 
+;; --------------------------------------
+;; interrupt.s - interruption handlers
+;; System sources under license MIT
+;; --------------------------------------
+
 %macro ISR_NO_ERROR_CODE 1
 [global isr%1]
 isr%1:

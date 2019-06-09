@@ -1,4 +1,7 @@
-;; bootloader read disk
+;; --------------------------------------
+;; bootloader_read_disk.s - read from drive number n 512 bytes sector(s)
+;; System sources under license MIT
+;; --------------------------------------
 
 ;;	read from disk the number of given sector, cylinder 0
 ;;	and write readden data in the buffer [es:bx]

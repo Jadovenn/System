@@ -1,5 +1,8 @@
-;; bootloader print function
-;; function for 16 bits mode
+[BITS 16]
+;; --------------------------------------
+;; bootloader_print.s - print proc for 16 bit mode
+;; System sources under license MIT
+;; --------------------------------------
 
 ;;	print a string
 ;;	put the first byte in si
@@ -42,3 +45,4 @@ print16_hex:
 	ret
 ;;	data for print_hex
 hex_out	db '0x0000', 0
+

@@ -1,5 +1,6 @@
 /**
- *	I/O - registers descriptors
+ * io.h - x86 input/output PIC registers
+ * System sources under license MIT
  */
 
 #ifndef IO_H_

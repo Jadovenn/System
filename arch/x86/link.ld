@@ -1,8 +1,6 @@
 /**
- * link.ld
- * linker script make sure every things is where
- * it is supposed to be.
- * it define code, data, bss and end pointer needed by the kernel
+ * link.ld - linker srcipt, define sctions and txt start addr
+ * System sources under license MIT
  */
 
 ENTRY(start)

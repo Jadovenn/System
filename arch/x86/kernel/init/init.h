@@ -1,5 +1,6 @@
 /**
- * Init - private headers
+ * init.h - init early stage hooks
+ * System sources under license MIT
  */
 
 // invok by kmain

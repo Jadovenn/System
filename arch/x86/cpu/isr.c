@@ -1,5 +1,6 @@
 /**
- * Interruptions request
+ * isr.c - Interruptions request handler API
+ * System sources under license MIT
  */
 
 #include <system.h>

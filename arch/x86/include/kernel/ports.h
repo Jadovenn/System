@@ -1,5 +1,6 @@
 /**
- * Ports drivers
+ * ports.h - x86 r/w ports API
+ * System sources under license MIT
  */
 
 #ifndef PORTS_H_

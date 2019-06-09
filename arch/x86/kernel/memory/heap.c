@@ -1,5 +1,6 @@
 /**
- * heap allocation for kernel space
+ * heap.c - Heap allocation for kernel space
+ * System sources under license MIT
  */
 
 #include <kernel/types.h>

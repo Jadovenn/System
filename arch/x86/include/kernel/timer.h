@@ -1,5 +1,6 @@
 /**
- * Timer
+ * timer.h - timer API
+ * System sources under license MIT
  */
 
 #ifndef TIMER_H_

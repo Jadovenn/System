@@ -1,6 +1,6 @@
 /**
- * printk, print formated text in kernel space
- * it is not perfec but this would be good 
+ * printk.c - print formated text to the monitor
+ * System sources under license MIT
  */
 
 #include <kernel/types.h>

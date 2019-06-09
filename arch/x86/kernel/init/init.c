@@ -1,11 +1,10 @@
 /**
- * init hooks
+ * init.c - init hooks to execute by the early_stage
+ * System sources under license MIT
  */
 
-// public header
-#include "kernel/log.h"
+#include <kernel/log.h>
 
-// private header
 #include "init.h"
 
 void	early_stage() {

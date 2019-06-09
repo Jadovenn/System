@@ -1,8 +1,8 @@
 /**
- *	Kernel entry point
+ * kernel.c - x86 kernel entry point
+ * System sources under license MIT
  */
 
-// private header
 #include "init/init.h"
 #include <kernel/timer.h>
 

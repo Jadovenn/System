@@ -1,6 +1,11 @@
 [BITS 32]
 [GLOBAL gdt_flush]
 
+;; --------------------------------------
+;; dt_flush.s - gdt/idt flush procedurs
+;; System sources under license MIT
+;; --------------------------------------
+
 gdt_flush:
 	mov	eax, [esp+4]
 	lgdt	[eax]

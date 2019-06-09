@@ -1,5 +1,6 @@
 /**
- * Compiler helper
+ * compiler.h - compiler helper features
+ * System sources under license MIT
  */
 
 #ifndef COMPILER_H_

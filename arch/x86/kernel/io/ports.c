@@ -1,5 +1,6 @@
 /**
- * Ports driver
+ * port.c - port driver
+ * System sources under license MIT
  */
 
 unsigned char	port_read_byte(unsigned short port) {

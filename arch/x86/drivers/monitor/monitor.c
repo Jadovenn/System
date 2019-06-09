@@ -1,5 +1,6 @@
 /**
- * VGA - screen driver
+ * monitor.c - monitor driver
+ * System sources under license MIT
  */
 
 #include "kernel/ports.h"

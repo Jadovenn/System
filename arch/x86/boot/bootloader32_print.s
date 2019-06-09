@@ -1,6 +1,9 @@
-;; bootload32_print.s
-;; print proc for 32 bits mode
 [BITS 32]
+
+;; --------------------------------------
+;; bootloader32_print.s - print proc for 32 bits mode
+;; System sources under license MIT
+;; --------------------------------------
 
 VIDEO_BUFFER	equ 0xb8000	;; Viedo memory buffer
 WB		equ 0x0f	;; White over Black

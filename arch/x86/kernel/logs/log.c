@@ -1,5 +1,6 @@
 /**
- * log
+ * log.c - init log
+ * System sources under license MIT
  */
 
 #include <drivers/monitor.h>

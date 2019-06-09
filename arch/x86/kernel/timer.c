@@ -1,5 +1,6 @@
 /**
- * Timer
+ * timer.c - Timer functionality
+ * System sources under license MIT
  */
 
 #include <system.h>
