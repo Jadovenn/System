@@ -6,7 +6,7 @@
 #include <kernel/compiler.h>
 #include <kernel/ports.h>
 #include <kernel/stdio.h>
-#include "isr.h"
+#include <cpu/isr.h>
 
 isr_t	interrupt_handlers_map[256];
 

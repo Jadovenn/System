@@ -5,8 +5,8 @@
 #include <kernel/io.h>
 #include <kernel/ports.h>
 #include <kernel/types.h>
-#include "isr.h"
-#include "pic.h"
+#include <cpu/isr.h>
+#include <cpu/pic.h>
 
 void	PIC_disable() {
 	//asm("mov %al, 0xff");

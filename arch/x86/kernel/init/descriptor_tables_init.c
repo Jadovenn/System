@@ -4,8 +4,8 @@
 
 #include <system.h>
 #include <kernel/ports.h>
-#include <descriptors_table.h>
-#include <isr.h>
+#include <cpu/descriptors_table.h>
+#include <cpu/isr.h>
 #include <string.h>
 
 extern void	gdt_flush(uint32_t);

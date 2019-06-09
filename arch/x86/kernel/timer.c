@@ -3,7 +3,7 @@
  */
 
 #include <system.h>
-#include <isr.h>
+#include <cpu/isr.h>
 #include <kernel/types.h>
 #include <kernel/io.h>
 #include <kernel/stdio.h>
