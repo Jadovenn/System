@@ -2,8 +2,8 @@
 ##	Makefile
 ##
 
-KERNEL		=	netero
-KERNEL_IMG	=	vmnetero.img
+KERNEL		=	system
+KERNEL_IMG	=	vmsystem.img
 KERNEL_SYM	=	kernel.elf
 BOOTLOADER	=	bootloader.bin
 ROOT		=	../..
@@ -22,6 +22,7 @@ KERNEL_C_SRC	=	kernel/kernel.c \
 			kernel/init/init.c \
 			kernel/init/monitor_init.c \
 			kernel/init/descriptor_tables_init.c \
+			kernel/memory/heap.c \
 			drivers/monitor/monitor.c \
 			cpu/pic.c \
 			cpu/isr.c
@@ -39,6 +40,8 @@ FLAGS		=	-Iinclude \
 			-Icpu \
 			-I$(ROOT)/lib/libc/include \
 			-I$(ROOT)/include
+
+LDFLAGS		=	-Tlink.ld
 
 ifeq ($(UNAME), Darwin)
 	CC	=	i386-elf-gcc -g -nostdinc -nostdlib -fno-builtin
@@ -62,7 +65,7 @@ $(BOOTLOADER):
 	nasm -f bin $(BOOTLOADER_SRC) -o $(BOOTLOADER)
 
 $(KERNEL):	$(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ)
-	$(LD) -o $(KERNEL) -Ttext 0x1000 $(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ) --oformat binary
+	$(LD) $(LDFLAGS) -o $(KERNEL) $(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ) --oformat binary
 
 .c.o:
 	$(CC) $(FLAGS) -ffreestanding -c $< -o $@
@@ -76,13 +79,13 @@ clean:
 	rm -f	$(KERNEL_C_OBJ)
 	rm -f	$(KERNEL_ASM_OBJ)
 	rm -f	$(LIBC_OBJ)
-qemue:
+run:
 	qemu-system-i386 -fda $(KERNEL_IMG)
 
 kernel_symbole: all
-	$(LD) -o $(KERNEL_SYM) -Ttext 0x1000 $(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ)
+	$(LD) $(LDFLAGS) -o $(KERNEL_SYM) -Ttext 0x1000 $(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ)
 
-qemue-debug:	kernel_symbole
+debug:	kernel_symbole
 	qemu-system-i386 -s -S -fda $(KERNEL_IMG) &
 	gdb -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
 
