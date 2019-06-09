@@ -36,8 +36,7 @@ LIBC_OBJ	=	$(LIBC_SRC:.c=.o)
 
 UNAME		:=	$(shell uname)
 
-FLAGS		=	-Iinclude \
-			-Icpu \
+CFLAGS		=	-Iinclude \
 			-I$(ROOT)/lib/libc/include \
 			-I$(ROOT)/include
 
@@ -68,7 +67,7 @@ $(KERNEL):	$(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ)
 	$(LD) $(LDFLAGS) -o $(KERNEL) $(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ) --oformat binary
 
 .c.o:
-	$(CC) $(FLAGS) -ffreestanding -c $< -o $@
+	$(CC) $(CFLAGS) -ffreestanding -c $< -o $@
 .s.o:
 	$(NASM) $< -f elf -o $@
 clean:

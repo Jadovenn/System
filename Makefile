@@ -2,8 +2,8 @@
 ##	Makefile
 ##
 
-KERNEL		=	netero
-KERNEL_IMG	=	vmnetero.img
+KERNEL		=	system
+KERNEL_IMG	=	vmsystem.img
 KERNEL_SYM	=	kernel.elf
 
 ISO_FILE	=	./bin/iso/$(KERNEL_IMG)
