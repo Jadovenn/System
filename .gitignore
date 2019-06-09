@@ -5,3 +5,8 @@
 *.DS_Store
 *.gdb_history
 *peda-session-*
+bin/
+*system
+*.bin
+*.elf
+*.img
