@@ -5,7 +5,8 @@
 
 #include <kernel/types.h>
 
-uint32_t	placement_address = 0x90000;
+extern uint32_t	end; // defined in the linker script
+uint32_t	placement_address = (uint32_t)&end;
 
 uint32_t	kmalloc(uint32_t size) {
 	uint32_t tmp = placement_address;
