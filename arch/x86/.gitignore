@@ -1,6 +1,0 @@
-*.o
-*.swp
-*~
-*.DS_Store
-*.gdb_history
-*peda-session-*
