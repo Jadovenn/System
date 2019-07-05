@@ -7,7 +7,8 @@
 #include <kernel/types.h>
 
 extern uint32_t	end; // defined in the linker script
-uint32_t	placement_address = (uint32_t)&end;
+//uint32_t	placement_address = (uint32_t)&end;
+uint32_t	placement_address = (uint32_t)0xffff0000;
 
 static uint32_t	__kmalloc_internal(uint32_t size, bool align, uint32_t *physical_addr) {
 	if (align == TRUE && (placement_address & 0xfffff000)) {
