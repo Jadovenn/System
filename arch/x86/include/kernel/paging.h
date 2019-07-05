@@ -6,8 +6,8 @@
 #ifndef PAGING_H_
 # define PAGING_H_
 
+#include <cpu/isr.h>
 #include <kernel/types.h>
-#include <isr.h>
 
 typedef struct page {
 	uint32_t	present	 : 1; // set when the page is present
@@ -34,9 +34,9 @@ void	init_paging();
 
 void	switch_page_directory(page_directory_t	*new);
 
-page_t	*get_page(uint32 address, int make, page_directory_t *dir);
+page_t	*get_page(uint32_t address, int make, page_directory_t *dir);
 
-void	page_fault(register_t regs);
+void	page_fault(registers_t regs);
 
 #endif // PAGING_H_
 
