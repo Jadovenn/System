@@ -20,10 +20,10 @@ KERNEL_C_SRC	=	kernel/kernel.c \
 			kernel/io/ports.c \
 			kernel/io/printk.c \
 			kernel/logs/log.c \
-			kernel/init/init.c \
 			kernel/init/monitor_init.c \
 			kernel/init/descriptor_tables_init.c \
 			kernel/memory/heap.c \
+			kernel/memory/frame.c \
 			drivers/monitor/monitor.c \
 			cpu/pic.c \
 			cpu/isr.c
