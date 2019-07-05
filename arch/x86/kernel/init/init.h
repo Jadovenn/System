@@ -17,5 +17,5 @@ void	early_stage();
 int	init_monitor();
 
 //	init descriptor tables
-int	init_descriptor_tables();
+int	install_descriptor_tables();
 

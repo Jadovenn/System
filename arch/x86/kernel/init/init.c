@@ -8,8 +8,8 @@
 #include "init.h"
 
 void	early_stage() {
-	init_descriptor_tables();
+	install_descriptor_tables();
 	klog_init(init_monitor(), "monitor"); 
-	asm volatile ("sti");
+	//asm volatile ("sti");
 }
 
