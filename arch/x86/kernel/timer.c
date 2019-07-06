@@ -14,6 +14,7 @@
 uint32_t	tick = 0;
 
 static void __timer_callback(registers_t regs) {
+	(void)regs;
 	tick++;
 	printk("timer tick %d\n", tick);
 	if (tick == 15) {
