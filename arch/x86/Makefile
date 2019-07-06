@@ -13,7 +13,7 @@ BOOTLOADER_SRC	=	boot/bootloader.s
 
 KERNEL_ASM_SRC	=	asm/kernel_entry.s \
 			asm/interrupt.s \
-			kernel/init/dt_flush.s
+			asm/dt_flush.s
 
 KERNEL_C_SRC	=	kernel/kernel.c \
 			kernel/timer.c \
@@ -22,8 +22,6 @@ KERNEL_C_SRC	=	kernel/kernel.c \
 			kernel/logs/log.c \
 			kernel/init/monitor_init.c \
 			kernel/init/descriptor_tables_init.c \
-			kernel/memory/heap.c \
-			kernel/memory/frame.c \
 			drivers/monitor/monitor.c \
 			cpu/pic.c \
 			cpu/isr.c
@@ -37,9 +35,12 @@ LIBC_OBJ	=	$(LIBC_SRC:.c=.o)
 
 UNAME		:=	$(shell uname)
 
-CFLAGS		=	-Iinclude \
+HEADERS		=	-Iinclude \
 			-I$(ROOT)/lib/libc/include \
 			-I$(ROOT)/include
+
+CFLAGS		:=	$(CFLAGS) $(HEADERS) \
+			-Wall -Wextra
 
 LDFLAGS		=	-Tlink.ld
 
