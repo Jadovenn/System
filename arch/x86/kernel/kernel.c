@@ -5,7 +5,6 @@
 
 #include <system.h>
 #include <kernel/timer.h>
-#include <kernel/paging.h>
 
 #include "init/init.h"
 
@@ -23,7 +22,6 @@ void	config_cpu() {
  */
 void	kmain() {
 	config_cpu();
-	init_paging();
 	monitor_init();
 	// enable interruption
 	asm volatile ("sti");
@@ -32,5 +30,6 @@ void	kmain() {
 	// should trigger a page fault if paging as been correctly setup
 	uint32_t	*ptr = (uint32_t*)0xa0000000;
 	uint32_t	page_fault = *ptr;
+	(void)page_fault;
 }
 
