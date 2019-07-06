@@ -3,9 +3,6 @@
  * System sources under license MIT
  */
 
-// invok by kmain
-void	early_stage();
-
 /**
  * Note
  * sub fonction to init intern stuff
@@ -13,9 +10,13 @@ void	early_stage();
  * only call by k_init, they must be called in their declaration order
  */
 
-//	init monitor
-int	init_monitor();
+#ifndef INIT_H_
+# define INIT_H_
 
-//	init descriptor tables
-int	init_descriptor_tables();
+int	monitor_init();
+
+void	install_gdt();
+void	install_idt();
+
+#endif // INIT_H_
 

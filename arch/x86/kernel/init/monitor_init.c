@@ -7,12 +7,7 @@
 #include <drivers/monitor.h>
 #include <kernel/stdio.h>
 
-/**
- * Note
- * just clean the screen and set a color
- * also print the version and that it
- */
-int	init_monitor() {
+int	monitor_init() {
 	monitor_clear();
 	monitor_set_color(BLACK_GREY);
 	printk("kernel ver ");

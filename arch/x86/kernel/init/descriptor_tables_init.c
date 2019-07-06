@@ -13,8 +13,6 @@ extern void	gdt_flush(uint32_t);
 extern void	idt_flush(uint32_t);
 extern isr_t	interrupt_handlers_map[];
 
-static void	__init_gdt();
-static void	__init_idt();
 static void	__gdt_set_gate(int32_t, uint32_t, uint32_t, uint8_t, uint8_t);
 static void	__idt_set_gate(uint8_t, uint32_t, uint16_t, uint8_t);
 
@@ -23,13 +21,7 @@ gdt_ptr_t	gdt_ptr;
 idt_entry_t	idt_entries[256];
 idt_ptr_t	idt_ptr;
 
-void	init_descriptor_tables() {
-	__init_gdt();
-	__init_idt();
-	memset(&interrupt_handlers_map, 0, sizeof(isr_t) * 256);
-}
-
-static void	__init_gdt() {
+void	install_gdt() {
 	gdt_ptr.limit = (sizeof(gdt_entry_t) * 5) - 1;
 	gdt_ptr.base = (uint32_t)&gdt_entries;
 
@@ -41,7 +33,7 @@ static void	__init_gdt() {
 	gdt_flush((uint32_t)&gdt_ptr);
 }
 
-static void	__init_idt() {
+void	install_idt() {
 	idt_ptr.limit = sizeof(idt_entry_t) * 256 - 1;
 	idt_ptr.base = (uint32_t)&idt_entries;
 
@@ -108,6 +100,7 @@ static void	__init_idt() {
 	__idt_set_gate(47, (uint32_t)irq15, 0x08, 0x8e);
 
 	idt_flush((uint32_t)&idt_ptr);
+	memset(&interrupt_handlers_map, 0, sizeof(isr_t) * 256);
 }
 
 static void	__gdt_set_gate(int32_t num, uint32_t base, uint32_t limit, uint8_t access, uint8_t gran) {

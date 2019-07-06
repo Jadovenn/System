@@ -30,7 +30,7 @@ _start:
 
 load_kernel:
 	mov	bx, KERNEL_OFFSET	;; write the data at 0x1000
-	mov	dh, 0x19		;; load 25 sectors
+	mov	dh, 0x30		;; load 25 sectors
 	mov	dl, [boot_drv]		;; from the given boot_drive
 	call	read_disk_sector
 	ret
