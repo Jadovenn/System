@@ -12,8 +12,6 @@
 isr_t	interrupt_handlers_map[256];
 
 int	register_interrupt_handler(uint8_t index, isr_t handler) {
-	if (unlikely(index < 0 || index > 255))
-			return ERROR;
 	interrupt_handlers_map[index] = handler;
 	return SUCCESS;
 }
