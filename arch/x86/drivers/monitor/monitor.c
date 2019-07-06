@@ -47,7 +47,7 @@ static void	set_cursor_offset(int offset) {
 
 static void	scroll_down() {
 	int	dest_offset = (COLONE_MAX * ROW_MAX - COLONE_MAX) << 1;
-	for (unsigned count = 0; count < dest_offset; count += COLONE_MAX << 1) {
+	for (int count = 0; count < dest_offset; count += COLONE_MAX << 1) {
 		memcpy(VIDEO_MEMORY_BUFFER_PTR + count,
 				VIDEO_MEMORY_BUFFER_PTR + count + (COLONE_MAX << 1),
 				COLONE_MAX << 1);
