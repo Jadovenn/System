@@ -4,6 +4,7 @@
  */
 
 #include <system.h>
+#include <kernel/multiboot.h>
 #include <kernel/timer.h>
 
 #include "init/init.h"
@@ -36,7 +37,8 @@ void	kernel_main() {
 /**
  * @details kernel multiboot entrypoint
  */
-void	kernel_main_multiboot() {
+void	kernel_main_multiboot(multiboot_header *mltb_header) {
+	(void)mltb_header;
 	config_cpu();
 	monitor_init();
 	asm volatile ("sti");
