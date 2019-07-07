@@ -1,4 +1,8 @@
 [BITS 32]
+[GLOBAL mboot]
+[EXTERN code]
+[EXTERN bss]
+[EXTERN end]
 ;; ------------------------------------
 ;; multiboot.s - multiboot kernel entry point
 ;; System sources under license MIT
@@ -14,9 +18,15 @@ CHECKSUM equ	-(MAGIC + FLAGS)
 ;; Multiboot header
 section	.multiboot
 align 4
+mboot:
 	dd	MAGIC
 	dd	FLAGS
 	dd	CHECKSUM
+	dd	mboot
+	dd	code
+	dd	bss
+	dd	end
+	dd	_start
 
 ;; Stack 16Kib
 section .bss
@@ -30,6 +40,7 @@ global _start:function (_start.end - _start)
 _start:
 	mov	esp, stack_top
 	extern	kernel_main_multiboot
+	push	ebx
 	call	kernel_main_multiboot
 	cli
 .hang:	hlt
