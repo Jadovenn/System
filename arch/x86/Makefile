@@ -57,17 +57,20 @@ CFLAGS		:=	$(CFLAGS) \
 			-nostdlib \
 			-nostdinc \
 			-fno-builtin \
+			-ffreestanding \
+			-g
 
 ## Select the right toolchains or cross-compiler
 ## for this architecture depending the host operating system
 UNAME		:=	$(shell uname)
 ifeq ($(UNAME), Darwin)
-	CC	=	i386-elf-gcc -g -lgcc
+	CC	=	i386-elf-gcc
 	LD	=	i386-elf-ld
 	NASM	=	nasm
 endif
 ifeq ($(UNAME), Linux)
-	CC	=	gcc -m32 -fno-pie -fno-stack-protector -lgcc
+	CFLAGS	+=	-fno-pie -fno-stack-protector
+	CC	=	gcc -m32 
 	LD	=	ld -melf_i386
 	NASM	=	nasm
 endif
@@ -111,7 +114,7 @@ debug-mltb:	$(SYSTEM_ISO) $(SYSTEM_SYM_MLTB)
 
 ## Generation rules
 $(KERNEL): $(MULTIBOOT) $(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ)
-	$(LD) -Tld/link_multiboot.ld -o $(KERNEL) $(MULTIBOOT) $(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ)
+	$(LD) $(LDFLAGS) -Tld/link_multiboot.ld -o $(KERNEL) $(MULTIBOOT) $(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ)
 
 $(BOOTLOADER):
 	nasm -f bin $(BOOTLOADER_SRC) -o $(BOOTLOADER)
@@ -120,10 +123,10 @@ $(MULTIBOOT):
 	nasm -felf32 $(MULTIBOOT_SRC) -o $(MULTIBOOT)
 
 $(KERNEL_BOOT):	$(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ)
-	$(LD) -Tld/link.ld -o $(KERNEL_BOOT) $(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ) --oformat binary
+	$(LD) $(LDFLAGS) -Tld/link.ld -o $(KERNEL_BOOT) $(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ) --oformat binary
 
 .c.o:
-	$(CC) $(CFLAGS) -ffreestanding -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 .s.o:
 	$(NASM) $< -f elf -o $@
 
