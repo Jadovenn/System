@@ -27,7 +27,7 @@ run-mltb:
 	$(MAKE) -C $(TARGET) run-mltb
 
 debug-mltb:
-	$(MAKE) -C $(CMAKE) debug-mltb
+	$(MAKE) -C $(TARGET) debug-mltb
 re:	
 	$(MAKE) -C $(TARGET) re
 
