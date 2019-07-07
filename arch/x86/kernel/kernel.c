@@ -20,7 +20,7 @@ void	config_cpu() {
 /**
  * @details kernel early stage main entry point
  */
-void	kmain() {
+void	kernel_main() {
 	config_cpu();
 	monitor_init();
 	// enable interruption
@@ -31,5 +31,17 @@ void	kmain() {
 	uint32_t	*ptr = (uint32_t*)0xa0000000;
 	uint32_t	page_fault = *ptr;
 	(void)page_fault;
+}
+
+/**
+ * @details kernel multiboot entrypoint
+ */
+void	kernel_main_multiboot() {
+	config_cpu();
+	monitor_init();
+	asm volatile ("sti");
+	printk("Hello multiboot header\n");
+	init_timer(50);
+	while(1);
 }
 

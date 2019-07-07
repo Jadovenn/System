@@ -1,10 +1,11 @@
 [BITS 32]
-[extern kmain]
+[extern kernel_main]
 
 ;; --------------------------------------
 ;; kernel_entry.s - kernel start proc
 ;; System sources under license MIT
 ;; --------------------------------------
 
-	call	kmain
+	call	kernel_main
 	jmp	$
+
