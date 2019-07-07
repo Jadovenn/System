@@ -3,36 +3,33 @@
 ## System sources under license MIT
 ##
 
+VERSION		=	v0.0.1
 KERNEL		=	system
 KERNEL_IMG	=	vmsystem.img
 KERNEL_SYM	=	kernel.elf
 
-ISO_FILE	=	./bin/iso/$(KERNEL_IMG)
-
 ARCH	=	x86
+TARGET	=	arch/$(ARCH)
 
-all:	$(ISO_FILE)
-
-$(ISO_FILE):
-	mkdir -p bin/iso
-	$(MAKE) -C ./arch/$(ARCH) all
-	cp ./arch/$(ARCH)/$(KERNEL_IMG) ./bin/iso
-	cp ./arch/$(ARCH)/$(KERNEL) ./bin
-	$(MAKE) -C ./arch/$(ARCH) kernel_symbole
-	cp ./arch/$(ARCH)/$(KERNEL_SYM) ./bin
+all:
+	$(MAKE) -C $(TARGET) all
 
 clean:
-	$(MAKE) -C ./arch/$(ARCH) clean
-	rm -rf bin
+	$(MAKE) -C $(TARGET) clean
 
 run:
-	qemu-system-i386 -fda ./bin/iso/$(KERNEL_IMG)
+	$(MAKE) -C $(TARGET) run
 
 debug:
-	qemu-system-i386 -s -S -fda ./bin/iso/$(KERNEL_IMG) &
-	gdb -ex "target remote localhost:1234" -ex "symbol-file ./bin/$(KERNEL_SYM)"
+	$(MAKE) -C $(TARGET) debug
 
-re:	clean all
+run-mltb:
+	$(MAKE) -C $(TARGET) run-mltb
+
+debug-mltb:
+	$(MAKE) -C $(CMAKE) debug-mltb
+re:	
+	$(MAKE) -C $(TARGET) re
 
 .PHONY:	all clean re qemue qemue-debug
 
