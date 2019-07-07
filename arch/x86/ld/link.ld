@@ -3,7 +3,7 @@
  * System sources under license MIT
  */
 
-ENTRY(start)
+ENTRY(_start)
 SECTIONS
 {
 
