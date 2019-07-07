@@ -11,6 +11,7 @@ SECTIONS
     	.text  BLOCK(4K) : ALIGN(4K)
    	{
 	    *(.multiboot)
+	    code = .;
 	    *(.text)
     	}
 
@@ -30,8 +31,9 @@ SECTIONS
 	.bss BLOCK(4K) : ALIGN(4K)
 	{
 		*(COMMON)
+		bss = .;
 		*(.bss)
 	}
- 
+	end = .; 
 }
 
