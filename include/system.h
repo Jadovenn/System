@@ -19,8 +19,9 @@
 #define FALSE	0
 
 #define PANIC(format, ...)	do {\
-	printk("Sytem kernel PANIC in %s at %s:\n", __FILE__, __LINE__);\
+	printk("Sytem panic in %s at line %d:\n", __FILE__, __LINE__);\
 	printk(format __VA_OPT__(,) __VA_ARGS__);\
+	printk("\n!!!!!! KERNEL PANIC !!!!!!\n");\
 	while(1);\
 } while (0)
 
