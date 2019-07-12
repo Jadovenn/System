@@ -8,6 +8,9 @@
 
 #include <kernel/types.h>
 
+#define MULTIBOOT_MAGIC			0x1BADB002
+#define MULTIBOOT_BOOTLOADER_MAGIC	0x2BADB002
+
 #define MULTIBOOT_FLAG_MEM     0x001
 #define MULTIBOOT_FLAG_DEVICE  0x002
 #define MULTIBOOT_FLAG_CMDLINE 0x004
@@ -20,7 +23,7 @@
 #define MULTIBOOT_FLAG_APM     0x200
 #define MULTIBOOT_FLAG_VBE     0x400
 
-struct multiboot_header_t {
+struct multiboot_info_t {
 	uint32_t	flags;
 	uint32_t	mem_lower;
 	uint32_t	mem_upper;
@@ -47,7 +50,7 @@ struct multiboot_header_t {
 	uint32_t	vbe_interface_len;
 } __attribute__((packed));
 
-typedef struct multiboot_header_t	multiboot_header;
+typedef struct multiboot_info_t	multiboot_info;
 
 #endif // MULTIBOOT_H_
 
