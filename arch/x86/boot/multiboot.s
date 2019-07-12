@@ -3,6 +3,8 @@
 [EXTERN code]
 [EXTERN bss]
 [EXTERN end]
+[EXTERN kernel_main_multiboot]
+[EXTERN _init]
 ;; ------------------------------------
 ;; multiboot.s - multiboot kernel entry point
 ;; System sources under license MIT
@@ -39,8 +41,9 @@ section .text
 global _start:function (_start.end - _start)
 _start:
 	mov	esp, stack_top
-	extern	kernel_main_multiboot
+	push	eax
 	push	ebx
+	call	_init
 	call	kernel_main_multiboot
 	cli
 .hang:	hlt
