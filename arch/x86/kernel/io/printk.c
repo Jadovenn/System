@@ -31,10 +31,33 @@ void	__print_decimal(int number) {
 	}
 }
 
-void	__print_formated(va_list *vl, char *format) {
+void	__print_hexadecimal(uint32_t number) {
+	int counter = 0;
+	char	hex_char[8] = {'0', '0', '0', '0', '0', '0', '0', '0'};
+	while (number != 0 && counter < 8) {
+		int temp = 0;
+		temp = number % 16;
+		if (temp < 10) {
+			hex_char[counter] = temp + 48;
+		}
+		else {
+			hex_char[counter] = temp + 55;
+		}
+		counter += 1;
+		number = number / 16;
+	}
+	counter = 7;
+	while (counter >= 0) {
+		monitor_write(hex_char[counter]);
+		counter -= 1;
+	}
+}
+
+int	__print_formated(va_list *vl, char *format) {
 	char *string;
 	char character;
 	int  decimal_number;
+	uint32_t hexa_number;
 	switch (*format) {
 		case 's':
 			string = va_arg(*vl, char*);
@@ -48,9 +71,24 @@ void	__print_formated(va_list *vl, char *format) {
 			decimal_number = va_arg(*vl, int);
 			__print_decimal(decimal_number);
 			break;
+		case '#':
+			monitor_write('0');
+			monitor_write('x');
+			format += 1;
+			if (*format == 'x') {
+				hexa_number = va_arg(*vl, uint32_t);
+				__print_hexadecimal(hexa_number);
+				return 1;
+			}
+			break;
+		case 'x':
+			decimal_number = va_arg(*vl, int);
+			__print_hexadecimal(decimal_number);
+			break;
 		default:
-			return;
+			return 0;
 	}
+	return 0;
 }
 
 /**
@@ -67,7 +105,7 @@ void	printk(char *format, ...) {
 		if (*c == '%') {
 			c += 1;
 			if (*c != '\0') {
-				__print_formated(&vl, c);
+				c += __print_formated(&vl, c);
 			}
 		}
 		else if (*c == '\\') {
