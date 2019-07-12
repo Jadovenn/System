@@ -103,7 +103,7 @@ void	monitor_write(char c) {
 			set_cursor_offset(offset);
 		}
 		else { // Special Case: carriage return
-			offset = offset - (offset % COLONE_MAX);
+			offset = offset - ((offset >> 1) % COLONE_MAX) * 2;
 			set_cursor_offset(offset + (2 * COLONE_MAX));
 		}
 	}
