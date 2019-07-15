@@ -60,6 +60,8 @@ CFLAGS		:=	$(CFLAGS) \
 			-ffreestanding \
 			-g
 
+LDFLAGS		+=	-Tld/link.ld
+
 ## Select the right toolchains or cross-compiler
 ## for this architecture depending the host operating system
 UNAME		:=	$(shell uname)
@@ -105,7 +107,7 @@ debug:	$(SYSTEM_ISO) $(SYSTEM_SYM_MLTB)
 
 ## Generation rules
 $(KERNEL): $(MULTIBOOT) $(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ)
-	$(LD) $(LDFLAGS) -Tld/link_multiboot.ld -o $(KERNEL) $(MULTIBOOT) $(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ)
+	$(LD) $(LDFLAGS) -o $(KERNEL) $(MULTIBOOT) $(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ)
 
 $(MULTIBOOT):
 	nasm -felf32 $(MULTIBOOT_SRC) -o $(MULTIBOOT)
@@ -119,7 +121,7 @@ $(SYSTEM_ISO):	$(KERNEL)
 	script/build-iso.sh $(SYSTEM_ISO)
 
 $(SYSTEM_SYM):	$(MULTIBOOT) $(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ)
-	$(LD) $(LDFLAGS) -Tld/link_multiboot.ld -o $(SYSTEM_SYM_MLTB) $(MULTIBOOT) $(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ)
+	$(LD) $(LDFLAGS) -o $(SYSTEM_SYM_MLTB) $(MULTIBOOT) $(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ)
 
 .PHONY:	all standalone iso clean run run-mltb debug debug-mltb
 
