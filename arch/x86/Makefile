@@ -25,8 +25,8 @@ MULTIBOOT_SRC	=	boot/multiboot.s
 KERNEL_ASM_SRC	=	asm/kernel_entry.s \
 			asm/init.s \
 			asm/interrupt.s \
-			asm/dt_flush.s \
-			asm/paging.s
+			asm/dt_flush.s
+
 ## System C sources
 KERNEL_C_SRC	=	kernel/kernel.c \
 			kernel/timer.c \
@@ -37,8 +37,7 @@ KERNEL_C_SRC	=	kernel/kernel.c \
 			kernel/init/descriptor_tables_init.c \
 			drivers/monitor/monitor.c \
 			cpu/pic.c \
-			cpu/isr.c \
-			cpu/mmu.c
+			cpu/isr.c
 
 ## Include directories
 HEADERS		=	-Iinclude \
