@@ -6,7 +6,8 @@
 #ifndef MONITOR_H_
 # define MONITOR_H_
 
-#define VIDEO_MEMORY_BUFFER_PTR		((char*)0xb8000)
+//#define VIDEO_MEMORY_BUFFER_PTR		((char*)0xb8000)
+#define VIDEO_MEMORY_BUFFER_PTR		((char*)0xC03FF000)
 
 #define VGA_CURSOR_POSITION_HIGHT	14
 #define VGA_CURSOR_POSITION_LOW		15
