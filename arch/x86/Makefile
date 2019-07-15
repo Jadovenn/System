@@ -15,16 +15,14 @@ BOOTLOADER	=	bootloader.bin
 MULTIBOOT	=	mtboot.o
 ROOT		=	../..
 
-## Bootloader for system-boot
+## Bootloader for system-boot, now deprecated, source are still here but not used
 BOOTLOADER_SRC	=	boot/bootloader.s
 
 ## Multiboot header for system multiboot
 MULTIBOOT_SRC	=	boot/multiboot.s
 
 ## System asm sources
-KERNEL_ASM_SRC	=	asm/kernel_entry.s \
-			asm/init.s \
-			asm/interrupt.s \
+KERNEL_ASM_SRC	=	asm/interrupt.s \
 			asm/dt_flush.s
 
 ## System C sources
