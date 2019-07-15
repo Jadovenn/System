@@ -36,19 +36,30 @@ void	kernel_main() {
 	//(void)page_fault;
 }
 
-void	check_multiboot(multiboot_info *header, uint32_t magic) {
+/**
+ * init mmu
+ */
+void	init_with_multiboot(multiboot_info *header, uint32_t magic) {
 	if (magic != MULTIBOOT_BOOTLOADER_MAGIC) {
-		PANIC("Wrong multiboot magic number, unable to perform  memory mapping.");
+		PANIC("Wrong multiboot magic number, multiboot header is not present");
+	}
+	if (!(header->flags & MULTIBOOT_INFO_MEMORY)) {
+		PANIC("Multiboot memmory flags is not present, manual memory detection is not available");
+	}
+	if (!(header->flags & MULTIBOOT_INFO_MMAP)) {
+		PANIC("Multiboot memory map is not present, manual memory detection is not available");
 	}
 }
 
 /**
  * @details kernel multiboot entrypoint
  */
-void	kernel_main_multiboot(multiboot_info *mltb_header, uint32_t magic) {
+void	kernel_main_multiboot(multiboot_info *header, uint32_t magic) {
 	config_cpu();
-	check_multiboot(mltb_header, magic);
 	monitor_init();
+	//init_with_multiboot(header, magic);
+	//printk("Lower Memory: %dKiB\n", header->mem_lower);
+	//printk("Upper Memory: %dKiB\n", header->mem_upper);
 	init_timer(50);
 	while(1);
 }
