@@ -110,7 +110,7 @@ _start:
 	;;mov	cr3, ecx
 
 	mov	esp, stack_top
-	add	ebx, 0xC0000000
+	;;add	ebx, 0xC0000000
 	push	eax
 	push	ebx
 	;;call	_init
