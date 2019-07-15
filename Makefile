@@ -23,13 +23,8 @@ run:
 debug:
 	$(MAKE) -C $(TARGET) debug
 
-run-mltb:
-	$(MAKE) -C $(TARGET) run-mltb
-
-debug-mltb:
-	$(MAKE) -C $(TARGET) debug-mltb
 re:	
 	$(MAKE) -C $(TARGET) re
 
-.PHONY:	all clean re qemue qemue-debug
+.PHONY:	all clean re run debug
 

@@ -80,8 +80,6 @@ endif
 ## Top level rules
 all:		$(KERNEL)
 
-standalone:	$(SYSTEM_IMG)
-
 iso:		$(SYSTEM_ISO)
 
 clean:
@@ -100,17 +98,10 @@ clean:
 
 re:		clean all
 
-run:		$(SYSTEM_IMG)
-	qemu-system-i386 -fda $(SYSTEM_IMG)
-
-debug:		$(SYSTEM_IMG) $(SYSTEM_SYM)
-	qemu-system-i386 -s -S -fda $(SYSTEM_IMG) &
-	gdb -ex "target remote localhost:1234" -ex "symbol-file $(SYSTEM_SYM)"
-
-run-mltb:	$(SYSTEM_ISO)
+run:		$(SYSTEM_ISO)
 	qemu-system-i386 -cdrom $(SYSTEM_ISO)
 
-debug-mltb:	$(SYSTEM_ISO) $(SYSTEM_SYM_MLTB)
+debug:	$(SYSTEM_ISO) $(SYSTEM_SYM_MLTB)
 	qemu-system-i386 -s -S -fda $(SYSTEM_ISO) &
 	gdb -ex "target remote localhost:1234" -ex "symbol-file $(SYSTEM_SYM_MLTB)"
 
@@ -118,14 +109,8 @@ debug-mltb:	$(SYSTEM_ISO) $(SYSTEM_SYM_MLTB)
 $(KERNEL): $(MULTIBOOT) $(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ)
 	$(LD) $(LDFLAGS) -Tld/link_multiboot.ld -o $(KERNEL) $(MULTIBOOT) $(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ)
 
-$(BOOTLOADER):
-	nasm -f bin $(BOOTLOADER_SRC) -o $(BOOTLOADER)
-
 $(MULTIBOOT):
 	nasm -felf32 $(MULTIBOOT_SRC) -o $(MULTIBOOT)
-
-$(KERNEL_BOOT):	$(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ)
-	$(LD) $(LDFLAGS) -Tld/link.ld -o $(KERNEL_BOOT) $(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ) --oformat binary
 
 .c.o:
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -135,13 +120,7 @@ $(KERNEL_BOOT):	$(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ)
 $(SYSTEM_ISO):	$(KERNEL)
 	script/build-iso.sh $(SYSTEM_ISO)
 
-$(SYSTEM_IMG):	$(BOOTLOADER) $(KERNEL_BOOT)
-	cat $(BOOTLOADER) $(KERNEL_BOOT) > $(SYSTEM_IMG)
-
-$(SYSTEM_SYM):	$(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ)
-	$(LD) $(LDFLAGS) -o $(SYSTEM_SYM) -Ttext 0x1000 $(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ)
-
-$(SYSTEM_SYM_MLTB):	$(MULTIBOOT) $(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ)
+$(SYSTEM_SYM):	$(MULTIBOOT) $(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ)
 	$(LD) $(LDFLAGS) -Tld/link_multiboot.ld -o $(SYSTEM_SYM_MLTB) $(MULTIBOOT) $(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ)
 
 .PHONY:	all standalone iso clean run run-mltb debug debug-mltb
