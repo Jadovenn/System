@@ -17,10 +17,12 @@ int	register_interrupt_handler(uint8_t index, isr_t handler) {
 }
 
 void	isr_handler(registers_t regs) {
-	printk("Fault: %d\n", regs.interr_nb);
 	if (interrupt_handlers_map[regs.interr_nb] != 0) {
 		isr_t handler = interrupt_handlers_map[regs.interr_nb];
 		handler(regs);
+	}
+	else {
+		PANIC("Unmanaged fault: %d", regs.interr_nb);
 	}
 }
 
