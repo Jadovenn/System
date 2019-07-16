@@ -1,6 +1,8 @@
 [BITS 32]
 [GLOBAL mboot]
 [GLOBAL _start]
+[GLOBAL boot_page_directory]
+[GLOBAL boot_page_table]
 ;; provided by the linker, see linker script
 [EXTERN _kernel_start]
 [EXTERN code]
