@@ -10,9 +10,7 @@
 int	monitor_init() {
 	monitor_clear();
 	monitor_set_color(BLACK_GREY);
-	printk("kernel ver ");
-	printk(VERSION);
-	printk("\n");
+	printk("kernel ver %s\n", VERSION);
 	return 0;
 }
 
