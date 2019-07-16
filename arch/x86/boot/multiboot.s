@@ -54,6 +54,19 @@ stack_top:
 section .text
 global _start:function (_start.end - _start)
 _start:
+	mov	edi, V2P(boot_page_table) + 0x7 * 0x4
+	mov	esi, 0x7000
+.higher_half_maping:
+	cmp	esi, 0x7FFFF
+	jg	.begin_kernel_maping
+	mov	edx, esi
+	or	edx, 0x003
+	mov	[edi], edx
+	add	esi, 0x1000
+	add	edi, 0x4
+	loop	.higher_half_maping
+
+.begin_kernel_maping:
 	mov	edi, V2P(boot_page_table)
 	mov	esi, 0x00
 	mov	ecx, 0x3FF
@@ -110,7 +123,7 @@ _start:
 	;;mov	cr3, ecx
 
 	mov	esp, stack_top
-	;;add	ebx, 0xC0000000
+	add	ebx, 0xC0000000
 	push	eax
 	push	ebx
 	;;call	_init
