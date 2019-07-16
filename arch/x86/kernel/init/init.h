@@ -14,9 +14,11 @@
 # define INIT_H_
 
 int	monitor_init();
+void	configure_mmu(multiboot_info *header);
 
 void	install_gdt();
 void	install_idt();
+void	install_mmu();
 
 #endif // INIT_H_
 
