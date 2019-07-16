@@ -60,7 +60,7 @@ CFLAGS		:=	$(CFLAGS) \
 			-ffreestanding \
 			-g
 
-LDFLAGS		+=	-Tld/link.ld
+LDFLAGS		+=	-Tlink.ld
 
 ## Select the right toolchains or cross-compiler
 ## for this architecture depending the host operating system
@@ -101,7 +101,7 @@ re:		clean all
 run:		$(SYSTEM_ISO)
 	qemu-system-i386 -cdrom $(SYSTEM_ISO)
 
-debug:	$(SYSTEM_ISO) $(SYSTEM_SYM_MLTB)
+debug:	$(SYSTEM_ISO) $(SYSTEM_SYM)
 	qemu-system-i386 -s -S -fda $(SYSTEM_ISO) &
 	gdb -ex "target remote localhost:1234" -ex "symbol-file $(SYSTEM_SYM_MLTB)"
 
