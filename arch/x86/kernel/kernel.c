@@ -40,7 +40,7 @@ void	init_with_multiboot(multiboot_info *header, uint32_t magic) {
 /**
  * @details kernel multiboot entrypoint
  */
-void	kernel_main_multiboot(multiboot_info *header, uint32_t magic) {
+void	kmain(multiboot_info *header, uint32_t magic) {
 	config_cpu();
 	monitor_init();
 	init_with_multiboot(header, magic);

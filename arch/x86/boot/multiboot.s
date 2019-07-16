@@ -7,7 +7,7 @@
 [EXTERN edata]
 [EXTERN end]
 ;; symbole from the kernel
-[EXTERN kernel_main_multiboot]
+[EXTERN kmain]
 [EXTERN _init]
 ;; ------------------------------------
 ;; multiboot.s - multiboot kernel entry point
@@ -114,7 +114,7 @@ _start:
 	push	eax
 	push	ebx
 	;;call	_init
-	call	kernel_main_multiboot
+	call	kmain
 	cli
 .hang:	hlt
 	jmp .hang
