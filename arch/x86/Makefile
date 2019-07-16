@@ -4,7 +4,7 @@
 ##
 
 ## Constante
-VERSION		=	v0.0.1
+VERSION		=	v0.0.2
 KERNEL		=	system
 KERNEL_BOOT	=	system-$(VERSION)-with-bootloader
 SYSTEM_IMG	=	system-$(VERSION)-bare_bones-with-bootloader.img

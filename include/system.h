@@ -6,7 +6,7 @@
 #ifndef SYSTEM_H_
 # define SYSTEM_H_
 
-#define VERSION "0.0.1"
+#define VERSION "0.0.2"
 
 #include <kernel/stdio.h>
 
