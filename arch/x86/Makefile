@@ -33,9 +33,11 @@ KERNEL_C_SRC	=	kernel/kernel.c \
 			kernel/logs/log.c \
 			kernel/init/monitor_init.c \
 			kernel/init/descriptor_tables_init.c \
+			kernel/init/mmu_init.c \
 			drivers/monitor/monitor.c \
 			cpu/pic.c \
-			cpu/isr.c
+			cpu/isr.c \
+			cpu/mmu/mmu.c
 
 ## Include directories
 HEADERS		=	-Iinclude \
