@@ -29,7 +29,7 @@ KERNEL_ASM_SRC	=	asm/interrupt.s \
 KERNEL_C_SRC	=	kernel/kernel.c \
 			kernel/timer.c \
 			kernel/io/ports.c \
-			kernel/io/printk.c \
+			$(ROOT)/kernel/printk.c \
 			kernel/logs/log.c \
 			kernel/init/monitor_init.c \
 			kernel/init/descriptor_tables_init.c \
@@ -56,26 +56,29 @@ CFLAGS		:=	$(CFLAGS) \
 			$(HEADERS) \
 			-Wall \
 			-Wextra \
-			-nostdlib \
 			-nostdinc \
+			-nostartfiles \
+			-fno-pic \
 			-fno-builtin \
 			-ffreestanding \
 			-g
 
-LDFLAGS		+=	-Tlink.ld
+LDFLAGS		=	-nostdlib -static-libgcc -static -Wl,-static -Wl,-lgcc -Wl,-Tlink.ld
+##LDFLAGS		=	-Tlink.ld -lgcc
 
 ## Select the right toolchains or cross-compiler
 ## for this architecture depending the host operating system
 UNAME		:=	$(shell uname)
 ifeq ($(UNAME), Darwin)
 	CC	=	i386-elf-gcc
-	LD	=	i386-elf-ld
+	LD	=	$(CC)
+	##LD	=	i386-elf-ld -L/usr/local/Cellar/i386-elf-gcc/8.2.0/lib/gcc/i386-elf/8.2.0/
 	NASM	=	nasm
 endif
 ifeq ($(UNAME), Linux)
 	CFLAGS	+=	-fno-pie -fno-stack-protector
 	CC	=	gcc -m32 
-	LD	=	ld -melf_i386
+	LD	=	$(CC)
 	NASM	=	nasm
 endif
 
@@ -109,7 +112,7 @@ debug:	$(SYSTEM_ISO) $(SYSTEM_SYM)
 
 ## Generation rules
 $(KERNEL): $(MULTIBOOT) $(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ)
-	$(LD) $(LDFLAGS) -o $(KERNEL) $(MULTIBOOT) $(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ)
+	$(LD) -o $(KERNEL) $(MULTIBOOT) $(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ) $(LDFLAGS)
 
 $(MULTIBOOT):
 	nasm -felf32 $(MULTIBOOT_SRC) -o $(MULTIBOOT)
@@ -123,7 +126,7 @@ $(SYSTEM_ISO):	$(KERNEL)
 	script/build-iso.sh $(SYSTEM_ISO)
 
 $(SYSTEM_SYM):	$(MULTIBOOT) $(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ)
-	$(LD) $(LDFLAGS) -o $(SYSTEM_SYM_MLTB) $(MULTIBOOT) $(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ)
+	$(LD) -o $(SYSTEM_SYM_MLTB) $(MULTIBOOT) $(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LIBC_OBJ) $(LDFLAGS)
 
 .PHONY:	all standalone iso clean run run-mltb debug debug-mltb
 
