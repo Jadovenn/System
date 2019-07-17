@@ -5,9 +5,9 @@
 [GLOBAL boot_page_table]
 ;; provided by the linker, see linker script
 [EXTERN _kernel_start]
-[EXTERN code]
-[EXTERN edata]
-[EXTERN end]
+[EXTERN _code]
+[EXTERN _end_data]
+[EXTERN _end]
 ;; symbole from the kernel
 [EXTERN kmain]
 ;; ------------------------------------
@@ -32,9 +32,9 @@ mboot:
 	dd	FLAGS
 	dd	CHECKSUM
 	dd	mboot
-	dd	code
-	dd	edata
-	dd	end
+	dd	_code
+	dd	_end_data
+	dd	_end
 	dd	V2P(_start)
 
 ;; boot page directory and table, 4KiB each
@@ -79,7 +79,7 @@ _start:
 	cmp	esi, V2P(_kernel_start)
 	jl	.inc_esi
 	;; if we are after the kernel, go to vga mem mapping
-	cmp	esi, V2P(end)
+	cmp	esi, V2P(_end)
 	jge	.vga_mem_maping
 	mov	edx, esi
 	or	edx, 0x003

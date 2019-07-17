@@ -17,11 +17,13 @@
 #define PHYSICAL_ADDR_TO_VIRTUAL(x)	(uint32_t)(((uint32_t)x) + VIRTUAL_KERNEL_SPACE_ADDR)
 
 extern uint32_t	_kernel_start;
-extern uint32_t	code;
-extern uint32_t	ecode;
-extern uint32_t	edata;
-extern uint32_t	bss;
-extern uint32_t	end;
+extern uint32_t	_code;
+extern uint32_t	_end_code;
+extern uint32_t	_rodata;
+extern uint32_t	_end_rodata;
+extern uint32_t	_end_data;
+extern uint32_t	_bss;
+extern uint32_t	_end;
 
 extern uint32_t	boot_page_directory;
 extern uint32_t	boot_page_table;
