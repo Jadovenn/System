@@ -1,36 +1,27 @@
 /**
- * descriptor_tables_init.c - init gdt/idt
+ * idt_init.c - Interrupt Descriptor Table Init
  * System sources under license MIT
  */
 
 #include <system.h>
 #include <kernel/ports.h>
-#include <cpu/descriptors_table.h>
+#include <cpu/idt.h>
 #include <cpu/isr.h>
 #include <string.h>
 
-extern void	gdt_flush(uint32_t);
 extern void	idt_flush(uint32_t);
 extern isr_t	interrupt_handlers_map[];
 
-static void	__gdt_set_gate(int32_t, uint32_t, uint32_t, uint8_t, uint8_t);
-static void	__idt_set_gate(uint8_t, uint32_t, uint16_t, uint8_t);
-
-gdt_entry_t	gdt_entries[5];
-gdt_ptr_t	gdt_ptr;
 idt_entry_t	idt_entries[256];
 idt_ptr_t	idt_ptr;
 
-void	install_gdt() {
-	gdt_ptr.limit = (sizeof(gdt_entry_t) * 5) - 1;
-	gdt_ptr.base = (uint32_t)&gdt_entries;
-
-	__gdt_set_gate(NULL_SEGMENT, 0, 0, 0, 0);
-	__gdt_set_gate(CODE_SEGMENT, 0, 0xffffffff ,0x9a, 0xcf);
-	__gdt_set_gate(DATA_SEGMENT, 0, 0xffffffff ,0x92, 0xcf);
-	__gdt_set_gate(USER_MODE_CODE_SEGMENT, 0, 0xffffffff ,0xfa, 0xcf);
-	__gdt_set_gate(USER_MODE_DATA_SEGMENT, 0, 0xffffffff ,0xf2, 0xcf);
-	gdt_flush((uint32_t)&gdt_ptr);
+static void	__idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags) {
+	idt_entries[num].base_lo = base & 0xffff;
+	idt_entries[num].base_hi = (base >> 16) & 0xffff;
+	idt_entries[num].sel = sel;
+	idt_entries[num].always0 = 0;
+	idt_entries[num].flags = flags;
+	// idt_entries[num].flags = flags | 0x60; // uncoment for ring 3
 }
 
 void	install_idt() {
@@ -101,26 +92,5 @@ void	install_idt() {
 
 	idt_flush((uint32_t)&idt_ptr);
 	memset(&interrupt_handlers_map, 0, sizeof(isr_t) * 256);
-}
-
-static void	__gdt_set_gate(int32_t num, uint32_t base, uint32_t limit, uint8_t access, uint8_t gran) {
-	gdt_entries[num].base_low = (base & 0xffff);
-	gdt_entries[num].base_middle = (base >> 16) & 0xff;
-	gdt_entries[num].base_hight = (base >> 24) & 0xff;
-
-	gdt_entries[num].limit_low = (limit & 0xffff);
-	gdt_entries[num].granularity = (limit >> 16) & 0x0f;
-
-	gdt_entries[num].granularity |= gran & 0xf0;
-	gdt_entries[num].access = access;
-}
-
-static void	__idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags) {
-	idt_entries[num].base_lo = base & 0xffff;
-	idt_entries[num].base_hi = (base >> 16) & 0xffff;
-	idt_entries[num].sel = sel;
-	idt_entries[num].always0 = 0;
-	idt_entries[num].flags = flags;
-	// idt_entries[num].flags = flags | 0x60; // uncoment for ring 3
 }
 
