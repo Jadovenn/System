@@ -7,6 +7,11 @@
 #include <kernel/va_arg.h>
 #include <drivers/monitor.h>
 
+// TODO: This implementation could be improved in many way.
+// first, some argument does not match what they should really do (l actually match lu)
+// second, __print_format should be improve to accept easly more than one arguments
+// third, print hexa could be better, others too
+
 void	__print_string(char *str) {
 	for (char *c = str; *c; c++) {
 		monitor_write(*c);
@@ -26,6 +31,20 @@ void	__print_decimal(int number) {
 		int next = number / 10;
 		if (next != 0) {
 			__print_decimal(next);
+		}
+		monitor_write((char)digit + 48);
+	}
+}
+
+void	__print_long_decimal(int64_t number) {
+	if (number == 0) {
+		monitor_write('0');
+	}
+	else {
+		uint64_t digit = number % 10;
+		uint64_t next = number / 10;
+		if (next != 0) {
+			__print_long_decimal(next);
 		}
 		monitor_write((char)digit + 48);
 	}
@@ -57,6 +76,7 @@ int	__print_formated(va_list *vl, char *format) {
 	char *string;
 	char character;
 	int  decimal_number;
+	uint64_t long_number;
 	uint32_t hexa_number;
 	switch (*format) {
 		case 's':
@@ -70,6 +90,10 @@ int	__print_formated(va_list *vl, char *format) {
 		case 'd':
 			decimal_number = va_arg(*vl, int);
 			__print_decimal(decimal_number);
+			break;
+		case 'l':
+			long_number = va_arg(*vl, uint64_t);
+			__print_long_decimal(long_number);
 			break;
 		case '#':
 			monitor_write('0');
