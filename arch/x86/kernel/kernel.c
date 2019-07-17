@@ -48,7 +48,7 @@ void	kmain(multiboot_info *header, uint32_t magic) {
 	monitor_init();
 	check_multiboot(header, magic);
 	configure_mmu(header);
-	init_timer(50);
+	//init_timer(50);
 	while(1);
 }
 
