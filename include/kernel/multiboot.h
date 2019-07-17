@@ -43,5 +43,20 @@ struct multiboot_info_t {
 
 typedef struct multiboot_info_t	multiboot_info;
 
+struct multiboot_mmap_info_t {
+	uint32_t	size;
+	uint64_t	addr;
+	uint64_t	len;
+	uint32_t	type;
+} __attribute__((packed));
+
+typedef struct multiboot_mmap_info_t multiboot_mmap_info;
+
+#define MULTIBOOT_MEMORY_AVAILABLE	1
+#define MULTIBOOT_MEMORY_RESERVED	2
+#define MULTIBOOT_MEMORY_ACPI_RECLAINABLE	3
+#define MULTIBOOT_MEMORY_NVS		4
+#define MULTIBOOT_MEMORY_BADRAM		5
+
 #endif // MULTIBOOT_H_
 
