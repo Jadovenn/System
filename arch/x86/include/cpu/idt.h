@@ -1,5 +1,5 @@
 /**
- * desciptors_table.h - gtd/idt structurs, iterruption handler declaration
+ * idt.h - Interrupt Descriptor Table
  * System sources under license MIT
  */
 
@@ -7,28 +7,6 @@
 # define DESCRIPTORS_TABLE_H_
 
 #include <kernel/types.h>
-
-typedef struct gdt_entry_struct {
-	uint16_t	limit_low;	// lower 16bits of the limit
-	uint16_t	base_low;	// lower 16bits of the base
-	uint8_t		base_middle;	// next 8bits of the base
-	uint8_t		access;		// Access flags, determine in which ring this segment can be used
-	uint8_t		granularity;
-	uint8_t		base_hight;	// last 8bits of the base
-} __attribute__((packed))	gdt_entry_t;	
-
-typedef struct gdt_pointer_struct {
-	uint16_t	limit;	// upper 16 bits of all sector limits
-	uint32_t	base;	// address of the first gdt_entry_t
-} __attribute__((packed)) gdt_ptr_t;
-
-enum gdt_segment {
-	NULL_SEGMENT = 0,
-	CODE_SEGMENT = 1,
-	DATA_SEGMENT = 2,
-	USER_MODE_CODE_SEGMENT = 3,
-	USER_MODE_DATA_SEGMENT = 4,
-};
 
 typedef struct idt_entry_struct {
 	uint16_t	base_lo;	// lowest 16 bit of the address to jump
