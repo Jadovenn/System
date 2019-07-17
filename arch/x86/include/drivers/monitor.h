@@ -35,7 +35,6 @@ struct s_cursor_position {
 };
 
 void	monitor_write(char c);
-void	printk_at(char c, int x, int y);
 void	monitor_clear();
 void	monitor_set_color(char color);
 void	monitor_set_cursor_position(struct s_cursor_position *s_cp);
