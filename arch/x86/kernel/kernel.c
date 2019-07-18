@@ -5,6 +5,7 @@
 
 #include <system.h>
 #include <kernel/multiboot.h>
+#include <cpu/heap.h>
 #include <kernel/timer.h>
 
 #include "init/init.h"
@@ -48,6 +49,20 @@ void	kmain(multiboot_info *header, uint32_t magic) {
 	monitor_init();
 	check_multiboot(header, magic);
 	configure_mmu(header);
+	uint32_t *data = kmalloc(sizeof(uint32_t));
+	*data = 42;
+	printk("data: %d, addr: %#x\n", *data, data);
+	uint32_t *array = kmalloc(sizeof(uint32_t) * 10);
+	for (int i = 0; i < 10; i++) {
+		array[i] = i;
+		printk("array[%d]: %d, addr: %#x\n", i, array[i], array + i);
+	}
+	kfree(data);
+	data = kmalloc(sizeof(uint32_t));
+	*data = 42;
+	printk("data: %d, addr: %#x\n", *data, data);
+	kfree(array);
+	kfree(data);
 	//init_timer(50);
 	while(1);
 }
