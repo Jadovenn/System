@@ -39,10 +39,10 @@ static heap_block_header	*_add_new_block() {
 		virtual_memory = new_block;
 	}
 	return new_block;
-}
+} // O(n) = n, where n is the number of block
 
 /**
- * @details fragment one block in two blocks
+ * @brief fragment one block in two blocks
  * @return struct heap_block - new fragmented block or if it is not
  * possible to fragment the block, it return the initial block
  */
@@ -76,27 +76,27 @@ static heap_block_header	*_fragment_block(heap_block_header *block, size_t buddy
 void	*kmalloc(size_t block_size) {
 	heap_block_header *iterator = virtual_memory;
 	heap_block_header *block = NULL;
-	if (block_size > 4096) { // Special Case: size is bigger than physical page size
+	if (block_size > 4096) { // Special Case: requested size is bigger than physical page size
 		return NULL;
 	}
-	if (block_size % 4 != 0) { // Special Case:  block_size requested is not 4 bytes aligned
+	if (block_size % 4 != 0) { // Special Case: requested size is not 4 bytes aligned
 		block_size += block_size % 4;
 	}
 	while (!block) { // Regular Case: until a block is found
-		if (!iterator) { // Special Case: No free block, then add new block
+		if (!iterator) { // Special Case: no free block, then add a new block
 			iterator = _add_new_block();
-			if (!iterator) { // Special Case: Heap overflow, no free heap page anymore
+			if (!iterator) { // Special Case: heap overflow, no free heap page anymore
 				return NULL;
 			}
 		}
 		if (iterator->is_free) { // Regular Case: a free block is found
-			if (iterator->size >= block_size) { // Regular Case: the free block as a good size return it
+			if (iterator->size >= block_size) { // Regular Case: the free block as a good size commit it
 				block = iterator;
 			}
 		}
 		iterator = iterator->next;
 	}
-	if (block->size > block_size) { // Special Case: the block is bigger try to fragment it
+	if (block->size > block_size) { // Special Case: the block is bigger than what we need try to fragment it
 		block = _fragment_block(block, block_size);
 	}
 	block->is_free = FALSE;
@@ -108,6 +108,7 @@ void	*kmalloc(size_t block_size) {
 
 /**
  * @brief mark the ptr's related block as free
+ * @param void* - ptr to match with a block and mark as free
  */
 void	kfree(void *ptr) {
 	uint32_t block_ptr = ((uint32_t)ptr) - (sizeof(heap_block_header) / 4);
@@ -123,5 +124,5 @@ void	kfree(void *ptr) {
 		iterator = iterator->next;
 	}
 	block->is_free = TRUE;
-}
+} // O(n) = n, where n is the number of block
 
