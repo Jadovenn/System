@@ -7,27 +7,27 @@
 #include <kernel/types.h>
 #include <cpu/mmu.h>
 
-struct heap_block_t {
-	struct heap_block_t	*next;
-	struct heap_block_t	*prev;
-	size_t			size;
-	bool			is_free;
-};
+typedef struct heap_block_header_t {
+	struct heap_block_header_t	*next;
+	struct heap_block_header_t	*prev;
+	size_t				size;
+	bool				is_free;
+}		heap_block_header;
 
-struct heap_block_t	*virtual_memory = NULL;
+heap_block_header	*virtual_memory = NULL;
 
 /**
  * @details add a new block to the virtual memory list
- * @return struct heap_block_t - pointer to the new block
+ * @return heap_block_header - pointer to the new block
  */
-static struct heap_block_t	*_add_new_block() {
-	struct heap_block_t *new_block = (struct heap_block_t*)get_new_heap_page(); ;
-	struct heap_block_t *iterator = virtual_memory;
+static heap_block_header	*_add_new_block() {
+	heap_block_header *new_block = (heap_block_header*)get_new_heap_page(); ;
+	heap_block_header *iterator = virtual_memory;
 	if (!new_block) {
 		return NULL;
 	}
 	new_block->next = NULL;
-	new_block->size = get_page_size() - sizeof(struct heap_block_t); 
+	new_block->size = get_page_size() - sizeof(heap_block_header); 
 	new_block->is_free = TRUE;
 	if (iterator) {
 		while (iterator->next)
@@ -46,15 +46,15 @@ static struct heap_block_t	*_add_new_block() {
  * @return struct heap_block - new fragmented block or if it is not
  * possible to fragment the block, it return the initial block
  */
-static struct heap_block_t	*_fragment_block(struct heap_block_t *block, size_t buddy_size) {
-	struct	heap_block_t	*buddy = NULL;
-	size_t	buddy_block_size = buddy_size + sizeof(struct heap_block_t);
+static heap_block_header	*_fragment_block(heap_block_header *block, size_t buddy_size) {
+	heap_block_header	*buddy = NULL;
+	size_t	buddy_block_size = buddy_size + sizeof(heap_block_header);
 	uint32_t ptr = (uint32_t)block;
 	if (block->size <= buddy_block_size + 1) { // Special Case: useless fragmentation, just return the block addr
 		return block;
 	}
 	ptr += buddy_block_size / 4; 
-	buddy = (struct heap_block_t *)ptr;
+	buddy = (heap_block_header*)ptr;
 	buddy->size = block->size - buddy_block_size;
 	block->size = buddy_size; 
 	buddy->is_free = TRUE;
@@ -74,8 +74,8 @@ static struct heap_block_t	*_fragment_block(struct heap_block_t *block, size_t b
  * @return void* - return valide pointer or NULL
  */
 void	*kmalloc(size_t block_size) {
-	struct heap_block_t *iterator = virtual_memory;
-	struct heap_block_t *block = NULL;
+	heap_block_header *iterator = virtual_memory;
+	heap_block_header *block = NULL;
 	if (block_size > 4096) { // Special Case: size is bigger than physical page size
 		return NULL;
 	}
@@ -100,7 +100,7 @@ void	*kmalloc(size_t block_size) {
 		block = _fragment_block(block, block_size);
 	}
 	block->is_free = FALSE;
-	return (void*)(((uint32_t)block) + (sizeof(struct heap_block_t) / 4));
+	return (void*)(((uint32_t)block) + (sizeof(heap_block_header) / 4));
 } // O(n) = n, where n is the number of blocks
 
 // TODO: find why when a block is free and reallocate immediatly, is value is altered
@@ -110,9 +110,9 @@ void	*kmalloc(size_t block_size) {
  * @brief mark the ptr's related block as free
  */
 void	kfree(void *ptr) {
-	uint32_t block_ptr = ((uint32_t)ptr) - (sizeof(struct heap_block_t) / 4);
-	struct heap_block_t *iterator = virtual_memory;
-	struct heap_block_t *block = NULL;
+	uint32_t block_ptr = ((uint32_t)ptr) - (sizeof(heap_block_header) / 4);
+	heap_block_header *iterator = virtual_memory;
+	heap_block_header *block = NULL;
 	while (!block) {
 		if (!iterator) { // Special Case: Ptr does not relate to a block, panic to let dev correct theirs errors
 			PANIC("kfree, %#x does not reffer to any blocks", ptr);
