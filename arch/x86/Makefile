@@ -29,16 +29,19 @@ KERNEL_ASM_SRC	=	asm/interrupt.s \
 KERNEL_C_SRC	=	kernel/kernel.c \
 			kernel/timer.c \
 			kernel/io/ports.c \
-			$(ROOT)/kernel/printk.c \
 			kernel/logs/log.c \
-			kernel/init/monitor_init.c \
 			kernel/init/gdt_init.c \
 			kernel/init/idt_init.c \
 			kernel/init/mmu_init.c \
-			drivers/monitor/monitor.c \
+			kernel/init/monitor_init.c \
+			$(ROOT)/kernel/printk.c \
 			cpu/pic.c \
 			cpu/isr.c \
-			cpu/mmu/mmu.c
+			cpu/cr.c \
+			cpu/mmu/mmu.c \
+			cpu/mmu/heap.c \
+			cpu/mmu/memory.c \
+			drivers/monitor/monitor.c
 
 ## Include directories
 HEADERS		=	-Iinclude \
