@@ -45,7 +45,7 @@ void	install_mmu() {
 	__asm__("mov %%eax, %%cr3" : : );
 }
 
-void	read_multiboot_info_memory_map(multiboot_info *header) {
+static void	read_multiboot_info_memory_map(multiboot_info *header) {
 	printk("mmap_addr %#x\n", header->mmap_addr);
 	printk("mmap_length %#x\n", header->mmap_length);
 	multiboot_mmap_info *mmap;
@@ -57,10 +57,27 @@ void	read_multiboot_info_memory_map(multiboot_info *header) {
 	}
 }
 
+/**
+ * @details configure kernel heap just after the physical
+ * space of the kernel. But in virtual space the heap is before the kernel
+ */
+static void	configure_kernel_heap() {
+	const size_t page_size = get_page_size();
+	mmu.heap.page_count = 0;
+	mmu.heap.base = 0;
+	mmu.heap.top = 0;
+	mmu.heap.placement_address = VIRTUAL_ADDR_TO_PHYSICAL(&_end);
+	if ((mmu.heap.placement_address % page_size) != 0) {
+		mmu.heap.placement_address += mmu.heap.placement_address % page_size;
+	}
+}
+
 // TODO: map free region using the multiboot header
 // the flags as already been tested and memory fields are
 // guaranty to be safe to read
 void	configure_mmu(multiboot_info *header) {
+	mmu.page_size = 0x1000;
+	configure_kernel_heap();
 	read_multiboot_info_memory_map(header);
 }
 
