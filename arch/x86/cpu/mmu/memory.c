@@ -140,6 +140,8 @@ void	*kmalloc(size_t block_size) {
 	return (void*)(((uint32_t)block) + (sizeof(heap_block_header)));
 } // O(n) = n, where n is the number of blocks
 
+// TODO: Kfree could be done in O(n) = 1, add a magic number in heap_block_header
+
 /**
  * @brief mark the ptr's related block as free
  * @details if the pointer is not related to a block, a kernel PANIC is
