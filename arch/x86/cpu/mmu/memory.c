@@ -37,6 +37,7 @@ static heap_block_header	*_add_new_block() {
 	}
 	else {
 		virtual_memory = new_block;
+		new_block->prev = NULL;
 	}
 	return new_block;
 } // O(n) = n, where n is the number of block
@@ -53,7 +54,7 @@ static heap_block_header	*_fragment_block(heap_block_header *block, size_t buddy
 	if (block->size <= buddy_block_size + 1) { // Special Case: useless fragmentation, just return the block addr
 		return block;
 	}
-	ptr += buddy_block_size / 4; 
+	ptr += buddy_block_size; 
 	buddy = (heap_block_header*)ptr;
 	buddy->size = block->size - buddy_block_size;
 	block->size = buddy_size; 
@@ -64,6 +65,34 @@ static heap_block_header	*_fragment_block(heap_block_header *block, size_t buddy
 		block->next->prev = buddy;
 	}
 	block->next = buddy;
+	return block;
+}
+
+/**
+ * @biref merge a block and his buddy
+ * @details the block merge with is right buddy, if the block is already
+ * the size of the physical page, then it is not merged
+ * @param heap_block_header - block to merge with is buddy on the next
+ * @return heap_block_header - the new merged block
+ */
+static heap_block_header	*_merge_block(heap_block_header *block) {
+	heap_block_header	*buddy = block;
+	if (!block->is_free && !buddy) { // Special Case: block is not free or/and as no buddy
+		return block;
+	}
+	if (!buddy->is_free) { // Special Case: buddy is not free
+		return block;
+	}
+	// Special Case: this block are not buddy, because merge them result
+	// in a block bigger than a physical page size
+	if ((block->size + buddy->size) + (2 * sizeof(heap_block_header)) > get_page_size()) {
+		return block;
+	}
+	block->size += buddy->size + sizeof(heap_block_header);
+	block->next = buddy->next;
+	if (buddy->next) {
+		buddy->next->prev = block;
+	}
 	return block;
 }
 
@@ -93,6 +122,14 @@ void	*kmalloc(size_t block_size) {
 			if (iterator->size >= block_size) { // Regular Case: the free block as a good size commit it
 				block = iterator;
 			}
+			else { // Special Case: block is to small, try to merge it with his buddy if it is free
+				if (iterator->prev && iterator->prev->is_free) {
+					iterator = _merge_block(iterator->prev);
+					if (iterator->size >= block_size) {
+						block = iterator;
+					}
+				}
+			}
 		}
 		iterator = iterator->next;
 	}
@@ -100,18 +137,18 @@ void	*kmalloc(size_t block_size) {
 		block = _fragment_block(block, block_size);
 	}
 	block->is_free = FALSE;
-	return (void*)(((uint32_t)block) + (sizeof(heap_block_header) / 4));
+	return (void*)(((uint32_t)block) + (sizeof(heap_block_header)));
 } // O(n) = n, where n is the number of blocks
-
-// TODO: find why when a block is free and reallocate immediatly, is value is altered
-// TODO: on free merge fragmented block if possible
 
 /**
  * @brief mark the ptr's related block as free
+ * @details if the pointer is not related to a block, a kernel PANIC is
+ * raised. The behavior may change in futur. This allow dev to avoid leaks
+ * if they provide a wrong addr. But it not prevent leaks if blocks is never free at all.
  * @param void* - ptr to match with a block and mark as free
  */
 void	kfree(void *ptr) {
-	uint32_t block_ptr = ((uint32_t)ptr) - (sizeof(heap_block_header) / 4);
+	uint32_t block_ptr = ((uint32_t)ptr) - (sizeof(heap_block_header));
 	heap_block_header *iterator = virtual_memory;
 	heap_block_header *block = NULL;
 	while (!block) {
@@ -124,5 +161,6 @@ void	kfree(void *ptr) {
 		iterator = iterator->next;
 	}
 	block->is_free = TRUE;
+	_merge_block(block);
 } // O(n) = n, where n is the number of block
 
