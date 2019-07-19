@@ -59,7 +59,6 @@ void	kmain(multiboot_info *header, uint32_t magic) {
 	}
 	kfree(data);
 	data = kmalloc(sizeof(uint32_t));
-	*data = 42;
 	printk("data: %d, addr: %#x\n", *data, data);
 	kfree(array);
 	kfree(data);
