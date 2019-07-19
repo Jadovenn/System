@@ -18,7 +18,7 @@ struct mmu_t	mmu = {
 	}
 };
 
-size_t	get_page_size() {
+inline size_t	get_page_size() {
 	return mmu.page_size;
 }
 
