@@ -1,11 +1,11 @@
 /**
- * memory.c - Virtual Memory Allocation Management
+ * heap.c - Virtual Memory Allocation Management
  * System sources under license MIT
  */
 
 #include <system.h>
 #include <kernel/types.h>
-#include <cpu/mmu.h>
+#include <kernel/heap.h>
 
 typedef struct heap_block_header_t {
 	struct heap_block_header_t	*next;

@@ -35,12 +35,12 @@ KERNEL_C_SRC	=	kernel/kernel.c \
 			kernel/init/mmu_init.c \
 			kernel/init/monitor_init.c \
 			$(ROOT)/kernel/printk.c \
+			$(ROOT)/kernel/heap.c \
 			cpu/pic.c \
 			cpu/isr.c \
 			cpu/cr.c \
 			cpu/mmu/mmu.c \
-			cpu/mmu/heap.c \
-			cpu/mmu/memory.c \
+			cpu/mmu/page.c \
 			drivers/monitor/monitor.c
 
 ## Include directories

@@ -5,7 +5,7 @@
 
 #include <system.h>
 #include <kernel/multiboot.h>
-#include <cpu/heap.h>
+#include <kernel/heap.h>
 #include <kernel/timer.h>
 
 #include "init/init.h"

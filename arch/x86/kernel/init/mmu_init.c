@@ -6,6 +6,7 @@
 #include <system.h>
 #include <kernel/stdio.h>
 #include <kernel/memlayout.h>
+#include <kernel/heap.h>
 #include <cpu/mmu.h>
 
 static void	__set_section_text_ro() {

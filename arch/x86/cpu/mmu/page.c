@@ -1,11 +1,13 @@
 /**
- * heap.c - Kernel Heap Management
+ * page.c - Kernel Heap Management
  * System sources under license MIT
  */
 
 #include <kernel/memlayout.h>
+#include <kernel/heap.h>
 #include <cpu/cr.h>
 #include <cpu/mmu.h>
+
 
 // TODO: actually we have a dummy physical memory management,
 // and assum that this will never been free because
