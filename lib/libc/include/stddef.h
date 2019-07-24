@@ -8,9 +8,9 @@
 
 #define NULL	((void*)0)
 
-typedef ptrdiff_t	signed int;
-typedef wchar_t		unsigned char;
-typedef size_t		unsigned int;
+typedef signed int	ptrdiff_t;
+typedef unsigned char	wchar_t;
+typedef unsigned int	size_t;
 
 #endif // STDDEF_H_
 
