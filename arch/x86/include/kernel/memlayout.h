@@ -6,7 +6,7 @@
 #ifndef MEMLAYOUT_H_
 # define MEMLAYOUT_H_
 
-#include <kernel/types.h>
+#include <stdint.h>
 
 #define VIRTUAL_KERNEL_SPACE_ADDR 0xC0000000
 

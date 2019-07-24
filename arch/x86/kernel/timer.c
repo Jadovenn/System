@@ -3,12 +3,12 @@
  * System sources under license MIT
  */
 
-#include <system.h>
-#include <cpu/isr.h>
-#include <kernel/types.h>
+#include <stdlib.h>
+#include <stddef.h>
 #include <kernel/io.h>
 #include <kernel/stdio.h>
 #include <kernel/ports.h>
+#include <cpu/isr.h>
 #include <drivers/monitor.h>
 
 uint32_t	tick = 0;
@@ -33,7 +33,7 @@ static void __timer_callback(registers_t regs) {
  */
 void	init_timer(uint32_t frequency) {
 	int ret = register_interrupt_handler(IRQ_0, &__timer_callback);
-	if (ret == ERROR)
+	if (ret == EXIT_FAILURE)
 		printk("register error\n");
 	uint32_t divisor = 1193180 / frequency;
 	port_write_byte(0x43, 0b00110110);

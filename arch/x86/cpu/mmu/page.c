@@ -8,7 +8,6 @@
 #include <cpu/cr.h>
 #include <cpu/mmu.h>
 
-
 // TODO: actually we have a dummy physical memory management,
 // and assum that this will never been free because
 // kmalloc will keep the pages for futher allocation
@@ -22,5 +21,10 @@ void	*get_new_heap_page() {
 	mmu.boot_page_table[new_page / page_size] = new_page | 0x003;
 	flush_tlb();
 	return PHYSICAL_PTR_TO_VIRTUAL(new_page);
+}
+
+void	*map_page(void *physical_addr) {
+	(void)physical_addr;
+	return NULL;
 }
 

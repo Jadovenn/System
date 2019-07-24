@@ -49,7 +49,8 @@ HEADERS		=	-Iinclude \
 			-I$(ROOT)/include
 
 ## Kernel space libc sources
-LIBC_SRC	=	$(ROOT)/lib/libc/memory.c
+LIBC_SRC	=	$(ROOT)/lib/libc/memory.c \
+			$(ROOT)/lib/libc/div.c
 
 ## System OBJ
 KERNEL_ASM_OBJ	=	$(KERNEL_ASM_SRC:.s=.o)

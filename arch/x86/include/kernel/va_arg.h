@@ -6,8 +6,8 @@
 #ifndef VA_ARG_H_
 # define VA_ARG_H_
 
-#include <system.h>
-#include <kernel/types.h>
+#include <stddef.h>
+#include <stdint.h>
 
 static inline unsigned	__align_sizeof(uint8_t size) {
 	int	aligned_value = 8;

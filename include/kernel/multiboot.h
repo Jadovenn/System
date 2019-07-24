@@ -6,7 +6,7 @@
 #ifndef MULTIBOOT_H_
 # define MULTIBOOT_H_
 
-#include <kernel/types.h>
+#include <stdint.h>
 
 #define MULTIBOOT_MAGIC			0x1BADB002
 #define MULTIBOOT_BOOTLOADER_MAGIC	0x2BADB002

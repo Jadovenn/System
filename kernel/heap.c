@@ -3,8 +3,10 @@
  * System sources under license MIT
  */
 
-#include <system.h>
-#include <kernel/types.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include <kernel/panic.h>
 #include <kernel/heap.h>
 
 typedef struct heap_block_header_t {
@@ -28,7 +30,7 @@ static heap_block_header	*_add_new_block() {
 	}
 	new_block->next = NULL;
 	new_block->size = get_page_size() - sizeof(heap_block_header); 
-	new_block->is_free = TRUE;
+	new_block->is_free = true;
 	if (iterator) {
 		while (iterator->next)
 			iterator = iterator->next;
@@ -58,7 +60,7 @@ static heap_block_header	*_fragment_block(heap_block_header *block, size_t buddy
 	buddy = (heap_block_header*)ptr;
 	buddy->size = block->size - buddy_block_size;
 	block->size = buddy_size; 
-	buddy->is_free = TRUE;
+	buddy->is_free = true;
 	buddy->next = block->next;
 	buddy->prev = block;
 	if (block->next) {
@@ -136,7 +138,7 @@ void	*kmalloc(size_t block_size) {
 	if (block->size > block_size) { // Special Case: the block is bigger than what we need try to fragment it
 		block = _fragment_block(block, block_size);
 	}
-	block->is_free = FALSE;
+	block->is_free = false;
 	return (void*)(((uint32_t)block) + (sizeof(heap_block_header)));
 } // O(n) = n, where n is the number of blocks
 
@@ -162,7 +164,7 @@ void	kfree(void *ptr) {
 		}
 		iterator = iterator->next;
 	}
-	block->is_free = TRUE;
+	block->is_free = true;
 	_merge_block(block);
 } // O(n) = n, where n is the number of block
 

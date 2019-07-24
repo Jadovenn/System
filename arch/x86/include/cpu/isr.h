@@ -7,7 +7,7 @@
 #ifndef ISR_H_
 # define ISR_H_
 
-#include <kernel/types.h>
+#include <stdint.h>
 
 typedef struct registers {
 	uint32_t	ds; // datasegment selector

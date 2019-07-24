@@ -5,7 +5,6 @@
 
 #include <kernel/io.h>
 #include <kernel/ports.h>
-#include <kernel/types.h>
 #include <cpu/isr.h>
 #include <cpu/pic.h>
 

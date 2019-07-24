@@ -3,7 +3,7 @@
  * System sources under license MIT
  */
 
-#include <kernel/types.h>
+#include <stdint.h>
 #include <kernel/va_arg.h>
 #include <drivers/monitor.h>
 

@@ -3,7 +3,8 @@
  * System sources under license MIT
  */
 
-#include <system.h>
+#include <stdint.h>
+#include <kernel/panic.h>
 #include <kernel/multiboot.h>
 #include <kernel/heap.h>
 #include <kernel/timer.h>

@@ -6,7 +6,7 @@
 #ifndef DESCRIPTORS_TABLE_H_
 # define DESCRIPTORS_TABLE_H_
 
-#include <kernel/types.h>
+#include <stdint.h>
 
 typedef struct idt_entry_struct {
 	uint16_t	base_lo;	// lowest 16 bit of the address to jump
