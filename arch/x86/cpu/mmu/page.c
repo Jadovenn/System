@@ -3,6 +3,8 @@
  * System sources under license MIT
  */
 
+#include <stddef.h>
+#include <stdint.h>
 #include <kernel/memlayout.h>
 #include <kernel/heap.h>
 #include <cpu/cr.h>
@@ -27,4 +29,6 @@ void	*map_page(void *physical_addr) {
 	(void)physical_addr;
 	return NULL;
 }
+
+
 
