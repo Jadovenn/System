@@ -111,7 +111,7 @@ void	*kmalloc(size_t block_size) {
 		return NULL;
 	}
 	if (block_size % 4 != 0) { // Special Case: requested size is not 4 bytes aligned
-		block_size += block_size % 4;
+		block_size += 4 - block_size % 4;
 	}
 	while (!block) { // Regular Case: until a block is found
 		if (!iterator) { // Special Case: no free block, then add a new block
