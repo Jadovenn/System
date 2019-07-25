@@ -11,6 +11,7 @@ struct mmu_t	mmu = {
 	NULL,
 	NULL,
 	0,
+	NULL,
 	{
 		NULL,
 		NULL,

@@ -6,12 +6,6 @@
 #ifndef MMU_H_
 # define MMU_H_
 
-/**
- * @brief Memory Management Unit
- * @details mmu c object is responsible of free aera mapping, 
- * address translation and placement address
- */
-
 #include <stdint.h>
 #include <stddef.h>
 #include <kernel/multiboot.h>
@@ -40,6 +34,11 @@
 #define PTE_STRUCT_DIRTY		1
 #define PTE_STRUCT_NOT_DIRTY		0
 
+// define kernel reserved byte
+#define KERN_BIT_HEAP	0x1000
+#define KERN_NOT_HEAP	0
+#define KERN_HEAP	1
+
 typedef struct		page_table_entry_t {
 	uint32_t	addr:		20;
 	uint32_t	os_reserved:	3;
@@ -58,7 +57,7 @@ typedef struct		page_table_t {
 }			page_table;
 
 typedef struct		page_directory_t {
-
+	page_table	*page_tables;
 }			page_directory;
 
 typedef struct 		kernel_heap_t {
@@ -68,10 +67,27 @@ typedef struct 		kernel_heap_t {
 	size_t		page_count;
 } 			kheap;
 
-struct mmu_t	{
+#define PHYS_MEMORY_AVAILABLE	1
+#define PHYS_MEMORY_RESERVED	2
+#define PHYS_MEMORY_ACPI	3
+#define PHYS_MEMORY_NVS		4
+#define PHYS_MEMORY_BADRAM	5
+
+int	map_frame_region(uint32_t physical_addr, size_t length, uint32_t memory_type);
+
+typedef struct	frame_t {
+	struct frame_t	*next;
+	uint32_t	*bitset;
+	uint32_t	physical_addr;
+	uint32_t	type;
+	size_t		size;
+}		frame;
+
+struct	mmu_t	{
 	uint32_t	*boot_page_directory;
 	uint32_t	*boot_page_table;
 	size_t		page_size;
+	frame		*frames;
 	kheap		heap;
 };
 
