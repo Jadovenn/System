@@ -41,6 +41,7 @@ KERNEL_C_SRC	=	kernel/kernel.c \
 			cpu/cr.c \
 			cpu/mmu/mmu.c \
 			cpu/mmu/page.c \
+			cpu/mmu/frame.c \
 			drivers/monitor/monitor.c
 
 ## Include directories
