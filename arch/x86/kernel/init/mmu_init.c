@@ -7,6 +7,7 @@
 #include <kernel/stdio.h>
 #include <kernel/memlayout.h>
 #include <kernel/heap.h>
+#include <kernel/panic.h>
 #include <cpu/mmu.h>
 
 static void	__set_section_text_ro() {
@@ -54,7 +55,13 @@ static void	read_multiboot_info_memory_map(multiboot_info *header) {
 			(uint32_t)mmap < PHYSICAL_ADDR_TO_VIRTUAL(header->mmap_addr) + header->mmap_length;
 			mmap = (multiboot_mmap_info*)((uint32_t) mmap + mmap->size + sizeof(mmap->size)))
 	{
-		printk("mmap entry size: %d, addr: %l, len: %l bytes, type: %d\n", mmap->size, mmap->addr, mmap->len, mmap->type);
+		map_frame_region((uint32_t)mmap->addr, (uint32_t)mmap->len, mmap->type);
+	}
+	if (!mmu.frames) {
+		PANIC("No physical frames as been read, could not manage memory.");
+	}
+	for (frame *iterator = mmu.frames; iterator; iterator = iterator->next) {
+		printk("frame entry size: %d, addr: %#x, len: %d frames\n", iterator->size, iterator->physical_addr, iterator->type);
 	}
 }
 
@@ -69,7 +76,7 @@ static void	configure_kernel_heap() {
 	mmu.heap.top = 0;
 	mmu.heap.placement_address = VIRTUAL_ADDR_TO_PHYSICAL(&_end);
 	if ((mmu.heap.placement_address % page_size) != 0) {
-		mmu.heap.placement_address += mmu.heap.placement_address % page_size;
+		mmu.heap.placement_address += (0x1000 - (mmu.heap.placement_address % page_size));
 	}
 }
 
@@ -79,6 +86,6 @@ static void	configure_kernel_heap() {
 void	configure_mmu(multiboot_info *header) {
 	mmu.page_size = 0x1000;
 	configure_kernel_heap();
-	read_multiboot_info_memory_map(header);
+	//read_multiboot_info_memory_map(header);
 }
 
