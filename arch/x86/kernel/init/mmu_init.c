@@ -61,7 +61,7 @@ static void	read_multiboot_info_memory_map(multiboot_info *header) {
 		PANIC("No physical frames as been read, could not manage memory.");
 	}
 	for (frame *iterator = mmu.frames; iterator; iterator = iterator->next) {
-		printk("frame entry size: %d, addr: %#x, len: %d frames\n", iterator->size, iterator->physical_addr, iterator->type);
+		printk("frame entry type: %d, addr: %#x, size: %d frames\n", iterator->type, iterator->physical_addr, iterator->size);
 	}
 }
 
@@ -86,6 +86,6 @@ static void	configure_kernel_heap() {
 void	configure_mmu(multiboot_info *header) {
 	mmu.page_size = 0x1000;
 	configure_kernel_heap();
-	//read_multiboot_info_memory_map(header);
+	read_multiboot_info_memory_map(header);
 }
 
