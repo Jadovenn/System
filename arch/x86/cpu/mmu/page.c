@@ -19,7 +19,7 @@ void	*get_new_heap_page() {
 	const size_t page_size = get_page_size();
 	uint32_t new_page = mmu.heap.placement_address + mmu.heap.page_count * page_size;
 	mmu.heap.page_count += 1;
-	mmu.heap.top = PHYSICAL_PTR_TO_VIRTUAL(new_page);
+	mmu.heap.top = PHYSICAL_PTR_TO_VIRTUAL(new_page + 0x1000);
 	mmu.boot_page_table[new_page / page_size] = new_page | 0x003;
 	flush_tlb();
 	return PHYSICAL_PTR_TO_VIRTUAL(new_page);
