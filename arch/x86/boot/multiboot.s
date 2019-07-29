@@ -15,7 +15,7 @@
 ;; System sources under license MIT
 ;; ------------------------------------
 
-%include "./boot/memlayout.s"
+%include "arch/x86/boot/memlayout.s"
 
 ;; Constant
 MBALIGN  equ	1 << 0
