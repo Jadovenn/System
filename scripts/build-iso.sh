@@ -7,7 +7,7 @@
 
 mkdir -p isodir/boot/grub
 cp system isodir/boot/system
-cp script/grub.cfg isodir/boot/grub/grub.cfg
+cp scripts/grub.cfg isodir/boot/grub/grub.cfg
 grub-mkrescue -o "$1" isodir
 rm -rf isodir
 exit 0
