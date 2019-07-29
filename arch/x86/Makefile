@@ -36,6 +36,7 @@ KERNEL_C_SRC	=	kernel/kernel.c \
 			kernel/init/monitor_init.c \
 			$(ROOT)/kernel/printk.c \
 			$(ROOT)/kernel/heap.c \
+			$(ROOT)/kernel/main.c \
 			cpu/pic.c \
 			cpu/isr.c \
 			cpu/cr.c \
@@ -51,7 +52,8 @@ HEADERS		=	-Iinclude \
 
 ## Kernel space libc sources
 LIBC_SRC	=	$(ROOT)/lib/libc/memory.c \
-			$(ROOT)/lib/libc/div.c
+			$(ROOT)/lib/libc/div.c \
+			$(ROOT)/lib/libc/string.c
 
 ## System OBJ
 KERNEL_ASM_OBJ	=	$(KERNEL_ASM_SRC:.s=.o)
