@@ -11,6 +11,8 @@
 
 #include "init/init.h"
 
+extern void main(int ac, char **av);
+
 /**
  * @brief install CPU related unit
  */
@@ -77,6 +79,7 @@ void	kmain(multiboot_info *header, uint32_t magic) {
 	check_multiboot(header, magic);
 	configure_mmu(header);
 	//init_timer(50);
+	main(0, NULL);
 	while(1);
 }
 
