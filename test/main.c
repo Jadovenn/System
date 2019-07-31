@@ -7,6 +7,7 @@
 #include <drivers/monitor.h>
 
 extern int test_memccpy();
+extern int test_strlen();
 
 void	klog(int status, char *msg) {
 	monitor_set_color(BLACK_GREY);
@@ -29,10 +30,14 @@ void	klog(int status, char *msg) {
 }
 
 int	main(int ac, char **av) {
+	(void)ac;
+	(void)av;
 	int result;
 	
 	result = test_memccpy();
 	klog(result, "test memccpy()");
+	result = test_strlen();
+	klog(result, "test strlen()");
 	return 0;
 }
 
