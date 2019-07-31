@@ -52,7 +52,8 @@ endif ## END DEBUG
 ifeq ($(MODE), test) ## TEST
 
 KERNEL_C_SRC	+=	test/main.c \
-			test/memccpy.c
+			test/memccpy.c \
+			test/strlen.c
 CFLAGS		+=	-g
 
 endif ## END TEST
@@ -146,7 +147,7 @@ all:		$(KERNEL)
 
 iso:		$(SYSTEM_ISO)
 
-clean:
+clean:		dependency-clean
 	rm -f	$(KERNEL)
 	rm -f	$(KERNEL_BOOT)
 	rm -f	$(SYSTEM_IMG)
@@ -170,7 +171,7 @@ debug:	$(SYSTEM_ISO) $(SYSTEM_SYM)
 	gdb -ex "target remote localhost:1234" -ex "symbol-file $(SYSTEM_SYM_MLTB)"
 
 ## Generation rules
-$(KERNEL): $(MULTIBOOT) $(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ)
+$(KERNEL):	$(LIBC) $(MULTIBOOT) $(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ)
 	$(LD) -o $(KERNEL) $(MULTIBOOT) $(KERNEL_ASM_OBJ) $(KERNEL_C_OBJ) $(LDFLAGS)
 
 $(MULTIBOOT):
@@ -180,6 +181,12 @@ $(MULTIBOOT):
 	$(CC) $(CFLAGS) -c $< -o $@
 .s.o:
 	$(NASM) $< -f elf -o $@
+
+$(LIBC):
+	$(MAKE) -C lib/libc
+
+dependency-clean:
+	$(MAKE) -C lib/libc clean
 
 $(SYSTEM_ISO):	$(KERNEL)
 	scripts/build-iso.sh $(SYSTEM_ISO)

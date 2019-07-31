@@ -42,9 +42,9 @@ ifeq ($(UNAME), Linux)
 	NASM	=	nasm
 endif
 
-all:	lib
+all:		$(NAME)
 
-lib:	$(OBJS)
+$(NAME):	$(OBJS)
 	$(AR) rcs $(NAME) $(OBJS)
 
 clean:
