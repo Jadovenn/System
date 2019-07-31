@@ -20,7 +20,7 @@ ROOT		=	../..
 
 ARCH	=	x86
 TARGET	=	arch/$(ARCH)
-MODE	=	release
+MODE	=	debug
 
 LIBC_PATH	=	lib/libc
 LIBC		=	$(LIBC_PATH)/libc.a
