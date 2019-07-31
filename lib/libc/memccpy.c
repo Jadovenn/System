@@ -17,26 +17,26 @@ void	*memccpy(void *restrict target, const void *restrict source, int c, size_t 
 	unsigned idx = 0;
 	void	 *occurence_ptr = NULL;
 
-	while (n - idx % 4) { // Read first byte
+	while ((n - idx) % 4 != 0) { // Read first byte
 		byte_ptr_target[idx] = byte_ptr_source[idx];
-		idx += 1;
 		if (byte_ptr_source[idx] == character) {
-			occurence_ptr = byte_ptr_target + idx;
+			occurence_ptr = byte_ptr_target + idx + 1;
 			return occurence_ptr;
 		}
+		idx += 1;
 	}
 	word_ptr_target = byte_ptr_target + idx; // use aligned pointer
 	word_ptr_source = byte_ptr_source + idx;
 	for (; idx < n; idx += 4) { // read word by word
 		uint32_t chunck = word_ptr_source[idx / 4];
-		if (_has_byte(chunck, character)) { // if chat is found go step by step and return
+		if (_has_byte(chunck, character)) { // if char is found, go byte by byte and return
 			while (idx < n) { 
 				byte_ptr_target[idx] = byte_ptr_source[idx];
-				idx += 1;
 				if (byte_ptr_source[idx] == character) {
-					occurence_ptr = byte_ptr_target + idx;
+					occurence_ptr = byte_ptr_target + idx + 1;
 					return occurence_ptr;
 				}
+				idx += 1;
 			}
 		} else { // else go word by word
 			word_ptr_target[idx / 4] = chunck;
