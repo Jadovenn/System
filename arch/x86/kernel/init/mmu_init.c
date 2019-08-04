@@ -9,6 +9,7 @@
 #include <kernel/heap.h>
 #include <kernel/panic.h>
 #include <cpu/mmu.h>
+#include <cpu/cr.h>
 
 static void	__set_section_text_ro() {
 	uint32_t text_start_addr = VIRTUAL_ADDR_TO_PHYSICAL(&_kernel_start);
@@ -43,8 +44,7 @@ void	install_mmu() {
 	mmu.boot_page_table = &boot_page_table;
 	__set_section_text_ro();
 	__set_section_rodata_ro();
-	__asm__("mov %%cr3, %%eax" : : );
-	__asm__("mov %%eax, %%cr3" : : );
+	flush_tlb();
 }
 
 static void	read_multiboot_info_memory_map(multiboot_info *header) {
