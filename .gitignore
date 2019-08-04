@@ -1,13 +1,9 @@
-<<<<<<< HEAD
 
 ## Temporary
-=======
->>>>>>> ddc1364... Initial commit: System
 *.swp
 *.o
 *.swp
 *~
-<<<<<<< HEAD
 
 ## Sessions
 *.DS_Store
@@ -17,24 +13,14 @@
 ## Binaries
 out/*
 System_v*
-=======
-*.DS_Store
-*.gdb_history
-*peda-session-*
-bin/
-*system
->>>>>>> ddc1364... Initial commit: System
 *.bin
 *.elf
 *.img
 *.iso
 *.a
 
-<<<<<<< HEAD
 ## Sysroot
 output/
 sysroot/boot/grub/grub.cfg
 sysroot/boot/*.kern
 sysroot/usr/include/*.h
-=======
->>>>>>> ddc1364... Initial commit: System

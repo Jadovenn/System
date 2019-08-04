@@ -3,7 +3,6 @@
  * System sources under license
  */
 
-<<<<<<< HEAD
 #include <kernel/stdio.h>
 
 #include <cpuid/cpuid.h>
@@ -24,11 +23,3 @@ int main(int ac, char** av) {
 	}
 	return 0;
 }
-=======
-int	main(int ac, char **av) {
-	(void)ac;
-	(void)av;
-	return 0;
-}
-
->>>>>>> ddc1364... Initial commit: System

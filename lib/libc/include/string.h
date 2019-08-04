@@ -4,11 +4,7 @@
  */
 
 #ifndef STRING_H_
-<<<<<<< HEAD
 #define STRING_H_
-=======
-# define STRING_H_
->>>>>>> ddc1364... Initial commit: System
 
 #include <stddef.h>
 
@@ -19,11 +15,7 @@
  * @param size {unsigned long} - number of byte to copy
  * @return {void*} - original value of dest
  */
-<<<<<<< HEAD
 void* memcpy(void* dest, const void* src, unsigned long size);
-=======
-void	*memcpy(void *dest, const void *src, unsigned long size);
->>>>>>> ddc1364... Initial commit: System
 
 /**
  * @details set n bytes with values byte to dest
@@ -32,7 +24,6 @@ void	*memcpy(void *dest, const void *src, unsigned long size);
  * @param byte {int} - value of the byte, (converter in unsigned char)
  * @param size {unsigned long} - number of byte to set
  */
-<<<<<<< HEAD
 void* memset(void* dest, int byte, unsigned long size);
 
 /**
@@ -67,13 +58,3 @@ size_t strlen(const char* s);
 char* strstr(const char* s1, const char* s2);
 
 #endif // STRING_H_
-=======
-void	*memset(void *dest, int byte, unsigned long size);
-void	*memccpy(void *restrict s1, const void *restrict s2, int c, size_t n);
-
-size_t	strlen(const char *s);
-char	*strstr(const char *s1, const char *s2);
-
-#endif // STRING_H_
-
->>>>>>> ddc1364... Initial commit: System

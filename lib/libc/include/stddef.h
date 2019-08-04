@@ -4,7 +4,6 @@
  */
 
 #ifndef STDDEF_H_
-<<<<<<< HEAD
 #define STDDEF_H_
 
 #define NULL ((void*)0)
@@ -14,15 +13,3 @@ typedef unsigned char wchar_t;
 typedef unsigned int size_t;
 
 #endif // STDDEF_H_
-=======
-# define STDDEF_H_
-
-#define NULL	((void*)0)
-
-typedef signed int	ptrdiff_t;
-typedef unsigned char	wchar_t;
-typedef unsigned int	size_t;
-
-#endif // STDDEF_H_
-
->>>>>>> ddc1364... Initial commit: System
