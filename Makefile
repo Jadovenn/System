@@ -7,9 +7,10 @@
 ##                 CONSTANTS                    ##
 ##################################################
 
-VERSION		=	v0.0.2
+VERSION		=	0.0.2
+RELEASE_NAME	=	bare_bones
 KERNEL		=	system
-SYSTEM_ISO	=	system-$(VERSION)-bare_bones.iso
+SYSTEM_ISO	=	$(KERNEL)_v$(VERSION)-$(RELEASE_NAME).iso
 
 ARCH	=	x86
 TARGET	=	arch/$(ARCH)
@@ -28,8 +29,10 @@ COMMON_SRC	=	kernel/printk.c \
 COMMON_HEADERS	=	-Iinclude \
 			-Ilib/libc/include
 
+KERNEL_SRCS	=	kernel/main.c
 
 TEST_SRCS	=	test/main.c \
+			test/heap.c \
 			test/memccpy.c \
 			test/strlen.c
 
@@ -66,14 +69,14 @@ HEADERS		+=	$(COMMON_HEADERS)
 
 ifeq ($(MODE), release) ## RELEASE
 
-SRCS		+=	kernel/main.c
+SRCS		+=	$(KERNEL_SRCS)
 
 CFLAGS		+=	-O3
 
 endif ## END RELEASE
 ifeq ($(MODE), debug) ## DEBUG
 
-SRCS		+=	kernel/main.c
+SRCS		+=	$(KERNEL_SRCS)
 
 CFLAGS		+=	-g
 
