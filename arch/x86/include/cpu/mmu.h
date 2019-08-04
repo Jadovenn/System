@@ -74,6 +74,8 @@ typedef struct 		kernel_heap_t {
 #define PHYS_MEMORY_BADRAM	5
 
 int	map_frame_region(uint32_t physical_addr, size_t length, uint32_t memory_type);
+uint32_t	first_available_page();
+void		release_frame(uint32_t physical_addr);
 
 typedef struct	frame_t {
 	struct frame_t	*next;
