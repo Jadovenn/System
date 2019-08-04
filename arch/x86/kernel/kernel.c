@@ -43,32 +43,6 @@ void	check_multiboot(multiboot_info *header, uint32_t magic) {
 	printk("Upper Memory Size: %dKiB\n", header->mem_upper);
 }
 
-void	memory_alloc_test() {
-	int block_size = sizeof(uint32_t);
-	int block_total_nb = 4096 / 4;
-	int block_nb = 0;
-	uint32_t *ptr = NULL;
-	uint32_t *it = NULL;
-	it = kmalloc(block_size);
-	ptr = it;
-	block_nb += 1;
-	for (; block_nb < block_total_nb; block_nb += 1) {
-		printk("alloc number: %d\n", block_nb);
-		uint32_t *block = kmalloc(block_size);
-		if (!it)
-			break;
-		*it = (uint32_t)block;
-		it = block;
-	}
-	printk("nb block allocated: %d\n", block_nb);
-	while (ptr != it) {
-		uint32_t *next = (uint32_t*)*ptr;
-		kfree(ptr);
-		ptr = next;
-	}
-	kfree(ptr);
-}
-
 /**
  * @brief kernel entrypoint
  * @details the order init function are called matter a lot

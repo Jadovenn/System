@@ -19,6 +19,7 @@ size_t	get_page_size();
 void	*get_new_heap_page();
 
 void	*kmalloc(size_t);
+void	*kmalloc_physical(size_t, uint32_t*);
 
 void	kfree(void *);
 
