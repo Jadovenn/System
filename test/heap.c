@@ -8,6 +8,46 @@
 #include <stdlib.h>
 #include <kernel/heap.h>
 
+int	test_heap_physical() {
+	uint32_t *data_1 = NULL;
+	uint32_t *data_2 = NULL;
+	uint32_t physical_addr_1;
+	uint32_t physical_addr_2;
+
+	// compute physcial address from virtual
+	data_1 = kmalloc_physical(sizeof(uint32_t), &physical_addr_1);
+	if (!data_1) {
+		return EXIT_FAILURE;
+	}
+	if (((uint32_t)data_1) - 0xC0000000 != physical_addr_1) {
+		kfree(data_1);
+		return EXIT_FAILURE;
+	}
+	kfree(data_1);
+	data_1 = kmalloc_physical(sizeof(uint32_t) * 100, &physical_addr_1);
+	if (!data_1) {
+		return EXIT_FAILURE;
+	}
+	data_2 = kmalloc_physical(sizeof(uint32_t) * 3, &physical_addr_2);
+	if (!data_2) {
+		kfree(data_1);
+		return EXIT_FAILURE;
+	}
+	if (((uint32_t)data_1) - 0xC0000000 != physical_addr_1) {
+		kfree(data_1);
+		kfree(data_2);
+		return EXIT_FAILURE;
+	}
+	if (((uint32_t)data_2) - 0xC0000000 != physical_addr_2) {
+		kfree(data_1);
+		kfree(data_2);
+		return EXIT_FAILURE;
+	}
+	kfree(data_1);
+	kfree(data_2);
+	return EXIT_SUCCESS;
+}
+
 int	test_heap_fragmentation() {
 	uint32_t	*data_1 = NULL;
 	uint32_t	*data_2 = NULL;
@@ -52,6 +92,8 @@ int	test_heap_big_alloc() {
 	int block_nb = 0;
 	uint32_t *ptr = NULL;
 	uint32_t *it = NULL;
+
+	// Make paging system work
 	it = kmalloc(block_size);
 	if (!it) {
 		return EXIT_FAILURE;

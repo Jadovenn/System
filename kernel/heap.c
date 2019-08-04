@@ -12,6 +12,7 @@
 typedef struct heap_block_header_t {
 	struct heap_block_header_t	*next;
 	struct heap_block_header_t	*prev;
+	uint32_t			physical_addr;
 	size_t				size;
 	bool				is_free;
 }		heap_block_header;
@@ -23,7 +24,8 @@ heap_block_header	*virtual_memory = NULL;
  * @return heap_block_header - pointer to the new block
  */
 static heap_block_header	*_add_new_block() {
-	heap_block_header *new_block = (heap_block_header*)get_new_heap_page(); ;
+	uint32_t	physical_addr;
+	heap_block_header *new_block = (heap_block_header*)get_new_heap_page(&physical_addr); 
 	heap_block_header *iterator = virtual_memory;
 	if (!new_block) {
 		return NULL;
@@ -31,6 +33,7 @@ static heap_block_header	*_add_new_block() {
 	new_block->next = NULL;
 	new_block->size = get_page_size() - sizeof(heap_block_header); 
 	new_block->is_free = true;
+	new_block->physical_addr = physical_addr;
 	if (iterator) {
 		while (iterator->next)
 			iterator = iterator->next;
@@ -58,6 +61,7 @@ static heap_block_header	*_fragment_block(heap_block_header *block, size_t buddy
 	}
 	ptr += buddy_block_size; 
 	buddy = (heap_block_header*)ptr;
+	buddy->physical_addr = block->physical_addr + buddy_block_size;
 	buddy->size = block->size - buddy_block_size;
 	block->size = buddy_size; 
 	buddy->is_free = true;
@@ -78,7 +82,7 @@ static heap_block_header	*_fragment_block(heap_block_header *block, size_t buddy
  * @return heap_block_header - the new merged block
  */
 static heap_block_header	*_merge_block(heap_block_header *block) {
-	heap_block_header	*buddy = block;
+	heap_block_header	*buddy = block->next;
 	if (!block->is_free && !buddy) { // Special Case: block is not free or/and as no buddy
 		return block;
 	}
@@ -98,13 +102,17 @@ static heap_block_header	*_merge_block(heap_block_header *block) {
 	return block;
 }
 
+void *kmalloc(size_t block_size) {
+	return kmalloc_physical(block_size, NULL);
+}
+
 /**
  * @brief kernel dynamic allocation
  * @attention block bigger than page size are not provided
  * @arg size_t - block_size desire size for 
  * @return void* - return valide pointer or NULL
  */
-void	*kmalloc(size_t block_size) {
+void	*kmalloc_physical(size_t block_size, uint32_t *physical_addr) {
 	heap_block_header *iterator = virtual_memory;
 	heap_block_header *block = NULL;
 	if (block_size > 4096) { // Special Case: requested size is bigger than physical page size
@@ -139,6 +147,9 @@ void	*kmalloc(size_t block_size) {
 		block = _fragment_block(block, block_size);
 	}
 	block->is_free = false;
+	if (physical_addr) {
+		*physical_addr = block->physical_addr + sizeof(heap_block_header);
+	}
 	return (void*)(((uint32_t)block) + (sizeof(heap_block_header)));
 } // O(n) = n, where n is the number of blocks
 

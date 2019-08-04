@@ -8,6 +8,7 @@
 
 extern int test_memccpy();
 extern int test_strlen();
+extern int test_heap_physical();
 extern int test_heap_fragmentation();
 extern int test_heap_big_alloc();
 
@@ -36,6 +37,8 @@ int	main(int ac, char **av) {
 	(void)av;
 	int result;
 
+	result = test_heap_physical();
+	klog(result, "test heap_physical()");
 	result = test_heap_fragmentation();
 	klog(result, "test heap_fragmentation()");
 	result = test_heap_big_alloc();
