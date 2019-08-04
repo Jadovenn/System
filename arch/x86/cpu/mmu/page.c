@@ -5,6 +5,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include <kernel/memlayout.h>
 #include <kernel/heap.h>
 #include <cpu/cr.h>
@@ -15,9 +16,12 @@
 // kmalloc will keep the pages for futher allocation
 // It would be better to use the save function for all
 // page allocation
-void	*get_new_heap_page() {
+void	*get_new_heap_page(uint32_t *physical_addr) {
 	const size_t page_size = get_page_size();
 	uint32_t new_page = mmu.heap.placement_address + mmu.heap.page_count * page_size;
+	if (physical_addr) {
+		*physical_addr = new_page;
+	}
 	mmu.heap.page_count += 1;
 	mmu.heap.top = PHYSICAL_PTR_TO_VIRTUAL(new_page + 0x1000);
 	mmu.boot_page_table[new_page / page_size] = new_page | 0x003;
@@ -25,10 +29,11 @@ void	*get_new_heap_page() {
 	return PHYSICAL_PTR_TO_VIRTUAL(new_page);
 }
 
-void	*map_page(void *physical_addr) {
+void	*get_page(uint32_t *physical_addr, bool kernel, bool read_only) {
+	//uint32_t	ph_addr = first_available_page();
 	(void)physical_addr;
+	(void)kernel;
+	(void)read_only;
 	return NULL;
 }
-
-
 
