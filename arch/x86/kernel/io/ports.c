@@ -3,6 +3,9 @@
  * System sources under license MIT
  */
 
+// inline assenbly with gcc: https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html
+// where to find info about ports: https://wiki.osdev.org/Where_Can_I_Find_Information_About_Ports 
+
 unsigned char	port_read_byte(unsigned short port) {
 	unsigned char	result;
 	__asm__("in %%dx, %%al" : "=a" (result) : "d" (port));
