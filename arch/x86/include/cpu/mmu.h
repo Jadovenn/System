@@ -72,6 +72,8 @@ typedef struct 		kernel_heap_t {
 #define PHYS_MEMORY_ACPI	3
 #define PHYS_MEMORY_NVS		4
 #define PHYS_MEMORY_BADRAM	5
+#define KERN_MEMORY_SPACE	11
+#define KERN_MEMORY_HEAP	12
 
 int	map_frame_region(uint32_t physical_addr, size_t length, uint32_t memory_type);
 uint32_t	first_available_page();
