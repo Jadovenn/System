@@ -115,7 +115,7 @@ run:		$(SYSTEM_ISO)
 	qemu-system-i386 -cdrom $(SYSTEM_ISO)
 
 debug:	$(SYSTEM_ISO) $(SYSTEM_SYM)
-	qemu-system-i386 -s -S -fda $(SYSTEM_ISO) &
+	qemu-system-i386 -m 1G -s -S -fda $(SYSTEM_ISO) &
 	gdb -ex "target remote localhost:1234" -ex "symbol-file $(SYSTEM_SYM_MLTB)"
 
 ## Generation rules
