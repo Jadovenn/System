@@ -181,10 +181,10 @@ $(SYSTEM_ISO):
 	scripts/build-iso.sh $(SYSTEM_ISO)
 
 run:		$(SYSTEM_ISO)
-	qemu-system-i386 -cdrom $(SYSTEM_ISO)
+	qemu-system-i386 -m 1G -cdrom $(SYSTEM_ISO)
 
 debug:		$(SYSTEM_ISO)
-	qemu-system-i386 -s -S -fda $(SYSTEM_ISO) &
+	qemu-system-i386 -m 1G -s -S -fda $(SYSTEM_ISO) &
 	gdb -ex "target remote localhost:1234" -ex "symbol-file $(KERNEL)"
 
 .PHONY:	all iso .c.o .s.o clean re run debug 
