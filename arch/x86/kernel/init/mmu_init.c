@@ -3,6 +3,7 @@
  * System under license MIT
  */
 
+#include <stdlib.h>
 #include <system.h>
 #include <kernel/stdio.h>
 #include <kernel/memlayout.h>
@@ -10,6 +11,15 @@
 #include <kernel/panic.h>
 #include <cpu/mmu.h>
 #include <cpu/cr.h>
+
+/**
+ * Step to initialize memory management unit
+ * 1. install mmu by marking read-only section in the boot page table
+ * 2. initialize heap marker to startup the heap algorithm
+ * 3. read and set physical frames from the multiboot header (require the heap working)
+ * 4. mark physical frame reserved for devices, heap and kernel spaces
+ * 5. register page fault interrupt handler
+ */
 
 static void	__set_section_text_ro() {
 	uint32_t text_start_addr = VIRTUAL_ADDR_TO_PHYSICAL(&_kernel_start);
@@ -47,7 +57,7 @@ void	install_mmu() {
 	flush_tlb();
 }
 
-static void	read_multiboot_info_memory_map(multiboot_info *header) {
+void	read_multiboot_info_memory_map(multiboot_info *header) {
 	printk("mmap_addr %#x\n", header->mmap_addr);
 	printk("mmap_length %#x\n", header->mmap_length);
 	multiboot_mmap_info *mmap;
@@ -55,14 +65,25 @@ static void	read_multiboot_info_memory_map(multiboot_info *header) {
 			(uint32_t)mmap < PHYSICAL_ADDR_TO_VIRTUAL(header->mmap_addr) + header->mmap_length;
 			mmap = (multiboot_mmap_info*)((uint32_t) mmap + mmap->size + sizeof(mmap->size)))
 	{
-		map_frame_region((uint32_t)mmap->addr, (uint32_t)mmap->len, mmap->type);
+		int result = map_frame_region((uint32_t)mmap->addr, (uint32_t)mmap->len, mmap->type);
+		if (result == EXIT_FAILURE) {
+			printk("Warning memory region not mapped\n");
+		}
 	}
-	if (!mmu.frames) {
-		PANIC("No physical frames as been read, could not manage memory.");
-	}
-	for (frame *iterator = mmu.frames; iterator; iterator = iterator->next) {
-		printk("frame entry type: %d, addr: %#x, size: %d frames\n", iterator->type, iterator->physical_addr, iterator->size);
-	}
+}
+
+/**
+ * @brief mark reserved frames
+ */
+static void	mark_kernel_frames() {
+	//frame	*iterator = mmu.frames;
+}
+
+static void	mark_heap_frames() {
+}
+
+static void	mark_devices_frames() {
+
 }
 
 /**
@@ -87,5 +108,14 @@ void	configure_mmu(multiboot_info *header) {
 	mmu.page_size = 0x1000;
 	configure_kernel_heap();
 	read_multiboot_info_memory_map(header);
+	mark_kernel_frames();
+	mark_heap_frames();
+	mark_devices_frames();
+	if (!mmu.frames) {
+		PANIC("No physical frames as been read, could not manage memory.");
+	}
+	for (frame *iterator = mmu.frames; iterator; iterator = iterator->next) {
+		printk("frame entry type: %d, addr: %#x, size: %d frames\n", iterator->type, iterator->physical_addr, iterator->size);
+	}
 }
 
