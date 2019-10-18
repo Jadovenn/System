@@ -8,8 +8,10 @@
 
 #ifdef __i386__
 
-# define _has_zero(word)	((word - 0x01010101UL) & ((~word) & 0x80808080UL))
-# define _has_byte(word, byte)  (_has_zero(((word) ^ ((~0UL)/255 * (byte)))))
+# define _has_zero(dword)	((dword - 0x01010101UL) & ((~dword) & 0x80808080UL))
+# define _has_byte(dword, byte)  (_has_zero(((dword) ^ ((~0UL)/255 * (byte)))))
+
+# define _has_zero_16(word)	((word - (unsigned short)0x0101) & ((~word) & (unsigned short)0x8080))
 
 #endif // __i386__
 
