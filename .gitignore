@@ -12,6 +12,6 @@ bin/
 *.img
 *.iso
 *.a
-sysroot/*.kern
-sysroot/*.h
+sysroot/boot/*.kern
+sysroot/usr/include/*.h
 
