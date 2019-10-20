@@ -7,10 +7,11 @@
 ##                 CONSTANTS                    ##
 ##################################################
 
-VERSION		=	0.0.2
+VERSION		=	0.0.3
 RELEASE_NAME	=	bare_bones
-KERNEL		=	system
-SYSTEM_ISO	=	$(KERNEL)_v$(VERSION)-$(RELEASE_NAME).iso
+NAME		=	system
+KERNEL		=	$(NAME).kern
+SYSTEM_ISO	=	$(NAME)_v$(VERSION)-$(RELEASE_NAME).iso
 
 ARCH	=	x86
 TARGET	=	arch/$(ARCH)
