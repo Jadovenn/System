@@ -28,5 +28,8 @@ struct div_t	div(int number, int denom);
 struct ldiv_t	ldiv(long number, long denom);
 struct lldiv_t	lldiv(long long number, long long denom);
 
+__attribute__((__noreturn__))
+void	abort(void);
+
 #endif // STDLIB_H_
 
