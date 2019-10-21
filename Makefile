@@ -32,10 +32,7 @@ COMMON_HEADERS	=	-Iinclude \
 
 KERNEL_SRCS	=	kernel/main.c
 
-TEST_SRCS	=	test/main.c \
-			test/heap.c \
-			test/memccpy.c \
-			test/strlen.c
+include  test/make.config
 
 ARCH_DIR	=	arch/$(ARCH)
 
