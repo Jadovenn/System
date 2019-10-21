@@ -24,13 +24,10 @@ LIBC		=	$(LIBC_PATH)/libc.a
 ##                  SOURCES                     ##
 ##################################################
 
-COMMON_SRC	=	kernel/printk.c \
-			kernel/heap.c
+include kernel/make.config
 
 COMMON_HEADERS	=	-Iinclude \
 			-Ilib/libc/include
-
-KERNEL_SRCS	=	kernel/main.c
 
 include  test/make.config
 
@@ -40,19 +37,19 @@ ARCH_DIR	=	arch/$(ARCH)
 ##                   MODES                      ##
 ##################################################
 
-SRCS		+=	$(COMMON_SRC)
+SRCS		+=	$(KERNEL_SRCS)
 HEADERS		+=	$(COMMON_HEADERS)
 
 ifeq ($(MODE), release) ## RELEASE
 
-SRCS		+=	$(KERNEL_SRCS)
+SRCS		+=	$(KERNEL_ENTRY_POINT)
 
 CFLAGS		+=	-O3
 
 endif ## END RELEASE
 ifeq ($(MODE), debug) ## DEBUG
 
-SRCS		+=	$(KERNEL_SRCS)
+SRCS		+=	$(KERNEL_ENTRY_POINT)
 
 CFLAGS		+=	-g
 
@@ -147,6 +144,7 @@ clean:		dependency-clean
 	rm -f	$(KERNEL)
 	rm -f	$(SYSTEM_ISO)
 	rm -f	$(OBJS)
+	rm -f	$(TEST_SRCS:.c=.o)
 	rm -f   peda-*
 
 re:		clean all
