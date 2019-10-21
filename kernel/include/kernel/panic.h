@@ -6,13 +6,14 @@
 #ifndef PANIC_H_
 # define PANIC_H_
 
+#include <stdlib.h>
 #include <kernel/stdio.h>
 
 #define PANIC(format, ...)	do {\
 	printk("Sytem panic in %s at line %d:\n", __FILE__, __LINE__);\
 	printk(format __VA_OPT__(,) __VA_ARGS__);\
 	printk("\n!!!!!! KERNEL PANIC !!!!!!\n");\
-	while(1);\
+	abort();\
 } while (0)
 
 #endif // PANIC_H_

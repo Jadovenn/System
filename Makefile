@@ -26,7 +26,7 @@ LIBC		=	$(LIBC_PATH)/libc.a
 
 include kernel/make.config
 
-COMMON_HEADERS	=	-Iinclude \
+COMMON_HEADERS	=	-I$(KERNEL_INCLUDE_DIR) \
 			-Ilib/libc/include
 
 include  test/make.config
