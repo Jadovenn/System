@@ -5,7 +5,7 @@
 
 #include <stdint.h>
 #include <kernel/va_arg.h>
-#include <drivers/monitor.h>
+#include <kernel/tty.h>
 
 // TODO: This implementation could be improved in many way.
 // first, some argument does not match what they should really do (l actually match lu)

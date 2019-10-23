@@ -3,6 +3,7 @@
  * System sources under license MIT
  */
 
+#include <kernel/tty.h>
 #include "kernel/ports.h"
 #include "kernel/io.h"
 #include "drivers/monitor.h"
@@ -114,8 +115,8 @@ void	monitor_write(char c) {
 	}
 }
 
-void	monitor_set_color(char color) {
-	cursor_color = (char)color;
+void	monitor_set_color(unsigned char fg, unsigned char bg) {
+	cursor_color = (char)(fg | bg << 4);
 }
 
 void	monitor_clear() {
