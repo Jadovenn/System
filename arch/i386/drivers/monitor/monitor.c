@@ -6,8 +6,13 @@
 #include <kernel/tty.h>
 #include "kernel/ports.h"
 #include "kernel/io.h"
-#include "drivers/monitor.h"
 #include "string.h"
+
+//#define VIDEO_MEMORY_BUFFER_PTR		((char*)0xb8000)
+#define VIDEO_MEMORY_BUFFER_PTR		((char*)0xC03FF000)
+
+#define VGA_CURSOR_POSITION_HIGHT	14
+#define VGA_CURSOR_POSITION_LOW		15
 
 #define	COLONE_MAX	80
 #define ROW_MAX		25

@@ -6,7 +6,6 @@
 #include <system.h>
 #include <kernel/stdio.h>
 #include <kernel/tty.h>
-#include <drivers/monitor.h>
 
 int	monitor_init() {
 	monitor_clear();
