@@ -7,6 +7,7 @@
 # define HEAP_H_
 
 #include <stddef.h>
+#include <stdint.h>
 
 /**
  * @brief return the physical page size

@@ -9,7 +9,6 @@
 #include <kernel/stdio.h>
 #include <kernel/ports.h>
 #include <cpu/isr.h>
-#include <drivers/monitor.h>
 
 uint32_t	tick = 0;
 

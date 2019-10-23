@@ -3,10 +3,16 @@
  * System sources under license MIT
  */
 
+#include <kernel/tty.h>
 #include "kernel/ports.h"
 #include "kernel/io.h"
-#include "drivers/monitor.h"
 #include "string.h"
+
+//#define VIDEO_MEMORY_BUFFER_PTR		((char*)0xb8000)
+#define VIDEO_MEMORY_BUFFER_PTR		((char*)0xC03FF000)
+
+#define VGA_CURSOR_POSITION_HIGHT	14
+#define VGA_CURSOR_POSITION_LOW		15
 
 #define	COLONE_MAX	80
 #define ROW_MAX		25
@@ -114,8 +120,8 @@ void	monitor_write(char c) {
 	}
 }
 
-void	monitor_set_color(char color) {
-	cursor_color = (char)color;
+void	monitor_set_color(unsigned char fg, unsigned char bg) {
+	cursor_color = (char)(fg | bg << 4);
 }
 
 void	monitor_clear() {

@@ -5,10 +5,7 @@
 ## System source under license MIT
 ##
 
-mkdir -p isodir/boot/grub
-cp system isodir/boot/system
-cp scripts/grub.cfg isodir/boot/grub/grub.cfg
-grub-mkrescue -o "$1" isodir
-rm -rf isodir
+cp system.kern sysroot/boot/system.kern
+grub-mkrescue -o "$1" sysroot
 exit 0
 

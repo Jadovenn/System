@@ -7,12 +7,13 @@ NAME	=	libc.a
 
 HEADERS	=	-Iinclude/
 
-SOURCES	=	div.c \
-		memccpy.c \
-		memory.c \
-		string.c \
-		strlen.c \
-		strstr.c
+SOURCES	=	stdlib/abort.c \
+		math/div.c \
+		string/memccpy.c \
+		string/memory.c \
+		string/string.c \
+		string/strlen.c \
+		string/strstr.c
 
 OBJS	=	$(SOURCES:.c=.o)
 

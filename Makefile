@@ -7,12 +7,13 @@
 ##                 CONSTANTS                    ##
 ##################################################
 
-VERSION		=	0.0.2
+VERSION		=	0.0.3
 RELEASE_NAME	=	bare_bones
-KERNEL		=	system
-SYSTEM_ISO	=	$(KERNEL)_v$(VERSION)-$(RELEASE_NAME).iso
+NAME		=	system
+KERNEL		=	$(NAME).kern
+SYSTEM_ISO	=	$(NAME)_v$(VERSION)-$(RELEASE_NAME).iso
 
-ARCH	=	x86
+ARCH	=	i386
 TARGET	=	arch/$(ARCH)
 MODE	=	release
 
@@ -23,60 +24,32 @@ LIBC		=	$(LIBC_PATH)/libc.a
 ##                  SOURCES                     ##
 ##################################################
 
-COMMON_SRC	=	kernel/printk.c \
-			kernel/heap.c
+include kernel/make.config
 
-COMMON_HEADERS	=	-Iinclude \
+COMMON_HEADERS	=	-I$(KERNEL_INCLUDE_DIR) \
 			-Ilib/libc/include
 
-KERNEL_SRCS	=	kernel/main.c
+include  test/make.config
 
-TEST_SRCS	=	test/main.c \
-			test/heap.c \
-			test/memccpy.c \
-			test/strlen.c
-
-X86_PATH	=	arch/x86
-
-## Multiboot header for system multiboot
-X86_MULTIBOOT	=	$(X86_PATH)/boot/multiboot.s
-## System asm sources
-X86_ASM		=	$(X86_PATH)/asm/interrupt.s \
-			$(X86_PATH)/asm/dt_flush.s
-
-X86_SRCS	=	$(X86_PATH)/kernel/kernel.c \
-			$(X86_PATH)/kernel/timer.c \
-			$(X86_PATH)/kernel/io/ports.c \
-			$(X86_PATH)/kernel/logs/log.c \
-			$(X86_PATH)/kernel/init/gdt_init.c \
-			$(X86_PATH)/kernel/init/idt_init.c \
-			$(X86_PATH)/kernel/init/mmu_init.c \
-			$(X86_PATH)/kernel/init/monitor_init.c \
-			$(X86_PATH)/cpu/pic.c \
-			$(X86_PATH)/cpu/isr.c \
-			$(X86_PATH)/cpu/cr.c \
-			$(X86_PATH)/cpu/mmu/mmu.c \
-			$(X86_PATH)/cpu/mmu/page.c \
-			$(X86_PATH)/cpu/mmu/frame.c \
-			$(X86_PATH)/drivers/monitor/monitor.c
+ARCH_DIR	=	arch/$(ARCH)
 
 ##################################################
 ##                   MODES                      ##
 ##################################################
 
-SRCS		+=	$(COMMON_SRC)
+SRCS		+=	$(KERNEL_SRCS)
 HEADERS		+=	$(COMMON_HEADERS)
 
 ifeq ($(MODE), release) ## RELEASE
 
-SRCS		+=	$(KERNEL_SRCS)
+SRCS		+=	$(KERNEL_ENTRY_POINT)
 
 CFLAGS		+=	-O3
 
 endif ## END RELEASE
 ifeq ($(MODE), debug) ## DEBUG
 
-SRCS		+=	$(KERNEL_SRCS)
+SRCS		+=	$(KERNEL_ENTRY_POINT)
 
 CFLAGS		+=	-g
 
@@ -94,9 +67,7 @@ endif ## END TEST
 
 UNAME		:=	$(shell uname)
 
-ifeq ($(ARCH), x86) ## x86
-
-LDFLAGS		+=	-Wl,-Tld/link_x86.ld
+ifeq ($(ARCH), i386) ## i386
 
 ifeq ($(UNAME), Darwin) ## DARWIN
 	CC	=	i386-elf-gcc
@@ -110,12 +81,15 @@ ifeq ($(UNAME), Linux) ## LINUX BASED
 	NASM	=	nasm
 endif # END LINUX BASED
 
-MULTIBOOT	+=	$(X86_MULTIBOOT)
-ASM		+=	$(X86_ASM)
-SRCS		+=	$(X86_SRCS)
-HEADERS		+=	-I$(X86_PATH)/include
+include	$(ARCH_DIR)/make.config
 
 endif ## END x86
+
+MULTIBOOT	+=	$(KERNEL_ARCH_MULTIBOOT)
+ASM		+=	$(KERNEL_ARCH_ASM)
+SRCS		+=	$(KERNEL_ARCH_SRCS)
+HEADERS		+=	$(KERNEL_ARCH_INCLUDE)
+LDFLAGS		+=	$(KERNEL_ARCH_LDFLAGS)
 
 ##################################################
 ##                  OBJECTS                     ##
@@ -170,6 +144,7 @@ clean:		dependency-clean
 	rm -f	$(KERNEL)
 	rm -f	$(SYSTEM_ISO)
 	rm -f	$(OBJS)
+	rm -f	$(TEST_SRCS:.c=.o)
 	rm -f   peda-*
 
 re:		clean all

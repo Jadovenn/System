@@ -6,10 +6,12 @@
 *.gdb_history
 *peda-session-*
 bin/
-*system
+*system.kern
 *.bin
 *.elf
 *.img
 *.iso
 *.a
+sysroot/boot/*.kern
+sysroot/usr/include/*.h
 

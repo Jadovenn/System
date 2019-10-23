@@ -4,7 +4,7 @@
  */
 
 #include <kernel/stdio.h>
-#include <drivers/monitor.h>
+#include <kernel/tty.h>
 
 extern int test_memccpy();
 extern int test_strlen();
@@ -13,23 +13,23 @@ extern int test_heap_fragmentation();
 extern int test_heap_big_alloc();
 
 void	klog(int status, char *msg) {
-	monitor_set_color(BLACK_GREY);
+	monitor_set_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
 	monitor_write('[');
 	if (status == 0) {
-		monitor_set_color(BLACK_GREEN_H);
+		monitor_set_color(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_BLACK);
 		printk("pass");
 	}
 	else {
-		monitor_set_color(BLACK_RED_H);
+		monitor_set_color(VGA_COLOR_LIGHT_RED, VGA_COLOR_BLACK);
 		printk("failed");
 	}
-	monitor_set_color(BLACK_GREY);
+	monitor_set_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
 	monitor_write(']');
-	monitor_set_color(BLACK_WHITE);
+	monitor_set_color(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
 	monitor_write(' ');
 	printk(msg);
 	monitor_write('\n');
-	monitor_set_color(BLACK_GREY);
+	monitor_set_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
 }
 
 int	main(int ac, char **av) {

@@ -15,7 +15,7 @@
 ;; System sources under license MIT
 ;; ------------------------------------
 
-%include "arch/x86/boot/memlayout.s"
+%include "arch/i386/multiboot/memlayout.s"
 
 ;; Constant
 MBALIGN  equ	1 << 0
