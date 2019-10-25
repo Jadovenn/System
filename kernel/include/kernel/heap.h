@@ -9,6 +9,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
+void	install_heap(void *placement_addr, void *physical_addr, size_t size);
+
 /**
  * @brief return the physical page size
  * @details it is accessible via the global object

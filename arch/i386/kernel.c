@@ -4,23 +4,26 @@
  */
 
 #include <stdint.h>
+#include <stddef.h>
 #include <kernel/panic.h>
 #include <kernel/multiboot.h>
-#include <kernel/heap.h>
-#include <kernel/timer.h>
 
-#include "init/init.h"
+#include "arch/init.h"
 
 extern void main(int ac, char **av);
 
 /**
  * @brief install CPU related unit
  */
-void	config_cpu() {
-	install_gdt();
-	install_idt();
-	install_mmu();
+void	cpu_init() {
+	gdt_init();
+	idt_init();
+	paging_init();
 	asm volatile ("sti");
+}
+
+void	drivers_init() {
+	monitor_driver_init();
 }
 
 /**
@@ -48,12 +51,9 @@ void	check_multiboot(multiboot_info *header, uint32_t magic) {
  * @details the order init function are called matter a lot
  */
 void	kmain(multiboot_info *header, uint32_t magic) {
-	config_cpu();
-	monitor_init();
+	cpu_init();
+	drivers_init();
 	check_multiboot(header, magic);
-	configure_mmu(header);
-	//init_timer(50);
 	main(0, NULL);
-	while(1);
 }
 

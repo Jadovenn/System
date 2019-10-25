@@ -3,7 +3,7 @@
  * System sourcies under license MIT
  */
 
-#include <cpu/gdt.h>
+#include "cpu/gdt.h"
 
 extern void	gdt_flush(uint32_t);
 
@@ -22,7 +22,7 @@ static void	__gdt_set_gate(int32_t num, uint32_t base, uint32_t limit, uint8_t a
 	gdt_entries[num].access = access;
 }
 
-void	install_gdt() {
+void	gdt_init() {
 	gdt_ptr.limit = (sizeof(gdt_entry_t) * 5) - 1;
 	gdt_ptr.base = (uint32_t)&gdt_entries;
 

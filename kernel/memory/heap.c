@@ -12,40 +12,21 @@
 typedef struct heap_block_header_t {
 	struct heap_block_header_t	*next;
 	struct heap_block_header_t	*prev;
-	uint32_t			physical_addr;
+	void				*physical_addr;
 	size_t				size;
 	bool				is_free;
 }		heap_block_header;
 
 heap_block_header	*virtual_memory = NULL;
 
-/**
- * @details add a new block to the virtual memory list
- * @return heap_block_header - pointer to the new block
- */
-static heap_block_header	*_add_new_block() {
-	uint32_t	physical_addr;
-	heap_block_header *new_block = (heap_block_header*)get_new_heap_page(&physical_addr); 
-	heap_block_header *iterator = virtual_memory;
-	if (!new_block) {
-		return NULL;
-	}
-	new_block->next = NULL;
-	new_block->size = get_page_size() - sizeof(heap_block_header); 
-	new_block->is_free = true;
-	new_block->physical_addr = physical_addr;
-	if (iterator) {
-		while (iterator->next)
-			iterator = iterator->next;
-		new_block->prev = iterator;
-		iterator->next = new_block;
-	}
-	else {
-		virtual_memory = new_block;
-		new_block->prev = NULL;
-	}
-	return new_block;
-} // O(n) = n, where n is the number of block
+void	install_heap(void *placement_addr, void *physical_addr, size_t size) {
+	virtual_memory = placement_addr;
+	virtual_memory->next = NULL;
+	virtual_memory->prev = NULL;
+	virtual_memory->size = size - sizeof(heap_block_header);
+	virtual_memory->is_free = true;
+	virtual_memory->physical_addr = physical_addr + sizeof(heap_block_header);
+}
 
 /**
  * @brief fragment one block in two blocks
@@ -115,18 +96,12 @@ void *kmalloc(size_t block_size) {
 void	*kmalloc_physical(size_t block_size, uint32_t *physical_addr) {
 	heap_block_header *iterator = virtual_memory;
 	heap_block_header *block = NULL;
-	if (block_size > 4096) { // Special Case: requested size is bigger than physical page size
-		return NULL;
-	}
 	if (block_size % 4 != 0) { // Special Case: requested size is not 4 bytes aligned
 		block_size += 4 - block_size % 4;
 	}
 	while (!block) { // Regular Case: until a block is found
-		if (!iterator) { // Special Case: no free block, then add a new block
-			iterator = _add_new_block();
-			if (!iterator) { // Special Case: heap overflow, no free heap page anymore
-				return NULL;
-			}
+		if (!iterator) { // Special Case: no free block, then return NULL
+			return NULL;
 		}
 		if (iterator->is_free) { // Regular Case: a free block is found
 			if (iterator->size >= block_size) { // Regular Case: the free block as a good size commit it

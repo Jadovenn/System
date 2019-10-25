@@ -13,12 +13,17 @@
 #ifndef INIT_H_
 # define INIT_H_
 
-int	monitor_init();
-void	configure_mmu(multiboot_info *header);
+//
+//	CPU Init
+//
+void	gdt_init();
+void	idt_init();
+void	paging_init();
 
-void	install_gdt();
-void	install_idt();
-void	install_mmu();
+//
+//	Drivers Init
+//
+int	monitor_driver_init();
 
 #endif // INIT_H_
 

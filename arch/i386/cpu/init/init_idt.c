@@ -4,10 +4,11 @@
  */
 
 #include <system.h>
-#include <kernel/ports.h>
-#include <cpu/idt.h>
-#include <cpu/isr.h>
 #include <string.h>
+
+#include "cpu/idt.h"
+#include "cpu/isr.h"
+#include "arch/ports.h"
 
 extern void	idt_flush(uint32_t);
 extern isr_t	interrupt_handlers_map[];
@@ -24,7 +25,7 @@ static void	__idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t fla
 	// idt_entries[num].flags = flags | 0x60; // uncoment for ring 3
 }
 
-void	install_idt() {
+void	idt_init() {
 	idt_ptr.limit = sizeof(idt_entry_t) * 256 - 1;
 	idt_ptr.base = (uint32_t)&idt_entries;
 

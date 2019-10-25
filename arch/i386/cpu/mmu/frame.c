@@ -8,9 +8,10 @@
 #include <stddef.h>
 #include <string.h>
 #include <bitset.h>
-#include <kernel/multiboot.h>
 #include <kernel/heap.h>
-#include <cpu/mmu.h>
+#include <kernel/multiboot.h>
+
+#include "cpu/mmu.h"
 
 int	map_frame_region(uint32_t physical_addr, size_t length, uint32_t memory_type) {
 	size_t	size = length / 0x1000 / 32; 
