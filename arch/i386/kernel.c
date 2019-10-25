@@ -54,6 +54,7 @@ void	kmain(multiboot_info *header, uint32_t magic) {
 	cpu_init();
 	drivers_init();
 	check_multiboot(header, magic);
+	physical_memory_init(header);
 	main(0, NULL);
 }
 

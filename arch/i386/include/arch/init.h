@@ -13,12 +13,19 @@
 #ifndef INIT_H_
 # define INIT_H_
 
+#include <kernel/multiboot.h>
+
 //
 //	CPU Init
 //
 void	gdt_init();
 void	idt_init();
 void	paging_init();
+
+//
+//	Memory Init
+//
+void	physical_memory_init(multiboot_info *header);
 
 //
 //	Drivers Init
