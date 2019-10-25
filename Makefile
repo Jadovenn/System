@@ -152,7 +152,7 @@ re:		clean all
 dependency-clean:
 	$(MAKE) -C lib/libc clean
 
-$(SYSTEM_ISO):
+$(SYSTEM_ISO):	$(KERNEL)
 	scripts/build-iso.sh $(SYSTEM_ISO)
 
 run:		$(SYSTEM_ISO)
