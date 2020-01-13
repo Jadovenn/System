@@ -20,17 +20,18 @@
 //
 void	gdt_init();
 void	idt_init();
-void	paging_init();
-
-//
-//	Memory Init
-//
-void	physical_memory_init(multiboot_info *header);
+void	boot_paging_init();
 
 //
 //	Drivers Init
 //
 int	monitor_driver_init();
+
+//
+//	Pre Kernel Init
+//
+void	kernel_paging_init(multiboot_info *header);
+void	physical_memory_init(multiboot_info *header);
 
 #endif // INIT_H_
 

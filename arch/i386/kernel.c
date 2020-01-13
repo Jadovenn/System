@@ -18,7 +18,7 @@ extern void main(int ac, char **av);
 void	cpu_init() {
 	gdt_init();
 	idt_init();
-	paging_init();
+	boot_paging_init();
 	asm volatile ("sti");
 }
 
@@ -54,6 +54,7 @@ void	kmain(multiboot_info *header, uint32_t magic) {
 	cpu_init();
 	drivers_init();
 	check_multiboot(header, magic);
+	kernel_paging_init(header);
 	physical_memory_init(header);
 	main(0, NULL);
 }
