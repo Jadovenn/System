@@ -84,9 +84,9 @@ static __inline__ void	*__setup_free_space_for_pgdt() {
 
 void	kernel_paging_init(multiboot_info *header) {
 	(void)header;
-	kernel_page_directory = __setup_free_space_for_pgdt();
-	printk("kpd_start addr: %#x\n", &kernel_page_directory);
-	memset(kernel_page_directory, 0x100, 0);
+	//kernel_page_directory = __setup_free_space_for_pgdt();
+	//printk("kpd_start addr: %#x\n", &kernel_page_directory);
+	//memset(kernel_page_directory, 0x100, 0);
 }
 
 /**
