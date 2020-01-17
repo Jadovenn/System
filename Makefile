@@ -26,7 +26,7 @@ LIBC		=	$(LIBC_PATH)/libc.a
 
 include kernel/make.config
 
-COMMON_HEADERS	=	-I$(KERNEL_INCLUDE_DIR) \
+COMMON_HEADERS	=	$(addprefix -I, $(KERNEL_INCLUDE_DIR)) \
 			-Ilib/libc/include
 
 include  test/make.config
@@ -88,7 +88,7 @@ endif ## END x86
 MULTIBOOT	+=	$(KERNEL_ARCH_MULTIBOOT)
 ASM		+=	$(KERNEL_ARCH_ASM)
 SRCS		+=	$(KERNEL_ARCH_SRCS)
-HEADERS		+=	$(KERNEL_ARCH_INCLUDE)
+HEADERS		+=	$(addprefix -I, $(KERNEL_ARCH_INCLUDE))
 LDFLAGS		+=	$(KERNEL_ARCH_LDFLAGS)
 
 ##################################################
