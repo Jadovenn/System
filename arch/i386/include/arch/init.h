@@ -13,7 +13,7 @@
 #ifndef INIT_H_
 # define INIT_H_
 
-#include <kernel/multiboot.h>
+#include <multiboot.h>
 
 //
 //	CPU Init

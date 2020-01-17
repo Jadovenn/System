@@ -6,10 +6,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <system.h>
+#include <multiboot.h>
 #include <kernel/stdio.h>
 #include <kernel/heap.h>
 #include <kernel/panic.h>
-#include <kernel/multiboot.h>
 
 #include "cpu/mmu.h"
 #include "cpu/cr.h"

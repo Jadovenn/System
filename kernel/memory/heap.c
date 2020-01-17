@@ -123,7 +123,7 @@ void	*kmalloc_physical(size_t block_size, uint32_t *physical_addr) {
 	}
 	block->is_free = false;
 	if (physical_addr) {
-		*physical_addr = block->physical_addr + sizeof(heap_block_header);
+		physical_addr = block->physical_addr + sizeof(heap_block_header);
 	}
 	return (void*)(((uint32_t)block) + (sizeof(heap_block_header)));
 } // O(n) = n, where n is the number of blocks

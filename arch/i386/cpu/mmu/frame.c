@@ -8,8 +8,8 @@
 #include <stddef.h>
 #include <string.h>
 #include <bitset.h>
+#include <multiboot.h>
 #include <kernel/heap.h>
-#include <kernel/multiboot.h>
 
 #include "cpu/mmu.h"
 

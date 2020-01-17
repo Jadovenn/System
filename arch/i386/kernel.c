@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <kernel/panic.h>
-#include <kernel/multiboot.h>
+#include <multiboot.h>
 
 #include "arch/init.h"
 
@@ -34,7 +34,7 @@ void	check_multiboot(multiboot_info *header, uint32_t magic) {
 		PANIC("Wrong multiboot magic number, \
 				multiboot header is not present");
 	}
-	if (!(header->flags & MULTIBOOT_INFO_MEMORY)) {
+	if (!MULTIBOOT_TEST_FLAG(header, MULTIBOOT_INFO_MEMORY)) {
 		PANIC("Multiboot memmory flags is not present, \
 				manual memory detection is not available");
 	}
@@ -42,8 +42,8 @@ void	check_multiboot(multiboot_info *header, uint32_t magic) {
 		PANIC("Multiboot memory map is not present, \
 				manual memory detection is not available");
 	}
-	printk("Lower Memory Size: %dKiB\n", header->mem_lower);
-	printk("Upper Memory Size: %dKiB\n", header->mem_upper);
+	printk("Lower memory region size: %dKiB\n", header->mem_lower);
+	printk("Upper memory region size: %dKiB\n", header->mem_upper);
 }
 
 /**
