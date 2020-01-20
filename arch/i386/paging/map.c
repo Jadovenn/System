@@ -26,11 +26,12 @@ uint32_t		paging_map_physical(uint32_t physical_addr, uint32_t virtual_addr, uin
 	}
 	physical_pg_entry_addr &= 0xFFFFD000;
 	uint32_t *pg_table_entry = PHYSICAL_PTR_TO_VIRTUAL((uint32_t*)physical_pg_entry_addr);
-	uint32_t pte_offset = (virtual_addr >> 12) / 1024;
+	uint32_t pte_offset = virtual_addr >> 12 & 0x03FF;
 	printk("pte offset: %d\n", pte_offset);
-	uint32_t physical_entry_addr = pg_table_entry[(virtual_addr >> 12) * 1024];
-	uint32_t *entry_ptr = PHYSICAL_PTR_TO_VIRTUAL((uint32_t*)physical_entry_addr);
-	*entry_ptr = physical_addr | flags;
+	uint32_t *pte_ptr = &pg_table_entry[pte_offset];
+	printk("physical pte addr: %#x\n", &pte_ptr);
+	*pte_ptr = physical_addr | flags;
+	printk("pte entry is: %#x\n", *pte_ptr);
 	flush_tlb();
 	return EXIT_SUCCESS;
 }
