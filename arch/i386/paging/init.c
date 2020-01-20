@@ -13,6 +13,7 @@
 
 #include "cpu/mmu.h"
 #include "cpu/cr.h"
+#include "arch/paging.h"
 #include "arch/memlayout.h"
 
 /**
@@ -29,26 +30,24 @@
 //
 
 static void	__set_section_text_ro() {
-	uint32_t text_start_addr = VIRTUAL_ADDR_TO_PHYSICAL(&_kernel_start);
 	uint32_t text_end_addr = VIRTUAL_ADDR_TO_PHYSICAL(&_end_code);
-	uint32_t page_offset = text_start_addr / 0x1000;
-	uint32_t pte_addr = mmu.boot_page_table[page_offset] & 0xFFFFF000; 
-	while (pte_addr < text_end_addr) {
-		mmu.boot_page_table[page_offset] = pte_addr | 0x001;
-		page_offset += 1;
-		pte_addr = mmu.boot_page_table[page_offset] & 0xFFFFF000; 
+	uint32_t vaddr = (uint32_t)&_kernel_start;
+	uint32_t paddr = VIRTUAL_ADDR_TO_PHYSICAL(&_kernel_start);
+	unsigned page_mapped = 0;
+	for (;paddr < text_end_addr; vaddr += 0x1000, paddr += 0x1000) {
+		paging_map_physical(paddr, vaddr, 0x001);
+		page_mapped += 1;
 	}
 }
 
 static void	__set_section_rodata_ro() {
-	uint32_t rodata_start_addr = VIRTUAL_ADDR_TO_PHYSICAL(&_rodata);
 	uint32_t rodata_end_addr = VIRTUAL_ADDR_TO_PHYSICAL(&_end_rodata);
-	uint32_t page_offset = rodata_start_addr / 0x1000;
-	uint32_t pte_addr = mmu.boot_page_table[page_offset] & 0xFFFFF000;
-	while (pte_addr < rodata_end_addr) {
-		mmu.boot_page_table[page_offset] = pte_addr | 0x001;
-		page_offset += 1;
-		pte_addr = mmu.boot_page_table[page_offset] & 0xFFFFF000; 
+	uint32_t vaddr = (uint32_t)&_rodata;
+	uint32_t paddr = VIRTUAL_ADDR_TO_PHYSICAL(&_rodata);
+	unsigned page_mapped = 0;
+	for (;paddr < rodata_end_addr; vaddr += 0x1000, paddr += 0x1000) {
+		paging_map_physical(paddr, vaddr, 0x001);
+		page_mapped += 1;
 	}
 }
 
