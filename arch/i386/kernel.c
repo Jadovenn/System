@@ -9,6 +9,8 @@
 #include <multiboot.h>
 
 #include "arch/init.h"
+#include "arch/paging.h"
+#include "cpu/isr.h"
 
 extern void main(int ac, char **av);
 
@@ -54,8 +56,9 @@ void	kmain(multiboot_info *header, uint32_t magic) {
 	cpu_init();
 	drivers_init();
 	check_multiboot(header, magic);
-	kernel_paging_init(header);
+	register_interrupt_handler(14, &page_fault_handler);
 	physical_memory_init(header);
+	kernel_paging_init(header);
 	main(0, NULL);
 }
 
