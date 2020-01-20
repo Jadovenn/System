@@ -3,10 +3,10 @@
  * System sources under license MIT
  */
 
+#include <string.h>
 #include <kernel/tty.h>
-#include "kernel/ports.h"
-#include "kernel/io.h"
-#include "string.h"
+#include "arch/ports.h"
+#include "arch/io.h"
 
 //#define VIDEO_MEMORY_BUFFER_PTR		((char*)0xb8000)
 #define VIDEO_MEMORY_BUFFER_PTR		((char*)0xC03FF000)

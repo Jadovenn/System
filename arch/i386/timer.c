@@ -5,10 +5,11 @@
 
 #include <stdlib.h>
 #include <stddef.h>
-#include <kernel/io.h>
 #include <kernel/stdio.h>
-#include <kernel/ports.h>
-#include <cpu/isr.h>
+
+#include "cpu/isr.h"
+#include "arch/ports.h"
+#include "arch/io.h"
 
 uint32_t	tick = 0;
 

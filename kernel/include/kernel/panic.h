@@ -10,7 +10,8 @@
 #include <kernel/stdio.h>
 
 #define PANIC(format, ...)	do {\
-	printk("Sytem panic in %s at line %d:\n", __FILE__, __LINE__);\
+	printk(">>>>>>>>> PANIC <<<<<<<<<<\n");\
+	printk("System panic in %s at line %d:\n", __FILE__, __LINE__);\
 	printk(format __VA_OPT__(,) __VA_ARGS__);\
 	printk("\n!!!!!! KERNEL PANIC !!!!!!\n");\
 	abort();\

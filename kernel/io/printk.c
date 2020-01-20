@@ -4,7 +4,7 @@
  */
 
 #include <stdint.h>
-#include <kernel/va_arg.h>
+#include <va_arg.h>
 #include <kernel/tty.h>
 
 // TODO: This implementation could be improved in many way.
@@ -72,7 +72,7 @@ void	__print_hexadecimal(uint32_t number) {
 	}
 }
 
-int	__print_formated(va_list *vl, char *format) {
+int	__print_formated(va_list *vl, const char *format) {
 	char *string;
 	char character;
 	int  decimal_number;
@@ -122,10 +122,10 @@ int	__print_formated(va_list *vl, char *format) {
  * @param format - the formated sequence
  * @param ... - variadic argument list to print use by the format description
  */
-void	printk(char *format, ...) {
+void	printk(char const *format, ...) {
 	va_list	vl;
 	va_start(vl, format);
-	for (char *c = format; *c; c++) {
+	for (const char *c = format; *c; c++) {
 		if (*c == '%') {
 			c += 1;
 			if (*c != '\0') {

@@ -8,7 +8,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include <kernel/multiboot.h>
+#include <multiboot.h>
 
 // define state for PTE as a bitfield
 #define PTE_PRESENT	0x0001

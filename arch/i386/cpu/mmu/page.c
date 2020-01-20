@@ -6,10 +6,13 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <kernel/memlayout.h>
 #include <kernel/heap.h>
-#include <cpu/cr.h>
-#include <cpu/mmu.h>
+
+#include "cpu/cr.h"
+#include "cpu/mmu.h"
+#include "arch/memlayout.h"
+
+// This has been reveal to be so fucking useless (to early implemented)
 
 // TODO: actually we have a dummy physical memory management,
 // and assum that this will never been free because

@@ -4,8 +4,9 @@
  */
 
 #include <system.h>
-#include <cpu/mmu.h>
 #include <kernel/heap.h>
+
+#include "cpu/mmu.h"
 
 struct mmu_t	mmu = { 
 	NULL,

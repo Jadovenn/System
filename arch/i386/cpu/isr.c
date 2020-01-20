@@ -7,10 +7,11 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <kernel/compiler.h>
-#include <kernel/ports.h>
 #include <kernel/stdio.h>
 #include <kernel/panic.h>
-#include <cpu/isr.h>
+
+#include "cpu/isr.h"
+#include "arch/ports.h"
 
 isr_t	interrupt_handlers_map[256];
 

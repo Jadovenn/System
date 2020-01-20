@@ -9,6 +9,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#ifdef __i386__
+
 static inline unsigned	__align_sizeof(uint8_t size) {
 	int	aligned_value = 8;
 	if (size <= 4) {
@@ -34,6 +36,8 @@ typedef char *va_list;
 #define va_arg(list, mode) ((mode*)__read_arg(&list, sizeof(mode)))[0]
 
 #define va_end(list) (list = NULL)
+
+#endif // __i386__
 
 #endif // VA_ARG_H_
 

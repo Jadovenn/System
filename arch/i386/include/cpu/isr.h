@@ -19,6 +19,7 @@ typedef struct registers {
 
 typedef void	(*isr_t)(registers_t);
 
+void	dump_regs_from_interrupt(registers_t regs);
 int	register_interrupt_handler(uint8_t, isr_t);
 isr_t	get_interrupt_handler(uint32_t key);
 int	idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags);

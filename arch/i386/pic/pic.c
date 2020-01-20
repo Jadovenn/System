@@ -3,10 +3,11 @@
  * System sources under license MIT
  */
 
-#include <kernel/io.h>
-#include <kernel/ports.h>
 #include <cpu/isr.h>
 #include <cpu/pic.h>
+
+#include <arch/io.h>
+#include <arch/ports.h>
 
 void	PIC_disable() {
 	//asm("mov %al, 0xff");

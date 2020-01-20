@@ -4,23 +4,28 @@
  */
 
 #include <stdint.h>
+#include <stddef.h>
 #include <kernel/panic.h>
-#include <kernel/multiboot.h>
-#include <kernel/heap.h>
-#include <kernel/timer.h>
+#include <multiboot.h>
 
-#include "init/init.h"
+#include "arch/init.h"
+#include "arch/paging.h"
+#include "cpu/isr.h"
 
 extern void main(int ac, char **av);
 
 /**
  * @brief install CPU related unit
  */
-void	config_cpu() {
-	install_gdt();
-	install_idt();
-	install_mmu();
+void	cpu_init() {
+	gdt_init();
+	idt_init();
+	boot_paging_init();
 	asm volatile ("sti");
+}
+
+void	drivers_init() {
+	monitor_driver_init();
 }
 
 /**
@@ -31,7 +36,7 @@ void	check_multiboot(multiboot_info *header, uint32_t magic) {
 		PANIC("Wrong multiboot magic number, \
 				multiboot header is not present");
 	}
-	if (!(header->flags & MULTIBOOT_INFO_MEMORY)) {
+	if (!MULTIBOOT_TEST_FLAG(header, MULTIBOOT_INFO_MEMORY)) {
 		PANIC("Multiboot memmory flags is not present, \
 				manual memory detection is not available");
 	}
@@ -39,8 +44,8 @@ void	check_multiboot(multiboot_info *header, uint32_t magic) {
 		PANIC("Multiboot memory map is not present, \
 				manual memory detection is not available");
 	}
-	printk("Lower Memory Size: %dKiB\n", header->mem_lower);
-	printk("Upper Memory Size: %dKiB\n", header->mem_upper);
+	printk("Lower memory region size: %dKiB\n", header->mem_lower);
+	printk("Upper memory region size: %dKiB\n", header->mem_upper);
 }
 
 /**
@@ -48,12 +53,12 @@ void	check_multiboot(multiboot_info *header, uint32_t magic) {
  * @details the order init function are called matter a lot
  */
 void	kmain(multiboot_info *header, uint32_t magic) {
-	config_cpu();
-	monitor_init();
+	cpu_init();
+	drivers_init();
 	check_multiboot(header, magic);
-	configure_mmu(header);
-	//init_timer(50);
+	register_interrupt_handler(14, &page_fault_handler);
+	physical_memory_init(header);
+	kernel_paging_init(header);
 	main(0, NULL);
-	while(1);
 }
 

@@ -1,11 +1,12 @@
 /**
  * multiboot.h - multiboot header
- * System under license MIT
+ * System sources under license MIT
  */
 
-#ifndef MULTIBOOT_H_
-# define MULTIBOOT_H_
+#ifndef MULTIBOOT_TYPES_H_
+# define MULTIBOOT_TYPES_H_
 
+#include <stddef.h>
 #include <stdint.h>
 
 #define MULTIBOOT_MAGIC			0x1BADB002
@@ -13,6 +14,8 @@
 
 #define MULTIBOOT_INFO_MEMORY		0x001
 #define MULTIBOOT_INFO_MMAP		0x020
+
+#define MULTIBOOT_TEST_FLAG(mltb_hdr, flag)	(mltb_hdr->flags & flag)	
 
 struct multiboot_info_t {
 	uint32_t	flags;
@@ -43,20 +46,20 @@ struct multiboot_info_t {
 
 typedef struct multiboot_info_t	multiboot_info;
 
-struct multiboot_mmap_info_t {
+struct multiboot_mmap_region {
 	uint32_t	size;
 	uint64_t	addr;
 	uint64_t	len;
 	uint32_t	type;
 } __attribute__((packed));
 
-typedef struct multiboot_mmap_info_t multiboot_mmap_info;
+typedef struct multiboot_mmap_region multiboot_mmap_region_t;
 
-#define MULTIBOOT_MEMORY_AVAILABLE	1
-#define MULTIBOOT_MEMORY_RESERVED	2
+#define MULTIBOOT_MEMORY_AVAILABLE		1
+#define MULTIBOOT_MEMORY_RESERVED		2
 #define MULTIBOOT_MEMORY_ACPI_RECLAINABLE	3
-#define MULTIBOOT_MEMORY_NVS		4
-#define MULTIBOOT_MEMORY_BADRAM		5
+#define MULTIBOOT_MEMORY_NVS			4
+#define MULTIBOOT_MEMORY_BADRAM			5
 
-#endif // MULTIBOOT_H_
+#endif // MULTIBOOT_TYPES_H_
 
