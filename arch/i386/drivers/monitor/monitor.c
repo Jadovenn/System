@@ -105,7 +105,7 @@ void	monitor_write(char c) {
 	else if (c == '\n') { // Special Case: carriage return
 		if ((offset >> 1) / COLONE_MAX == 24) { // Special Case: bottom of the screen
 			scroll_down();
-			offset = offset - (offset % COLONE_MAX);
+			offset = offset - ((offset >> 1) % COLONE_MAX) * 2;
 			set_cursor_offset(offset);
 		}
 		else { // Special Case: carriage return
