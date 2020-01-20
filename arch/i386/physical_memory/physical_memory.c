@@ -4,6 +4,7 @@
  */
 
 #include <stddef.h>
+#include <stdint.h>
 
 extern const char *_end;
 
@@ -19,6 +20,11 @@ void	physical_free(void) {
 
 }
 
+/**
+ * @brief physical memory page allocator
+ * @details sequencial search algorithm using shortcut ptr
+ * @return a physical pointer to a 4Kib physical page
+ */
 void	*physical_alloc(void) {
 	return NULL;
 }
