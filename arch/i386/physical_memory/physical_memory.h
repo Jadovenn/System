@@ -6,14 +6,16 @@
 #ifndef PHYSICAL_MEMORY_H_
 # define PHYSICAL_MEMORY_H_
 
-extern struct physical_memory_group *physical_mmap;
 
 typedef struct physical_mm_group {
-	void		*start_addr;
+	uint32_t	physical_addr;
 	uint32_t	next_free_offset;
+	size_t		page_nb;
 	uint32_t	*bitset;
-	struct 		physical_memory_group *next;
+	struct 		physical_mm_group *next;
 }		physical_mm_group_t;
+
+extern physical_mm_group_t *physical_mmap;
 
 void	physical_free(void);
 
