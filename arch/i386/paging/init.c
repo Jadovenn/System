@@ -35,7 +35,7 @@ static void	__set_section_text_ro() {
 	uint32_t paddr = VIRTUAL_ADDR_TO_PHYSICAL(&_kernel_start);
 	unsigned page_mapped = 0;
 	for (;paddr < text_end_addr; vaddr += 0x1000, paddr += 0x1000) {
-		paging_map_physical(paddr, vaddr, 0x001);
+		paging_map_physical(paddr, vaddr, 0x001, true);
 		page_mapped += 1;
 	}
 }
@@ -46,7 +46,7 @@ static void	__set_section_rodata_ro() {
 	uint32_t paddr = VIRTUAL_ADDR_TO_PHYSICAL(&_rodata);
 	unsigned page_mapped = 0;
 	for (;paddr < rodata_end_addr; vaddr += 0x1000, paddr += 0x1000) {
-		paging_map_physical(paddr, vaddr, 0x001);
+		paging_map_physical(paddr, vaddr, 0x001, true);
 		page_mapped += 1;
 	}
 }
