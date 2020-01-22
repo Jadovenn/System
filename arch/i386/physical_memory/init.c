@@ -41,7 +41,7 @@ static void	__vmap_physical_memory_region_groupe(multiboot_mmap_region_t *mmap) 
 	size_t bitset_len = page_nb / 32;
 	size_t size = bitset_len * 4 + sizeof(physical_mm_group_t);
 	size_t pages = size / 0x1000;
-	if (pages % 0x1000) {
+	if (pages % 0x1000 || !pages) {
 		pages += 1;
 	}
 	// Compute nb of page
@@ -78,6 +78,10 @@ static void __display_usable_physical_memory() {
 	size_t	size = 0;
 	for (physical_mm_group_t *idx = physical_mmap;
 			idx; idx = idx->next) {
+		printk("[%#x - %#x] %d Kib of usable memory\n",
+				idx->physical_addr,
+				idx->physical_addr + idx->page_nb * 0x1000,
+				idx->page_nb*4);
 		size += idx->page_nb * 4;
 	}
 	size /= 1024;
@@ -93,9 +97,6 @@ static void __display_usable_physical_memory() {
 void	physical_memory_init(multiboot_info *header) {
 	printk("Physical Memory Regions:\n");
 	mltb_foreach_physical_memory_region(header, &__display_physical_memory_regions);
-	mltb_available_physical_mem_size_t	physmem_size = mltb_available_physical_memory_size(header);
-	printk("Sizeof physical memory block: %dKib\n", physmem_size.size);
-	printk("Number of physical memory region(s): %d\n", physmem_size.region_nb);
 	_physical_mmap_start = VIRTUAL_ADDR_TO_PHYSICAL((uint32_t)&_end);
 	if (_physical_mmap_start % 0x1000 != 0) {
 		_physical_mmap_start += (0x1000 - (_physical_mmap_start % 0x1000));
