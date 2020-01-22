@@ -27,11 +27,15 @@ uint32_t _physical_mmap_start = 0;
 uint32_t _physical_mmap_end = 0;
 
 static void	__display_physical_memory_regions(multiboot_mmap_region_t *mmap) {
-	printk("    addr: %#x, len: %d bytes, type: %d\n", (uint32_t)mmap->addr, (uint32_t)mmap->len, mmap->type);
+	printk("    addr: %#x, len: %u bytes, type: %d\n", (uint32_t)mmap->addr, (uint32_t)mmap->len, mmap->type);
 }
 
 static void	__vmap_physical_memory_region_groupe(multiboot_mmap_region_t *mmap) {
-	if (mmap->addr == 0 || mmap->type != 1) {
+	if (!mmap->addr || mmap->type != 1) {
+		return;
+	}
+	if (!(uint32_t)mmap->addr && (uint64_t)mmap->addr) {
+		printk("PAE not supported, physical region ignored\n");
 		return;
 	}
 	// Compute size in Kib
@@ -87,10 +91,10 @@ static void __display_usable_physical_memory() {
 	size /= 1024;
 	size_t size_gb = size / 1024;
 	if (size_gb != 0) {
-		printk("total usable physical memory: %d Gib and %d Mib\n", size_gb, size % 1024);
+		printk("Free RAM: %d Gib and %d Mib\n", size_gb, size % 1024);
 	}
 	else {
-		printk("total usable physical memory: %d Mib\n", size);
+		printk("Free RAM: %d Mib\n", size);
 	}
 }
 
@@ -98,7 +102,7 @@ void	physical_memory_init(multiboot_info *header) {
 	printk("Physical Memory Regions:\n");
 	mltb_foreach_physical_memory_region(header, &__display_physical_memory_regions);
 	_physical_mmap_start = VIRTUAL_ADDR_TO_PHYSICAL((uint32_t)&_end);
-	if (_physical_mmap_start % 0x1000 != 0) {
+	if (_physical_mmap_start % 0x1000) {
 		_physical_mmap_start += (0x1000 - (_physical_mmap_start % 0x1000));
 	}
 	_physical_mmap_end = _physical_mmap_start;
