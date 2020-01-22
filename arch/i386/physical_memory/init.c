@@ -22,7 +22,7 @@
  * 3. then physical alloc/free should work
  */
 
-physical_mm_group_t	*physical_mmap = NULL;
+pm_region_t	*physical_mmap = NULL;
 uint32_t _physical_mmap_start = 0;
 uint32_t _physical_mmap_end = 0;
 
@@ -38,18 +38,18 @@ static void	__vmap_physical_memory_region_groupe(multiboot_mmap_region_t *mmap) 
 		printk("PAE not supported, physical region ignored\n");
 		return;
 	}
-	// Compute size in Kib
+	// Compute region's size in Kib
 	size_t page_nb = mmap->len / 1024; // phys map in Kib
 	page_nb /= 4; // nb of phys page 4kib
+	// Compute nb of page available in this region
 	page_nb = page_nb - (page_nb % 32); // align on 32
 	size_t bitset_len = page_nb / 32;
-	size_t size = bitset_len * 4 + sizeof(physical_mm_group_t);
+	size_t size = bitset_len * 4 + sizeof(pm_region_t);
 	size_t pages = size / 0x1000;
 	if (pages % 0x1000 || !pages) {
 		pages += 1;
 	}
-	// Compute nb of page
-	physical_mm_group_t *start = (physical_mm_group_t*)PHYSICAL_PTR_TO_VIRTUAL((uint32_t*)_physical_mmap_end);
+	pm_region_t *start = (pm_region_t*)PHYSICAL_PTR_TO_VIRTUAL((uint32_t*)_physical_mmap_end);
 	uint32_t paddr = _physical_mmap_end;
 	uint32_t vaddr = PHYSICAL_ADDR_TO_VIRTUAL(_physical_mmap_end);
 	for (size_t nb_page = 0; nb_page < pages; nb_page += 1) {
@@ -64,10 +64,10 @@ static void	__vmap_physical_memory_region_groupe(multiboot_mmap_region_t *mmap) 
 	memset(start, 0, pages * 0x1000);
 	start->physical_addr = mmap->addr;
 	start->page_nb = page_nb;
-	start->bitset = (uint32_t*)((uint32_t)start + sizeof(physical_mm_group_t));
+	start->bitset = (uint32_t*)((uint32_t)start + sizeof(pm_region_t));
 	start->next = NULL;
 	if (physical_mmap) {
-		physical_mm_group_t *idx = physical_mmap;
+		pm_region_t *idx = physical_mmap;
 		while (idx->next) {
 			idx = idx->next;
 		}
@@ -80,7 +80,7 @@ static void	__vmap_physical_memory_region_groupe(multiboot_mmap_region_t *mmap) 
 
 static void __display_usable_physical_memory() {
 	size_t	size = 0;
-	for (physical_mm_group_t *idx = physical_mmap;
+	for (pm_region_t *idx = physical_mmap;
 			idx; idx = idx->next) {
 		printk("[%#x - %#x] %d Kib of usable memory\n",
 				idx->physical_addr,
