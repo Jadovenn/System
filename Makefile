@@ -4,18 +4,20 @@
 ##
 
 ##################################################
+##               CONFIGURATION                  ##
+##################################################
+
+include build.config
+
+##################################################
 ##                 CONSTANTS                    ##
 ##################################################
 
-VERSION		=	0.0.3
-RELEASE_NAME	=	bare_bones
 NAME		=	system
 KERNEL		=	$(NAME).kern
 SYSTEM_ISO	=	$(NAME)_v$(VERSION)-$(RELEASE_NAME).iso
 
-ARCH	=	i386
 TARGET	=	arch/$(ARCH)
-MODE	=	release
 
 LIBC_PATH	=	lib/libc
 LIBC		=	$(LIBC_PATH)/libc.a
@@ -156,10 +158,10 @@ $(SYSTEM_ISO):	$(KERNEL)
 	scripts/build-iso.sh $(SYSTEM_ISO)
 
 run:		$(SYSTEM_ISO)
-	qemu-system-i386 -m 1G -cdrom $(SYSTEM_ISO)
+	$(QEMU) -m $(PHYSICAL_MEM) -cdrom $(SYSTEM_ISO)
 
 debug:		$(SYSTEM_ISO)
-	qemu-system-i386 -m 1G -s -S -fda $(SYSTEM_ISO) &
+	$(QEMU) -m $(PHYSICAL_MEM) -s -S -fda $(SYSTEM_ISO) &
 	gdb -ex "target remote localhost:1234" -ex "symbol-file $(KERNEL)"
 
 .PHONY:	all iso .c.o .s.o clean re run debug 
