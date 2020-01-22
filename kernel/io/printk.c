@@ -36,6 +36,20 @@ void	__print_decimal(int number) {
 	}
 }
 
+void	__print_unsigned_decimal(unsigned number) {
+	if (number == 0) {
+		monitor_write('0');
+	}
+	else {
+		unsigned digit = number % 10;
+		unsigned next = number / 10;
+		if (next != 0) {
+			__print_decimal(next);
+		}
+		monitor_write((char)digit + 48);
+	}
+}
+
 void	__print_long_decimal(int64_t number) {
 	if (number == 0) {
 		monitor_write('0');
@@ -72,10 +86,13 @@ void	__print_hexadecimal(uint32_t number) {
 	}
 }
 
+
+
 int	__print_formated(va_list *vl, const char *format) {
 	char *string;
 	char character;
 	int  decimal_number;
+	unsigned unsigned_number;
 	uint64_t long_number;
 	uint32_t hexa_number;
 	switch (*format) {
@@ -90,6 +107,10 @@ int	__print_formated(va_list *vl, const char *format) {
 		case 'd':
 			decimal_number = va_arg(*vl, int);
 			__print_decimal(decimal_number);
+			break;
+		case 'u':
+			unsigned_number = va_arg(*vl, unsigned);
+			__print_unsigned_decimal(unsigned_number);
 			break;
 		case 'l':
 			long_number = va_arg(*vl, uint64_t);
