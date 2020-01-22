@@ -158,7 +158,7 @@ $(SYSTEM_ISO):	$(KERNEL)
 	scripts/build-iso.sh $(SYSTEM_ISO)
 
 run:		$(SYSTEM_ISO)
-	$(QEMU) -m $(PHYSICAL_MEM) -cdrom $(SYSTEM_ISO)
+	$(QEMU) -m $(PHYSICAL_MEM) -fda $(SYSTEM_ISO)
 
 debug:		$(SYSTEM_ISO)
 	$(QEMU) -m $(PHYSICAL_MEM) -s -S -fda $(SYSTEM_ISO) &
