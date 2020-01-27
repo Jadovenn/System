@@ -17,12 +17,12 @@
 #include "arch/paging.h"
 
 /**
- * 1. detecting useable physical memory
- * 2. map space for physical memory bitset
- * 3. then physical alloc/free should work
+ * 1. read physical memory region from multiboot header
+ * 2. map physical aera after kernel to store bitset for the physical memory manager (pmm)
+ * 3. map already taken region like kernel space and pmm biset map
  */
 
-pm_region_t	*physical_mmap = NULL;
+pmm_region_t	*physical_mmap = NULL;
 uint32_t _physical_mmap_start = 0;
 uint32_t _physical_mmap_end = 0;
 
@@ -44,12 +44,12 @@ static void	__vmap_physical_memory_region_groupe(multiboot_mmap_region_t *mmap) 
 	// Compute nb of page available in this region
 	page_nb = page_nb - (page_nb % 32); // align on 32
 	size_t bitset_len = page_nb / 32;
-	size_t size = bitset_len * 4 + sizeof(pm_region_t);
+	size_t size = bitset_len * 4 + sizeof(pmm_region_t);
 	size_t pages = size / 0x1000;
 	if (pages % 0x1000 || !pages) {
 		pages += 1;
 	}
-	pm_region_t *start = (pm_region_t*)PHYSICAL_PTR_TO_VIRTUAL((uint32_t*)_physical_mmap_end);
+	pmm_region_t *start = (pmm_region_t*)PHYSICAL_PTR_TO_VIRTUAL((uint32_t*)_physical_mmap_end);
 	uint32_t paddr = _physical_mmap_end;
 	uint32_t vaddr = PHYSICAL_ADDR_TO_VIRTUAL(_physical_mmap_end);
 	for (size_t nb_page = 0; nb_page < pages; nb_page += 1) {
@@ -64,10 +64,10 @@ static void	__vmap_physical_memory_region_groupe(multiboot_mmap_region_t *mmap) 
 	memset(start, 0, pages * 0x1000);
 	start->physical_addr = mmap->addr;
 	start->page_nb = page_nb;
-	start->bitset = (uint32_t*)((uint32_t)start + sizeof(pm_region_t));
+	start->bitset = (uint32_t*)((uint32_t)start + sizeof(pmm_region_t));
 	start->next = NULL;
 	if (physical_mmap) {
-		pm_region_t *idx = physical_mmap;
+		pmm_region_t *idx = physical_mmap;
 		while (idx->next) {
 			idx = idx->next;
 		}
@@ -80,7 +80,7 @@ static void	__vmap_physical_memory_region_groupe(multiboot_mmap_region_t *mmap) 
 
 static void __display_usable_physical_memory() {
 	size_t	size = 0;
-	for (pm_region_t *idx = physical_mmap;
+	for (pmm_region_t *idx = physical_mmap;
 			idx; idx = idx->next) {
 		printk("[%#x - %#x] %d Kib of usable memory\n",
 				idx->physical_addr,
@@ -98,6 +98,20 @@ static void __display_usable_physical_memory() {
 	}
 }
 
+static __inline void __map_kernel_physical_region() {
+	uint32_t kernel_start_addr = VIRTUAL_ADDR_TO_PHYSICAL((uint32_t)&_kernel_start);
+	uint32_t kernel_end_addr = VIRTUAL_ADDR_TO_PHYSICAL((uint32_t)&_end);
+	kernel_end_addr -= kernel_end_addr % 0x1000;
+	uint32_t result = pmm_set_region(kernel_start_addr, kernel_end_addr, true);
+	if (result != EXIT_SUCCESS) {
+		PANIC("Could not map physical aera of the kernel");
+	}
+	result = pmm_set_region(_physical_mmap_start, _physical_mmap_end - 0x1000, true);
+	if (result != EXIT_SUCCESS) {
+		PANIC("Could not map physical aera of the bitset for physical memory manager");
+	}
+}
+
 void	physical_memory_init(multiboot_info *header) {
 	printk("Physical Memory Regions:\n");
 	mltb_foreach_physical_memory_region(header, &__display_physical_memory_regions);
@@ -108,5 +122,6 @@ void	physical_memory_init(multiboot_info *header) {
 	_physical_mmap_end = _physical_mmap_start;
 	mltb_foreach_physical_memory_region(header, &__vmap_physical_memory_region_groupe);
 	__display_usable_physical_memory();
+	__map_kernel_physical_region();
 }
 
