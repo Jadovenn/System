@@ -13,6 +13,9 @@
 
 # define _has_zero_16(word)	((word - (unsigned short)0x0101) & ((~word) & (unsigned short)0x8080))
 
+# define _set_bit(dword, bit)	(dword |= (1 << bit))
+# define _unset_bit(dword, bit)	(dword &=  ~(1 << bit))
+
 #endif // __i386__
 
 #endif // BITSET_H_
