@@ -18,10 +18,22 @@ typedef struct pmm_region {
 	struct 		pmm_region *next;
 }		pmm_region_t;
 
-extern pmm_region_t *physical_mmap;
+extern pmm_region_t *physical_memory_map;
 
-void	physical_free(void);
+/**
+ * @brief free a physical page
+ * @param addr - address to the page to free
+ * @details the physical page should not be used anymore
+ * the free is performed via an offset computation so it is
+ * pretty fast close to O(1)
+ */
+void	physical_free(void *addr);
 
+/**
+ * @brief allocate one physical page
+ * @return physical address to the allocated physical page
+ * @details the allocator is implemented as a sequential search O(N)
+ */
 void	*physical_alloc(void);
 
 /**
@@ -30,7 +42,7 @@ void	*physical_alloc(void);
  * @param value - value to set true/false
  * @return EXIT_SUCCESS/FAILURE
  */
-uint32_t	pmm_set_page(uint32_t p_addr, bool value);
+uint32_t pmm_set_page(uint32_t p_addr, bool value);
 
 /**
  * @brief set value to physical region including p_end_addr
@@ -39,7 +51,7 @@ uint32_t	pmm_set_page(uint32_t p_addr, bool value);
  * @param value - value to set true/false
  * @return EXIT_SUCCESS/FAILURE
  */
-uint32_t	pmm_set_region(const uint32_t p_start_addr, const uint32_t p_end_addr, bool value);
+uint32_t pmm_set_region(const uint32_t p_start_addr, const uint32_t p_end_addr, bool value);
 
 #endif // PHYSICAL_MEMORY_H_
 

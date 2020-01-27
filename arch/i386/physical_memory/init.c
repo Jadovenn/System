@@ -22,7 +22,6 @@
  * 3. map already taken region like kernel space and pmm biset map
  */
 
-pmm_region_t	*physical_mmap = NULL;
 uint32_t _physical_mmap_start = 0;
 uint32_t _physical_mmap_end = 0;
 
@@ -66,21 +65,21 @@ static void	__vmap_physical_memory_region_groupe(multiboot_mmap_region_t *mmap) 
 	start->page_nb = page_nb;
 	start->bitset = (uint32_t*)((uint32_t)start + sizeof(pmm_region_t));
 	start->next = NULL;
-	if (physical_mmap) {
-		pmm_region_t *idx = physical_mmap;
+	if (physical_memory_map) {
+		pmm_region_t *idx = physical_memory_map;
 		while (idx->next) {
 			idx = idx->next;
 		}
 		idx->next = start;
 	}
 	else {
-		physical_mmap = start;
+		physical_memory_map = start;
 	}
 }
 
 static void __display_usable_physical_memory() {
 	size_t	size = 0;
-	for (pmm_region_t *idx = physical_mmap;
+	for (pmm_region_t *idx = physical_memory_map;
 			idx; idx = idx->next) {
 		printk("[%#x - %#x] %d Kib of usable memory\n",
 				idx->physical_addr,

@@ -10,13 +10,15 @@
 
 #include "physical_memory.h"
 
+pmm_region_t	*physical_memory_map = NULL;
+
 uint32_t	pmm_set_page(const uint32_t p_addr, bool value) {
 	pmm_region_t *region = NULL;
 	if (p_addr % 0x1000) { // check alignement
 		return EXIT_FAILURE;
 	}
 	{ // find coresponding region
-		pmm_region_t *idx = physical_mmap;
+		pmm_region_t *idx = physical_memory_map;
 		while (idx) {
 			if (p_addr - idx->physical_addr < idx->page_nb * 0x1000) {
 				region = idx;
@@ -52,15 +54,12 @@ uint32_t	pmm_set_region(const uint32_t p_start_addr, const uint32_t p_end_addr, 
 	return EXIT_SUCCESS;
 }
 
-void	p_free(void) {
+void	p_free(void *addr) {
+	pmm_set_page((uint32_t)addr, false);
 }
 
-/**
- * @brief physical memory page allocator
- * @details sequencial search algorithm using shortcut ptr
- * @return a physical pointer to a 4Kib physical page
- */
 void	*p_alloc(void) {
+	pmm_region_t *region = physical_memory_map;
 	return NULL;
 }
 
