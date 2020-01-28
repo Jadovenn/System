@@ -5,7 +5,7 @@
 
 #include <test/test.h>
 
-extern int test_physical_memory_manager();
+int test_physical_memory_manager();
 
 void	arch_test() {
 	int result = 0;
