@@ -59,7 +59,7 @@ void	pmm_free(void *addr) {
 }
 
 void	*__compute_addr_and_alloc(pmm_region_t *region, uint32_t offset, uint32_t bit, uint32_t bit_count) {
-	uint32_t addr = region->physical_addr + (offset * 4 * 0x1000) + (bit_count * 0x1000);
+	uint32_t addr = region->physical_addr + (offset * 32 * 0x1000) + (bit_count * 0x1000);
 	region->bitset[offset] |= bit;
 	return (void*)addr;
 }
