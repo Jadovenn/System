@@ -10,13 +10,14 @@
 #include <kernel/stdio.h>
 #include <kernel/panic.h>
 
-#include "physical_memory.h"
 #include "cpu/mmu.h"
 #include "cpu/cr.h"
+#include "arch/physical_memory.h"
 #include "arch/memlayout.h"
 #include "arch/paging.h"
 
 /**
+ * Physical Memory Init procedure
  * 1. read physical memory region from multiboot header
  * 2. map physical aera after kernel to store bitset for the physical memory manager (pmm)
  * 3. map already taken region like kernel space and pmm biset map
@@ -122,5 +123,16 @@ void	physical_memory_init(multiboot_info *header) {
 	mltb_foreach_physical_memory_region(header, &__vmap_physical_memory_region_groupe);
 	__display_usable_physical_memory();
 	__map_kernel_physical_region();
+	void *page = pmm_alloc();
+	unsigned idx = 0;
+	while (pmm_alloc()) {
+		idx += 1;
+	}
+	printk("allocated page: %#x\n", (uint32_t)page + idx * 0x1000);
+	while (idx) {
+		pmm_free((void*)((uint32_t)page + idx * 0x1000));
+		idx -= 1;
+	}
+	pmm_free(page);
 }
 

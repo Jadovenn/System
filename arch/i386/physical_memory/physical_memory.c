@@ -8,7 +8,7 @@
 #include <stdint.h>
 #include <bitset.h>
 
-#include "physical_memory.h"
+#include "arch/physical_memory.h"
 
 pmm_region_t	*physical_memory_map = NULL;
 
