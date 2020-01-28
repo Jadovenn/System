@@ -54,12 +54,36 @@ uint32_t	pmm_set_region(const uint32_t p_start_addr, const uint32_t p_end_addr, 
 	return EXIT_SUCCESS;
 }
 
-void	p_free(void *addr) {
+void	pmm_free(void *addr) {
 	pmm_set_page((uint32_t)addr, false);
 }
 
-void	*p_alloc(void) {
+void	*__compute_addr_and_alloc(pmm_region_t *region, uint32_t offset, uint32_t bit, uint32_t bit_count) {
+	uint32_t addr = region->physical_addr + (offset * 4 * 0x1000) + (bit_count * 0x1000);
+	region->bitset[offset] |= bit;
+	return (void*)addr;
+}
+
+void	*pmm_alloc(void) {
 	pmm_region_t *region = physical_memory_map;
+	while (region) { // search in region
+		unsigned idx = 0;
+		while (idx < region->page_nb / 32) { // search in bitset
+			if (region->bitset[idx] != 0xFFFFFFFF) {
+				uint32_t bit = 0x80000000;
+				uint32_t bit_count = 0;
+				while (bit) { // search in dword
+					if (!(region->bitset[idx] & bit)) { // free page found
+						return __compute_addr_and_alloc(region, idx, bit, bit_count);
+					}
+					bit = bit >> 1;
+					bit_count += 1;
+				}
+			}
+			idx += 1;
+		}
+		region = region->next;
+	}
 	return NULL;
 }
 
