@@ -3,6 +3,7 @@
  * System sources under license MIT
  */
 
+#include <test/test.h>
 #include <kernel/stdio.h>
 #include <kernel/tty.h>
 
@@ -37,6 +38,7 @@ int	main(int ac, char **av) {
 	(void)av;
 	int result;
 
+	arch_test();
 	result = test_heap_physical();
 	klog(result, "test heap_physical()");
 	result = test_heap_fragmentation();
