@@ -27,14 +27,14 @@ extern pmm_region_t *physical_memory_map;
  * the free is performed via an offset computation so it is
  * pretty fast close to O(1)
  */
-void	physical_free(void *addr);
+void	pmm_free(void *addr);
 
 /**
  * @brief allocate one physical page
  * @return physical address to the allocated physical page
  * @details the allocator is implemented as a sequential search O(N)
  */
-void	*physical_alloc(void);
+void	*pmm_alloc(void);
 
 /**
  * @brief set value to physical page
