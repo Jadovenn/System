@@ -59,6 +59,7 @@ endif ## END DEBUG
 ifeq ($(MODE), test) ## TEST
 
 SRCS		+=	$(TEST_SRCS)
+COMMON_HEADERS	+=	$(addprefix -I, $(TEST_HEADERS))
 CFLAGS		+=	-g
 
 endif ## END TEST
