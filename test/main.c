@@ -9,9 +9,6 @@
 
 extern int test_memccpy();
 extern int test_strlen();
-extern int test_heap_physical();
-extern int test_heap_fragmentation();
-extern int test_heap_big_alloc();
 
 void	klog(int status, char *msg) {
 	monitor_set_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
@@ -39,12 +36,6 @@ int	main(int ac, char **av) {
 	int result;
 
 	arch_test();
-	result = test_heap_physical();
-	klog(result, "test heap_physical()");
-	result = test_heap_fragmentation();
-	klog(result, "test heap_fragmentation()");
-	result = test_heap_big_alloc();
-	klog(result, "test heap_big_alloc()");
 	result = test_memccpy();
 	klog(result, "test memccpy()");
 	result = test_strlen();
