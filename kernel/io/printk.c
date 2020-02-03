@@ -4,7 +4,7 @@
  */
 
 #include <stdint.h>
-#include <va_arg.h>
+#include <stdarg.h>
 #include <kernel/tty.h>
 
 // TODO: This implementation could be improved in many way.
