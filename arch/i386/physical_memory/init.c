@@ -91,10 +91,10 @@ static void __display_usable_physical_memory() {
 	size /= 1024;
 	size_t size_gb = size / 1024;
 	if (size_gb != 0) {
-		printk("Free RAM: %d Gib and %d Mib\n", size_gb, size % 1024);
+		printk("Total available RAM: %d Gib and %d Mib\n", size_gb, size % 1024);
 	}
 	else {
-		printk("Free RAM: %d Mib\n", size);
+		printk("Total available RAM: %d Mib\n", size);
 	}
 }
 
