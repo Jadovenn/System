@@ -10,7 +10,7 @@
 
 int	test_strlen() {
 	char	str_1[] = "hello world";
-	char	*str_2;
+	char	str_2[] = "lkk_qwje_oqwe=-1kjbakl*kwjehlq;w4elqk kjk1kjk5kkjfe0j4bktbkew0fiwjblj34035ikb";
 	size_t	len;
 
 
@@ -24,42 +24,11 @@ int	test_strlen() {
 		return EXIT_FAILURE;
 	}
 
-	str_2 = kmalloc(2048 * sizeof(char));
-	if (!str_2) {
-		printk("Error kmalloc\n");
-		return EXIT_FAILURE;
-	}
-	for (unsigned idx = 0; idx < 2048; idx++)
-		str_2[idx] = 'a';
-
-	str_2[2047] = 0;
 	len = strlen(str_2);
-	if (len != 2047) {
-		kfree(str_2);
+	if (len != 77) {
 		return EXIT_FAILURE;
 	}
 
-	str_2[2000] = 0;
-	len = strlen(str_2);
-	if (len != 2000) {
-		kfree(str_2);
-		return EXIT_FAILURE;
-	}
-
-	str_2[1533] = 0;
-	len = strlen(str_2);
-	if (len != 1533) {
-		kfree(str_2);
-		return EXIT_FAILURE;
-	}
-
-	str_2[3] = 0;
-	len = strlen(str_2);
-	if (len != 3) {
-		kfree(str_2);
-		return EXIT_FAILURE;
-	}
-	kfree(str_2);
 	return EXIT_SUCCESS;
 }
 
