@@ -17,49 +17,52 @@ NAME		=	system
 KERNEL		=	$(NAME).kern
 SYSTEM_ISO	=	$(NAME)_v$(VERSION)-$(RELEASE_NAME).iso
 
-TARGET	=	arch/$(ARCH)
-
-LIBC_PATH	=	lib/libc
-LIBC		=	$(LIBC_PATH)/libc.a
-
 ##################################################
 ##                  SOURCES                     ##
 ##################################################
 
+# dependency
+LIBC_PATH	=	lib/libc
+LIBC		=	$(LIBC_PATH)/libc.a
+HEADERS		+=	-Ilib/libc/include
+
+# kernel common
 include kernel/make.config
 
-COMMON_HEADERS	=	$(addprefix -I, $(KERNEL_INCLUDE_DIR)) \
-			-Ilib/libc/include
+SRCS		=	$(KERNEL_C_SRCS)
+HEADERS		+=	$(addprefix -I, $(KERNEL_INCLUDE_DIRS))
 
-include  test/make.config
-
+# arch depencency
 ARCH_DIR	=	arch/$(ARCH)
+include	$(ARCH_DIR)/make.config
+
+ASM		+=	$(ARCH_ASM_SRCS)
+SRCS		+=	$(ARCH_C_SRCS)
+HEADERS		+=	$(addprefix -I, $(ARCH_INCLUDE_DIRS))
+LDFLAGS		+=	$(ARCH_LDFLAGS)
 
 ##################################################
 ##                   MODES                      ##
 ##################################################
 
-SRCS		+=	$(KERNEL_SRCS)
-HEADERS		+=	$(COMMON_HEADERS)
-
 ifeq ($(MODE), release) ## RELEASE
 
 SRCS		+=	$(KERNEL_ENTRY_POINT)
-
 CFLAGS		+=	-O3
 
 endif ## END RELEASE
 ifeq ($(MODE), debug) ## DEBUG
 
 SRCS		+=	$(KERNEL_ENTRY_POINT)
-
 CFLAGS		+=	-g
 
 endif ## END DEBUG
 ifeq ($(MODE), test) ## TEST
 
+include  test/make.config
+
 SRCS		+=	$(TEST_SRCS)
-COMMON_HEADERS	+=	$(addprefix -I, $(TEST_HEADERS))
+HEADERS		+=	$(addprefix -I, $(TEST_HEADERS))
 CFLAGS		+=	-g
 
 endif ## END TEST
@@ -84,15 +87,9 @@ ifeq ($(UNAME), Linux) ## LINUX BASED
 	NASM	=	nasm
 endif # END LINUX BASED
 
-include	$(ARCH_DIR)/make.config
 
 endif ## END x86
 
-MULTIBOOT	+=	$(KERNEL_ARCH_MULTIBOOT)
-ASM		+=	$(KERNEL_ARCH_ASM)
-SRCS		+=	$(KERNEL_ARCH_SRCS)
-HEADERS		+=	$(addprefix -I, $(KERNEL_ARCH_INCLUDE))
-LDFLAGS		+=	$(KERNEL_ARCH_LDFLAGS)
 
 ##################################################
 ##                  OBJECTS                     ##
