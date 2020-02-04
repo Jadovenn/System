@@ -165,5 +165,14 @@ debug:		$(SYSTEM_ISO)
 	$(QEMU) -m $(PHYSICAL_MEM) -s -S -fda $(SYSTEM_ISO) &
 	gdb -ex "target remote localhost:1234" -ex "symbol-file $(KERNEL)"
 
-.PHONY:	all iso .c.o .s.o clean re run debug 
+help:
+	@echo "System Makefile:"
+	@echo "\tall: build all"
+	@echo "\tiso: build and create bootable iso"
+	@echo "\trun: run in qemu"
+	@echo "\tdebug: run with gdb"
+	@echo "see build.conf for more details"
+
+
+.PHONY:	all iso .c.o .s.o clean re run debug help
 
