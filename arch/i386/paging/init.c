@@ -15,6 +15,7 @@
 #include "cpu/cr.h"
 #include "arch/paging.h"
 #include "arch/memlayout.h"
+#include "arch/hal.h"
 
 /**
  * Step to initialize paging
@@ -59,50 +60,20 @@ void	boot_paging_init() {
 	flush_tlb();
 }
 
-//
-// Post Init sequence - Pre kernel cold and dark startup
-//
-
-static int	*kernel_page_directory = NULL;
-
 /**
- * @brief allocate physical memory for kernel page directory
- * @return valide virtual ptr to page the directory
+ * TODO:
+ * 	1. install page directory
+ *	1. set correct r/w access for text section
+ *	2. set correct r/w access for rodata section
+ *
+ * func to write:
+ * get_physical_addr_from_virtual() -> lookup physical addr in virtual table
  */
-static __inline__ void	*__setup_free_space_for_pgdt() {
-	int physic_kpd_start = VIRTUAL_ADDR_TO_PHYSICAL(&_end);
-	if (physic_kpd_start % 0x1000) {
-		physic_kpd_start += 0x1000 - physic_kpd_start % 0x1000;
-	}
-	int page_offset = physic_kpd_start / 0x1000;
-	int pte_entry = mmu.boot_page_table[page_offset] & 0xFFFF0000;
-	mmu.boot_page_table[page_offset] = pte_entry | 0x001;
-	flush_tlb();
-	return (void*)PHYSICAL_ADDR_TO_VIRTUAL(physic_kpd_start);
-}
 
-void	kernel_paging_init(multiboot_info *header) {
+void	paging_init(multiboot_info *header) {
 	(void)header;
-	(void) kernel_page_directory;
-	//kernel_page_directory = __setup_free_space_for_pgdt();
-	//printk("kpd_start addr: %#x\n", &kernel_page_directory);
-	//memset(kernel_page_directory, 0x100, 0);
+	hal.mmu.page_directory = &boot_page_directory;
+	__set_section_text_ro();
+	__set_section_rodata_ro();
 }
-
-/**
- * dirty code, keep it here
-
- * @details configure kernel heap just after the physical
- * space of the kernel. But in virtual space the heap is before the kernel
-
-static void	configure_kernel_heap() {
-	const size_t page_size = get_page_size();
-	mmu.heap.placement_address = VIRTUAL_ADDR_TO_PHYSICAL(&_end);
-	if ((mmu.heap.placement_address % page_size) != 0) {
-		mmu.heap.placement_address += (0x1000 - (mmu.heap.placement_address % page_size));
-	}
-	mmu.heap.page_count = 0x100;
-	install_heap((void*)PHYSICAL_ADDR_TO_VIRTUAL(mmu.heap.placement_address), (void*)mmu.heap.placement_address, 0x100 * 0x1000);
-}
-*/
 

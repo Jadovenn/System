@@ -10,23 +10,12 @@
 
 #include "arch/init.h"
 #include "arch/paging.h"
+#include "arch/hal.h"
 #include "cpu/isr.h"
 
 extern void main(int ac, char **av);
 
-/**
- * @brief install CPU related unit
- */
-void	cpu_init() {
-	gdt_init();
-	idt_init();
-	boot_paging_init();
-	asm volatile ("sti");
-}
-
-void	drivers_init() {
-	monitor_driver_init();
-}
+hal_t	hal;
 
 /**
  * multiboot info header parser
@@ -53,12 +42,17 @@ void	check_multiboot(multiboot_info *header, uint32_t magic) {
  * @details the order init function are called matter a lot
  */
 void	kmain(multiboot_info *header, uint32_t magic) {
-	cpu_init();
-	drivers_init();
+	gdt_init();
+	idt_init();
+	//boot_paging_init();
+
+	asm volatile ("sti");
+	monitor_driver_init();
+
 	check_multiboot(header, magic);
 	register_interrupt_handler(14, &page_fault_handler);
 	physical_memory_init(header);
-	kernel_paging_init(header);
+	paging_init(header);
 	main(0, NULL);
 }
 
