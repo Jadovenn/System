@@ -8,10 +8,10 @@
 #include <kernel/panic.h>
 #include <multiboot.h>
 
-#include "arch/init.h"
-#include "arch/paging.h"
-#include "arch/hal.h"
-#include "cpu/isr.h"
+#include <arch/init.h>
+#include <arch/paging.h>
+#include <arch/hal.h>
+#include <cpu/isr.h>
 
 extern void main(int ac, char **av);
 
@@ -44,7 +44,6 @@ void	check_multiboot(multiboot_info *header, uint32_t magic) {
 void	kmain(multiboot_info *header, uint32_t magic) {
 	gdt_init();
 	idt_init();
-	//boot_paging_init();
 
 	asm volatile ("sti");
 	monitor_driver_init();
