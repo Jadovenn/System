@@ -5,13 +5,10 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <system.h>
 #include <multiboot.h>
 #include <kernel/stdio.h>
-#include <kernel/heap.h>
 #include <kernel/panic.h>
 
-#include "cpu/mmu.h"
 #include "cpu/cr.h"
 #include "arch/paging.h"
 #include "arch/memlayout.h"
@@ -52,16 +49,7 @@ static void	__set_section_rodata_ro() {
 	}
 }
 
-void	boot_paging_init() {
-	mmu.boot_page_directory = &boot_page_directory;
-	mmu.boot_page_table = &boot_page_table;
-	__set_section_text_ro();
-	__set_section_rodata_ro();
-	flush_tlb();
-}
-
 /**
- * TODO:
  * 	1. install page directory
  *	1. set correct r/w access for text section
  *	2. set correct r/w access for rodata section

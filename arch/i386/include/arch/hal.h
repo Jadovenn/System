@@ -9,7 +9,7 @@
 #include <stdint.h>
 
 typedef struct	mmu {
-	uintptr_t	boot_page_directory;
+	uintptr_t	page_directory;
 }		mmu_t;
 
 
