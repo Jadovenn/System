@@ -27,7 +27,8 @@
 // Post boot - Pre init sequence
 //
 
-static void	__set_section_text_ro() {
+static __inline__ 
+void	__set_section_text_ro() {
 	uint32_t text_end_addr = VIRTUAL_ADDR_TO_PHYSICAL(&_end_code);
 	uint32_t vaddr = (uint32_t)&_kernel_start;
 	uint32_t paddr = VIRTUAL_ADDR_TO_PHYSICAL(&_kernel_start);
@@ -38,7 +39,8 @@ static void	__set_section_text_ro() {
 	}
 }
 
-static void	__set_section_rodata_ro() {
+static __inline__
+void	__set_section_rodata_ro() {
 	uint32_t rodata_end_addr = VIRTUAL_ADDR_TO_PHYSICAL(&_end_rodata);
 	uint32_t vaddr = (uint32_t)&_rodata;
 	uint32_t paddr = VIRTUAL_ADDR_TO_PHYSICAL(&_rodata);
