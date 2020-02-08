@@ -12,7 +12,7 @@
 #include <arch/memlayout.h>
 #include <kernel/stdio.h>
 
-uint32_t		paging_map_physical(uint32_t physical_addr, uint32_t virtual_addr, uint32_t flags, bool override) {
+uint32_t		pg_map_physical(uint32_t physical_addr, uint32_t virtual_addr, uint32_t flags, bool override) {
 	uint32_t	*pg_dir = (uint32_t*)PHYSICAL_ADDR_TO_VIRTUAL(read_cr3());
 
 	if (virtual_addr % 0x1000 || physical_addr % 0x1000) {

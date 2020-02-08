@@ -18,7 +18,7 @@
  * @param flags - page configuration flags
  * @param override - if true override existing setting if there is a present valide page
  */
-uint32_t paging_map_physical(uint32_t physical_addr, uint32_t virtual_addr, uint32_t flags, bool override);
+uint32_t pg_map_physical(uint32_t physical_addr, uint32_t virtual_addr, uint32_t flags, bool override);
 
 /**
  * @brief page fault handler
