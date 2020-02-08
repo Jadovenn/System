@@ -9,7 +9,7 @@
 [EXTERN _end_data]
 [EXTERN _end]
 ;; symbole from the kernel
-[EXTERN kmain]
+[EXTERN i386_entry]
 ;; ------------------------------------
 ;; multiboot.s - multiboot kernel entry point
 ;; System sources under license MIT
@@ -116,7 +116,7 @@ _start:
 	add	ebx, 0xC0000000
 	push	eax
 	push	ebx
-	call	kmain
+	call	i386_entry
 	cli
 .hang:	hlt
 	jmp .hang

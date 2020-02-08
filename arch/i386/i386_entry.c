@@ -41,7 +41,7 @@ void	check_multiboot(multiboot_info *header, uint32_t magic) {
  * @brief kernel entrypoint
  * @details the order init function are called matter a lot
  */
-void	kmain(multiboot_info *header, uint32_t magic) {
+void	i386_entry(multiboot_info *header, uint32_t magic) {
 	gdt_init();
 	idt_init();
 
