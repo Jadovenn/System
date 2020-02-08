@@ -25,8 +25,8 @@
  */
 extern uint32_t _kernel_space;
 extern uint32_t	_kernel_start;
-extern uint32_t	boot_page_directory;
-extern uint32_t	boot_page_table;
+extern uint32_t	boot_page_directory; // only available at boot time
+extern uint32_t	boot_page_table; // only available at boot time
 extern uint32_t	_code;
 extern uint32_t	_end_code;
 extern uint32_t	_rodata;
