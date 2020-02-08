@@ -16,3 +16,9 @@ uint32_t	read_cr3() {
 	return cr3;
 }
 
+uint32_t	read_cr2() {
+	uint32_t	cr2 = 0;
+	__asm__("mov %%cr2, %0" : "=a" (cr2) : );
+	return cr2;
+}
+

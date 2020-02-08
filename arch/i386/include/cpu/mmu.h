@@ -60,40 +60,11 @@ typedef struct		page_directory_t {
 	page_table	*page_tables;
 }			page_directory;
 
-typedef struct 		kernel_heap_t {
-	uint32_t	*base;
-	uint32_t	*top;
-	uint32_t	placement_address;
-	size_t		page_count;
-} 			kheap;
-
 #define PHYS_MEMORY_AVAILABLE	1
 #define PHYS_MEMORY_RESERVED	2
 #define PHYS_MEMORY_ACPI	3
 #define PHYS_MEMORY_NVS		4
 #define PHYS_MEMORY_BADRAM	5
-
-int	map_frame_region(uint32_t physical_addr, size_t length, uint32_t memory_type);
-uint32_t	first_available_page();
-void		release_frame(uint32_t physical_addr);
-
-typedef struct	frame_t {
-	struct frame_t	*next;
-	uint32_t	*bitset;
-	uint32_t	physical_addr;
-	uint32_t	type;
-	size_t		size;
-}		frame;
-
-struct	mmu_t	{
-	uint32_t	*boot_page_directory;
-	uint32_t	*boot_page_table;
-	size_t		page_size;
-	frame		*frames;
-	kheap		heap;
-};
-
-extern struct mmu_t	mmu;
 
 #endif // MMU_H_
 

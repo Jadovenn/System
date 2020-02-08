@@ -24,7 +24,7 @@ uint32_t		paging_map_physical(uint32_t physical_addr, uint32_t virtual_addr, uin
 		printk("ERROR ::: PAGING: Asked page is not present, could not add a new one\n");
 		return EXIT_FAILURE;
 	}
-	physical_pg_entry_addr &= 0xFFFFD000;
+	physical_pg_entry_addr &= 0xFFFFF000;
 	uint32_t *pg_table_entry = PHYSICAL_PTR_TO_VIRTUAL((uint32_t*)physical_pg_entry_addr);
 	uint32_t pte_offset = virtual_addr >> 12 & 0x03FF;
 	uint32_t *pte_ptr = &pg_table_entry[pte_offset];

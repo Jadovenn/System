@@ -6,7 +6,8 @@
      /___/                   
 ```
 
-System is a playground kernel. It is work in progress for i386 architecture.
+System is a playground kernel. It is work in progress for i386 architecture.   
+It is written for educational purpose.
 
 Please read the [Get Started](https://github.com/domage-j/system/wiki/Get-Started) guide in the wiki.
 

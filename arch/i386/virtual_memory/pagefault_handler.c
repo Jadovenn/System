@@ -7,7 +7,8 @@
 #include <kernel/stdio.h>
 #include <kernel/panic.h>
 
-#include "cpu/isr.h"
+#include <cpu/cr.h>
+#include <cpu/isr.h>
 
 static const char *PG_FAULT_USER_ALL = "::: Page Fault caused by user are not managed yet";
 static const char *PG_FAULT_KERNEL_000 = "::: Kernel tried to read a non present page";
@@ -17,12 +18,14 @@ static const char *PG_FAULT_KERNEL_011 = "::: Kernel tried to write a page and c
 static const char *PG_FAULT_DEFAULT = "::: Unknown Page Fault Interrution";
 
 void	page_fault_handler(registers_t regs) {
+	uint32_t cr2 = read_cr2();
 	uint32_t mask = regs.err_code & 0x00000007;
 	if (mask & 0x4) {
 		PANIC(PG_FAULT_USER_ALL);
 	}
 	printk("\n:::: PAGE FAULT ::::\n");
-	dump_regs_from_interrupt(regs);
+	//dump_regs_from_interrupt(regs);
+	printk("cr2: %#x\n", cr2);
 	if (!mask) {
 		PANIC(PG_FAULT_KERNEL_000);
 	}

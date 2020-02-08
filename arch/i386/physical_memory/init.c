@@ -10,7 +10,6 @@
 #include <kernel/stdio.h>
 #include <kernel/panic.h>
 
-#include "cpu/mmu.h"
 #include "cpu/cr.h"
 #include "arch/physical_memory.h"
 #include "arch/memlayout.h"
