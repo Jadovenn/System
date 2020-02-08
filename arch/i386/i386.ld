@@ -6,6 +6,8 @@
 ENTRY(_start)
 SECTIONS {
 
+	_kernel_space = 0xC0100000;
+
 	. = 0xC0100000;
 
 	_kernel_start = .;
