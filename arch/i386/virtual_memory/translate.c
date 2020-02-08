@@ -7,7 +7,7 @@
 #include <cpu/cr.h>
 #include <arch/memlayout.h>
 
-uint32_t	paging_translate_virtual(uint32_t virtual_addr) {
+uint32_t	pg_translate_virtual(uint32_t virtual_addr) {
 	uint32_t	*pg_dir = (uint32_t*)PHYSICAL_ADDR_TO_VIRTUAL(read_cr3());
 
 	uint32_t aligned_addr = virtual_addr - (virtual_addr % 0x1000);

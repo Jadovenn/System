@@ -8,6 +8,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <api/mm.h>
 #include <cpu/isr.h>
 
 /**
@@ -30,7 +31,13 @@ void page_fault_handler(registers_t regs);
  * 	necessarly aligned
  * @return {uint32_t} - corresponding physical address
  */
-uint32_t paging_translate_virtual(uint32_t virtual_addr);
+uint32_t pg_translate_virtual(uint32_t virtual_addr);
+
+typedef struct	arch_vma {
+	uint32_t	vstart;
+	uint32_t	vend;
+	memory_zone_t	zone;
+}		arch_vma_t;
 
 #endif // PAGING_H_
 
