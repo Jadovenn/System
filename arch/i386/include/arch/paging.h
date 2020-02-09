@@ -11,6 +11,8 @@
 #include <api/mm.h>
 #include <cpu/isr.h>
 
+extern vma_t	kernel_vma[];
+
 /**
  * @brief map a physical page to a virtual page
  * @param physcial_addr - aligned physical page addr
@@ -33,11 +35,16 @@ void page_fault_handler(registers_t regs);
  */
 uint32_t pg_translate_virtual(uint32_t virtual_addr);
 
-typedef struct	arch_vma {
+/**
+ * Physical Memory region
+ */
+typedef struct	pma {
 	uint32_t	vstart;
 	uint32_t	vend;
-	memory_zone_t	zone;
-}		arch_vma_t;
+	char		*name;
+}		pma_t;
+
+extern pma_t	*kernel_pma[];
 
 #endif // PAGING_H_
 
