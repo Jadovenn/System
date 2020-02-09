@@ -9,10 +9,9 @@
 #include <kernel/stdio.h>
 #include <kernel/panic.h>
 
-#include "cpu/cr.h"
-#include "arch/paging.h"
-#include "arch/memlayout.h"
-#include "arch/hal.h"
+#include <cpu/cr.h>
+#include <arch/paging.h>
+#include <arch/memlayout.h>
 
 /**
  * Step to initialize paging
@@ -93,12 +92,9 @@ void	paging_init(multiboot_info *header) {
 	(void)header;
 	_vmap_page_tables_entries();
 	_vmap_page_directory();
-	printk("%#x\n", read_cr3());
 	write_cr3(_page_directory_start);
 	flush_tlb();
-	printk("%#x\n", read_cr3());
 	
-	//hal.mmu.page_directory = &boot_page_directory;
 	__set_section_text_ro();
 	__set_section_rodata_ro();
 	memset(PHYSICAL_PTR_TO_VIRTUAL((uint32_t*)&boot_page_directory), 0x1000, 0x0);

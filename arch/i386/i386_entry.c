@@ -10,12 +10,9 @@
 
 #include <arch/init.h>
 #include <arch/paging.h>
-#include <arch/hal.h>
 #include <cpu/isr.h>
 
 extern void main(int ac, char **av);
-
-hal_t	hal;
 
 /**
  * multiboot info header parser
