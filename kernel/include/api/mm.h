@@ -23,6 +23,14 @@ typedef struct	pg_page {
 	uint8_t		flags;
 }		pg_page_t;
 
+// Virtual memory aera
+typedef struct	vma {
+	uintptr_t	start;
+	uintptr_t	end;
+	uint8_t		flags;
+	char		*name;
+}		vma_t;
+
 /**
  * @bried allocate size bytes over multiple page
  * @details bakcend function for *
