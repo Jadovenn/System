@@ -1,8 +1,9 @@
 /**
  * mmu_init.c - Memory Management Unit Installation
- * System under license MIT
+ * System sources under license MIT
  */
 
+#include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
 #include <multiboot.h>
@@ -65,12 +66,30 @@ uint32_t _page_directory_end;
 uint32_t _page_table_entries_start;
 uint32_t _page_table_entries_end;
 
+/**
+ * Require by libc, sbrk*'s like procedure
+ * but gdt is not affected
+ */
+static
+void	*alloc_heap_space(size_t *size, size_t request) {
+	return NULL;
+}
+
+/**
+ * @brief init libc malloc, recycle boot pg directory
+ */
+void	heap_init() {
+	memset(PHYSICAL_PTR_TO_VIRTUAL((uint32_t*)&boot_page_directory), 0x1000, 0x0);
+	
+	libc_init_allocator(0xD0000000, 0x1000, &alloc_heap_space);
+}
+
 static void	_vmap_page_directory() {
 	// alloc page contiguously
 	_page_directory_start = _page_table_entries_end;
 	_page_directory_end = _page_directory_start + 0x1000;
-	uintptr_t vstart = PHYSICAL_PTR_TO_VIRTUAL((uintptr_t)_page_directory_start);
-	uintptr_t pg_dir = PHYSICAL_PTR_TO_VIRTUAL(read_cr3());
+	uint32_t *vstart = PHYSICAL_PTR_TO_VIRTUAL((uint32_t*)_page_directory_start);
+	uint32_t *pg_dir = PHYSICAL_PTR_TO_VIRTUAL(read_cr3());
 	pg_map_physical(_page_directory_start, (uint32_t)vstart, 0x003, false);
 	// init by copy of the boot page directory and remove itself from the boot table
 	memcpy(vstart, pg_dir, 0x1000);
@@ -80,7 +99,7 @@ static void	_vmap_page_tables_entries() {
 	// alloc page contiguously
 	_page_table_entries_start = _physical_mmap_end;
 	_page_table_entries_end = _page_table_entries_start + 0x1000;
-	uintptr_t vstart = PHYSICAL_PTR_TO_VIRTUAL((uintptr_t)_page_table_entries_start);
+	uint32_t *vstart = PHYSICAL_PTR_TO_VIRTUAL((uint32_t*)_page_table_entries_start);
 	pg_map_physical(_page_table_entries_start, (uint32_t)vstart, 0x003, false);
 	// init by adding manually the boot page directory page
 	memset(vstart, 0x1000, 0x0);
@@ -97,6 +116,6 @@ void	paging_init(multiboot_info *header) {
 	
 	__set_section_text_ro();
 	__set_section_rodata_ro();
-	memset(PHYSICAL_PTR_TO_VIRTUAL((uint32_t*)&boot_page_directory), 0x1000, 0x0);
+	//heap_init();
 }
 
