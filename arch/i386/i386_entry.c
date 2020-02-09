@@ -35,16 +35,13 @@ void	check_multiboot(multiboot_info *header, uint32_t magic) {
 }
 
 /**
- * @brief kernel entrypoint
- * @details the order init function are called matter a lot
+ * @brief arch entrypoint
  */
 void	i386_entry(multiboot_info *header, uint32_t magic) {
 	gdt_init();
 	idt_init();
-
 	asm volatile ("sti");
 	monitor_driver_init();
-
 	check_multiboot(header, magic);
 	register_interrupt_handler(14, &page_fault_handler);
 	physical_memory_init(header);
