@@ -34,7 +34,7 @@ void	__set_section_text_ro() {
 	uint32_t paddr = VIRTUAL_ADDR_TO_PHYSICAL(&_kernel_start);
 	unsigned page_mapped = 0;
 	for (;paddr < text_end_addr; vaddr += 0x1000, paddr += 0x1000) {
-		paging_map_physical(paddr, vaddr, 0x001, true);
+		pg_map_physical(paddr, vaddr, 0x001, true);
 		page_mapped += 1;
 	}
 }
@@ -46,24 +46,61 @@ void	__set_section_rodata_ro() {
 	uint32_t paddr = VIRTUAL_ADDR_TO_PHYSICAL(&_rodata);
 	unsigned page_mapped = 0;
 	for (;paddr < rodata_end_addr; vaddr += 0x1000, paddr += 0x1000) {
-		paging_map_physical(paddr, vaddr, 0x001, true);
+		pg_map_physical(paddr, vaddr, 0x001, true);
 		page_mapped += 1;
 	}
 }
 
 /**
- * 	1. install page directory
- *	1. set correct r/w access for text section
- *	2. set correct r/w access for rodata section
- *
- * func to write:
- * get_physical_addr_from_virtual() -> lookup physical addr in virtual table
+ * Paging init sequence:
+ *	1. allocate & init physical page for page_table_entries
+ *	2. allocate & init physical page for page_boot_directory
+ *	3. flush tlb
+ *	// recycle boot pg directory page, optional 
+ *	4. set correct r/w access for text section
+ *	5. set correct r/w access for rodata section
  */
+
+uint32_t _page_directory_start;
+uint32_t _page_directory_end;
+uint32_t _page_table_entries_start;
+uint32_t _page_table_entries_end;
+
+static void	_vmap_page_directory() {
+	// alloc page contiguously
+	_page_directory_start = _page_table_entries_end;
+	_page_directory_end = _page_directory_start + 0x1000;
+	uintptr_t vstart = PHYSICAL_PTR_TO_VIRTUAL((uintptr_t)_page_directory_start);
+	uintptr_t pg_dir = PHYSICAL_PTR_TO_VIRTUAL(read_cr3());
+	pg_map_physical(_page_directory_start, (uint32_t)vstart, 0x003, false);
+	// init by copy of the boot page directory and remove itself from the boot table
+	memcpy(vstart, pg_dir, 0x1000);
+}
+
+static void	_vmap_page_tables_entries() {
+	// alloc page contiguously
+	_page_table_entries_start = _physical_mmap_end;
+	_page_table_entries_end = _page_table_entries_start + 0x1000;
+	uintptr_t vstart = PHYSICAL_PTR_TO_VIRTUAL((uintptr_t)_page_table_entries_start);
+	pg_map_physical(_page_table_entries_start, (uint32_t)vstart, 0x003, false);
+	// init by adding manually the boot page directory page
+	memset(vstart, 0x1000, 0x0);
+	unsigned offset = PHYSICAL_ADDR_TO_VIRTUAL((uint32_t)&boot_page_table) >> 22;
+	vstart[offset] = (uint32_t)&boot_page_table | 0x003;
+}
 
 void	paging_init(multiboot_info *header) {
 	(void)header;
-	hal.mmu.page_directory = &boot_page_directory;
+	_vmap_page_tables_entries();
+	_vmap_page_directory();
+	printk("%#x\n", read_cr3());
+	write_cr3(_page_directory_start);
+	flush_tlb();
+	printk("%#x\n", read_cr3());
+	
+	//hal.mmu.page_directory = &boot_page_directory;
 	__set_section_text_ro();
 	__set_section_rodata_ro();
+	memset(PHYSICAL_PTR_TO_VIRTUAL((uint32_t*)&boot_page_directory), 0x1000, 0x0);
 }
 
