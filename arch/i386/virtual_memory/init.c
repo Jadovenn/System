@@ -34,7 +34,7 @@ void	__set_section_text_ro() {
 	uint32_t paddr = VIRTUAL_ADDR_TO_PHYSICAL(&_kernel_start);
 	unsigned page_mapped = 0;
 	for (;paddr < text_end_addr; vaddr += 0x1000, paddr += 0x1000) {
-		pg_map_physical(paddr, vaddr, 0x001, true);
+		pg_map(paddr, vaddr, 0x001, true);
 		page_mapped += 1;
 	}
 }
@@ -46,7 +46,7 @@ void	__set_section_rodata_ro() {
 	uint32_t paddr = VIRTUAL_ADDR_TO_PHYSICAL(&_rodata);
 	unsigned page_mapped = 0;
 	for (;paddr < rodata_end_addr; vaddr += 0x1000, paddr += 0x1000) {
-		pg_map_physical(paddr, vaddr, 0x001, true);
+		pg_map(paddr, vaddr, 0x001, true);
 		page_mapped += 1;
 	}
 }
@@ -91,7 +91,7 @@ static void	_vmap_page_directory() {
 	_page_directory_end = _page_directory_start + 0x1000;
 	uint32_t *vstart = PHYSICAL_PTR_TO_VIRTUAL((uint32_t*)_page_directory_start);
 	uint32_t *pg_dir = PHYSICAL_PTR_TO_VIRTUAL(read_cr3());
-	pg_map_physical(_page_directory_start, (uint32_t)vstart, 0x003, false);
+	pg_map(_page_directory_start, (uint32_t)vstart, 0x003, false);
 	// init by copy of the boot page directory and remove itself from the boot table
 	memcpy(vstart, pg_dir, 0x1000);
 }
@@ -101,7 +101,7 @@ static void	_vmap_page_tables_entries() {
 	_page_table_entries_start = _physical_mmap_end;
 	_page_table_entries_end = _page_table_entries_start + 0x1000;
 	uint32_t *vstart = PHYSICAL_PTR_TO_VIRTUAL((uint32_t*)_page_table_entries_start);
-	pg_map_physical(_page_table_entries_start, (uint32_t)vstart, 0x003, false);
+	pg_map(_page_table_entries_start, (uint32_t)vstart, 0x003, false);
 	// init by adding manually the boot page directory page
 	memset(vstart, 0x1000, 0x0);
 	unsigned offset = PHYSICAL_ADDR_TO_VIRTUAL((uint32_t)&boot_page_table) >> 22;

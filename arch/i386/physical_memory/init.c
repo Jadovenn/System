@@ -52,7 +52,7 @@ static void	__vmap_physical_memory_region_groupe(multiboot_mmap_region_t *mmap) 
 	uint32_t paddr = _physical_mmap_end;
 	uint32_t vaddr = PHYSICAL_ADDR_TO_VIRTUAL(_physical_mmap_end);
 	for (size_t nb_page = 0; nb_page < pages; nb_page += 1) {
-		if (pg_map_physical(paddr, vaddr, 0x3, false) == EXIT_FAILURE) {
+		if (pg_map(paddr, vaddr, 0x3, false) == EXIT_FAILURE) {
 			PANIC("Could not map safly physical page frame");
 			return;
 		}

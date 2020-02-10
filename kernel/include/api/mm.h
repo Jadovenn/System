@@ -7,6 +7,7 @@
 # define _K_API_MM_H_
 
 #include <stdint.h>
+#include <stddef.h>
 
 /**
  * @brief Virtual Memory Page
