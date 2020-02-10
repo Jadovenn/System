@@ -10,10 +10,13 @@
 #include <cpu/cr.h>
 #include <arch/paging.h>
 
-void	*allocate_pages(size_t size, memory_zone_t zone) {
-	if (zone < 0 || zone > 1) {
-		return NULL;
-	}
+pg_page_t	*alloc_pages(size_t count, size_t flags) {
+	(void)count;
+	(void)flags;
 	return NULL;
+}
+
+void	free_pages(pg_page_t *p) {
+	(void)p;
 }
 
