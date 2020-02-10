@@ -72,6 +72,8 @@ uint32_t _page_table_entries_end;
  */
 static
 void	*alloc_heap_space(size_t *size, size_t request) {
+	(void)size;
+	(void)request;
 	return NULL;
 }
 
@@ -79,8 +81,7 @@ void	*alloc_heap_space(size_t *size, size_t request) {
  * @brief init libc malloc, recycle boot pg directory
  */
 void	heap_init() {
-	memset(PHYSICAL_PTR_TO_VIRTUAL((uint32_t*)&boot_page_directory), 0x1000, 0x0);
-	
+	pg_add_pte(0xD0000000, (uint32_t)&boot_page_directory);
 	libc_init_allocator(0xD0000000, 0x1000, &alloc_heap_space);
 }
 
@@ -113,9 +114,8 @@ void	paging_init(multiboot_info *header) {
 	_vmap_page_directory();
 	write_cr3(_page_directory_start);
 	flush_tlb();
-	
 	__set_section_text_ro();
 	__set_section_rodata_ro();
-	//heap_init();
+	heap_init();
 }
 
