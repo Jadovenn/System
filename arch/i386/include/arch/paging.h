@@ -11,7 +11,9 @@
 #include <api/mm.h>
 #include <cpu/isr.h>
 
-extern vma_t	kernel_vma[];
+extern vma_struct_t	kernel_vma[];
+
+void	pg_add_pte(uint32_t vaddr, uint32_t paddr);
 
 /**
  * @brief map a physical page to a virtual page

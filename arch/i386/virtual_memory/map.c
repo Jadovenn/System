@@ -4,6 +4,7 @@
  */
 
 #include <stdint.h>
+#include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
 
@@ -35,5 +36,17 @@ uint32_t		pg_map_physical(uint32_t physical_addr, uint32_t virtual_addr, uint32_
 	*pte_ptr = physical_addr | flags;
 	flush_tlb();
 	return EXIT_SUCCESS;
+}
+
+void	pg_add_pte(uintptr_t vaddr, uintptr_t paddr) {
+	unsigned offset = vaddr >> 22;
+	uint32_t *pg_dir = (uint32_t*)PHYSICAL_ADDR_TO_VIRTUAL(read_cr3());
+	uint32_t *pte_pages = PHYSICAL_PTR_TO_VIRTUAL((uint32_t*)_page_table_entries_start);
+	pte_pages[offset] = paddr | 0x3;
+	flush_tlb();
+	uint32_t *pte = pte_pages + offset;
+	memset(pte, 0x1000, 0);
+	pg_dir[offset] = paddr | 0x3;
+	flush_tlb();
 }
 
