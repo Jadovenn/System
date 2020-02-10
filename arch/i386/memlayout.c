@@ -22,15 +22,13 @@ vma_struct_t	_kernel_vma[] = {
 
 /**
  * Kernel Physical Memory Region
- * TODO:
- * 	in vitual_memory/init.c add dma entry in this
- * 	table after the dma area is determinated
  */
 pm_region_t	_kernel_pm_region[] = {
 	{ 0x00000000, 0x000FFFFF, 0},
 	{ VIRTUAL_ADDR_TO_PHYSICAL((uintptr_t)&_kernel_start),
 		VIRTUAL_ADDR_TO_PHYSICAL((uintptr_t)&_end), 2},
-	{ 0x0, 0x0, 3},
+	{ VIRTUAL_ADDR_TO_PHYSICAL((uintptr_t)&_kernel_start),
+		0x01000000, 3},
 	{ 0x0, 0x0, 0}
 };
 
