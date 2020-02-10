@@ -15,7 +15,7 @@ static const char *PG_FAULT_KERNEL_000 = "::: Kernel tried to read a non present
 static const char *PG_FAULT_KERNEL_001 = "::: Kernel tried to read a page and caused a protection fault";
 static const char *PG_FAULT_KERNEL_010 = "::: Kernel tried to write to a non-present page entry";
 static const char *PG_FAULT_KERNEL_011 = "::: Kernel tried to write a page and caused a protection fault";
-static const char *PG_FAULT_DEFAULT = "::: Unknown Page Fault Interrution";
+static const char *PG_FAULT_DEFAULT = "::: Unexpected Page Fault Interrution";
 
 void	boot_page_fault_handler(registers_t regs) {
 	uint32_t cr2 = read_cr2();
@@ -23,9 +23,9 @@ void	boot_page_fault_handler(registers_t regs) {
 	if (mask & 0x4) {
 		PANIC(PG_FAULT_USER_ALL);
 	}
-	printk("\n:::: PAGE FAULT ::::\n");
-	//dump_regs_from_interrupt(regs);
-	printk("cr2: %#x\n", cr2);
+	printk("\n:::: INTERRUPT %d ::::\n", regs.interr_nb);
+	printk("Page Fault at: %#x\n", cr2);
+	dump_regs_from_interrupt(regs);
 	if (!mask) {
 		PANIC(PG_FAULT_KERNEL_000);
 	}
