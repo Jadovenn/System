@@ -25,7 +25,7 @@ uint32_t pg_map_physical(uint32_t physical_addr, uint32_t virtual_addr, uint32_t
 /**
  * @brief page fault handler
  */
-void page_fault_handler(registers_t regs);
+void boot_page_fault_handler(registers_t regs);
 
 /**
  * @brief translate a virtual address to physical addr

@@ -17,7 +17,7 @@ static const char *PG_FAULT_KERNEL_010 = "::: Kernel tried to write to a non-pre
 static const char *PG_FAULT_KERNEL_011 = "::: Kernel tried to write a page and caused a protection fault";
 static const char *PG_FAULT_DEFAULT = "::: Unknown Page Fault Interrution";
 
-void	page_fault_handler(registers_t regs) {
+void	boot_page_fault_handler(registers_t regs) {
 	uint32_t cr2 = read_cr2();
 	uint32_t mask = regs.err_code & 0x00000007;
 	if (mask & 0x4) {
