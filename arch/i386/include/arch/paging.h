@@ -9,8 +9,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <api/mm.h>
-#include <cpu/isr.h>
-
+#include <cpu/isr.h> 
 /**
  * @brief Map a physical page to a virtual page
  * @param physcial_addr - aligned physical page addr
@@ -48,7 +47,7 @@ uint32_t pg_translate_virtual(uint32_t virtual_addr);
 typedef struct		pm_region {
 	uint32_t	vstart;
 	uint32_t	vend;
-	size_t		type;
+	int32_t		type;
 }			pm_region_t;
 
 extern pm_region_t	_kernel_pm_region[];

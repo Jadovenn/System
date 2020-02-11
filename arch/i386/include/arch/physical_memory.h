@@ -11,11 +11,11 @@
 
 // physical memory region
 typedef struct pmm_region {
-	uint32_t	physical_addr;
-	uint32_t	next_free_offset;
-	size_t		page_nb;
-	uint32_t	*bitset;
 	struct 		pmm_region *next;
+	uint32_t	physical_addr;
+	size_t		page_nb;
+	uint32_t	type;
+	uint32_t	*bitset;
 }		pmm_region_t;
 
 extern pmm_region_t *physical_memory_map;
