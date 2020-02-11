@@ -35,11 +35,12 @@ typedef struct	vma_struct {
 
 #define	VMA_USERSPACE	0
 #define	VMA_BIOS	1
-#define	VMA_KERNEL_IMG	2
-#define VMA_LOW_MEMORY	3
-#define VMA_HEAP	4
-#define	VMA_DEVICES	5
-#define VMA_DATA	6
+#define VMA_RESERVED	2
+#define	VMA_KERNEL_IMG	3
+#define VMA_LOW_MEMORY	4
+#define VMA_HEAP	5
+#define	VMA_DEVICES	6
+#define VMA_DATA	7
 
 /**
  * @brief Memory Structur
