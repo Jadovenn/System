@@ -10,10 +10,10 @@
 #include <kernel/stdio.h>
 #include <kernel/panic.h>
 
-#include "cpu/cr.h"
-#include "arch/physical_memory.h"
-#include "arch/memlayout.h"
-#include "arch/paging.h"
+#include <cpu/cr.h>
+#include <arch/physical_memory.h>
+#include <arch/memlayout.h>
+#include <arch/paging.h>
 
 /**
  * Physical Memory Init procedure
@@ -29,19 +29,15 @@ static void	__display_physical_memory_regions(multiboot_mmap_region_t *mmap) {
 	printk("    addr: %#x, len: %u bytes, type: %d\n", (uint32_t)mmap->addr, (uint32_t)mmap->len, mmap->type);
 }
 
-static void	__vmap_physical_memory_region_groupe(multiboot_mmap_region_t *mmap) {
-	if (!mmap->addr || mmap->type != 1) {
-		return;
-	}
-	if (!(uint32_t)mmap->addr && (uint64_t)mmap->addr) {
-		printk("PAE not supported, physical region ignored\n");
-		return;
-	}
+static inline void	__create_physical_region(uint32_t len, uint32_t addr, uint32_t type) {
 	// Compute region's size in Kib
-	size_t page_nb = mmap->len / 1024; // phys map in Kib
+	size_t page_nb = len / 1024; // phys map in Kib
 	page_nb /= 4; // nb of phys page 4kib
 	// Compute nb of page available in this region
 	page_nb = page_nb - (page_nb % 32); // align on 32
+	if (!page_nb) {
+		return;
+	}
 	size_t bitset_len = page_nb / 32;
 	size_t size = bitset_len * 4 + sizeof(pmm_region_t);
 	size_t pages = size / 0x1000;
@@ -61,26 +57,29 @@ static void	__vmap_physical_memory_region_groupe(multiboot_mmap_region_t *mmap) 
 	}
 	_physical_mmap_end = paddr;
 	memset(start, 0, pages * 0x1000);
-	start->physical_addr = mmap->addr;
+	start->physical_addr = addr;
 	start->page_nb = page_nb;
+	start->type = type;
 	start->bitset = (uint32_t*)((uint32_t)start + sizeof(pmm_region_t));
-	start->next = NULL;
-	if (physical_memory_map) {
-		pmm_region_t *idx = physical_memory_map;
-		while (idx->next) {
-			idx = idx->next;
-		}
-		idx->next = start;
+	start->next = physical_memory_map;
+	physical_memory_map = start;
+}
+
+static void	__vmap_physical_memory_region_groupe(multiboot_mmap_region_t *mmap) {
+	if (!(uint32_t)mmap->addr && (uint64_t)mmap->addr) {
+		printk("PAE not supported, physical region ignored\n");
+		return;
 	}
-	else {
-		physical_memory_map = start;
-	}
+	__create_physical_region(mmap->len, mmap->addr, mmap->type);
 }
 
 static void __display_usable_physical_memory() {
 	size_t	size = 0;
 	for (pmm_region_t *idx = physical_memory_map;
 			idx; idx = idx->next) {
+		if (idx->type != 1) {
+			continue;
+		}
 		printk("[%#x - %#x] %d Kib of usable memory\n",
 				idx->physical_addr,
 				idx->physical_addr + idx->page_nb * 0x1000,
