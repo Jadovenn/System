@@ -1,0 +1,18 @@
+
+log: bochs.log
+config_interface: textconfig
+display_library: sdl2
+
+romimage: file=bios/BIOS-bochs-latest, options=fastboot
+cpu: model=pentium, count=1, ips=50000000, reset_on_triple_fault=1, ignore_bad_msrs=1, msrs="msrs.def"
+megs: 128
+
+clock: sync=none, time0=local
+vga: extension=vbe
+
+pci: enabled=1, chipset=i440fx
+
+vgaromimage: file=bios/VGABIOS-lgpl-latest
+ata0-slave: type=cdrom, path=system_v0.0.3-bare_bones.iso, status=inserted
+boot: cdrom
+
