@@ -24,6 +24,8 @@ vma_struct_t	_kernel_vma[] = {
  * Kernel Physical Memory Region
  * code type after 7 are free to use
  * Please list here special reservation:
+ * 	1: bios aera
+ * 	3: low memory
  * 	7: VGA Buffer
  */
 pm_region_t	_kernel_pm_region[] = {
