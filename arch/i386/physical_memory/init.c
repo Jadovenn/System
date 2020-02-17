@@ -60,7 +60,12 @@ static inline void	__create_physical_region(uint32_t len, uint32_t addr, uint32_
 	start->physical_addr = addr;
 	start->page_nb = page_nb;
 	start->type = type;
-	start->bitset = (uint32_t*)((uint32_t)start + sizeof(pmm_region_t));
+	if (type == 1 || type == 3) {
+		start->bitset = (uint32_t*)((uint32_t)start + sizeof(pmm_region_t));
+	}
+	else {
+		start->bitset = NULL;
+	}
 	start->next = physical_memory_map;
 	physical_memory_map = start;
 }
@@ -70,6 +75,7 @@ static void	__vmap_physical_memory_region_groupe(multiboot_mmap_region_t *mmap) 
 		printk("PAE not supported, physical region ignored\n");
 		return;
 	}
+
 	__create_physical_region(mmap->len, mmap->addr, mmap->type);
 }
 
