@@ -146,6 +146,8 @@ clean:		dependency-clean
 	rm -f	$(OBJS)
 	rm -f	$(TEST_SRCS:.c=.o)
 	rm -f   peda-*
+	rm -f	*.sym
+	rm -f	*.log
 
 re:		clean all
 
@@ -154,6 +156,10 @@ dependency-clean:
 
 $(SYSTEM_ISO):	$(KERNEL)
 	scripts/build-iso.sh $(SYSTEM_ISO)
+
+text-sym-file:	$(KERNEL)
+	i386-elf-objcopy --only-keep-debug $(KERNEL) $(NAME).sym
+	i386-elf-nm $(NAME).sym | grep "T" | awk '{ print $$1" "$$3 }' > $(NAME).txt.sym
 
 run:		$(SYSTEM_ISO)
 	$(QEMU) -m $(PHYSICAL_MEM) -fda $(SYSTEM_ISO)
