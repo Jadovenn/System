@@ -3,6 +3,7 @@
  * System sources under license MIT
  */
 
+#include <unistd.h>
 #include <stdint.h>
 #include <stddef.h>
 #include <kernel/panic.h>
@@ -47,6 +48,8 @@ void	i386_entry(multiboot_info *header, uint32_t magic) {
 	check_multiboot(header, magic);
 	physical_memory_init(header);
 	paging_init(header);
+	uint32_t *integer = malloc(sizeof(uint32_t));
+	printk("%#x\n", integer);
 	main(0, NULL);
 }
 
