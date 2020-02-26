@@ -33,6 +33,14 @@ typedef struct	vma_struct {
 	size_t		type;
 }		vma_struct_t;
 
+#define MEMORY_AVAILABLE	1
+#define MEMORY_RESERVED		2
+#define MEMORY_ACPI		3
+#define MEMORY_NVS		4
+#define MEMORY_BADRAM		5
+#define MEMORY_BIOS		6
+#define MEMORY_LOWER_REGION	7
+
 #define	VMA_USERSPACE	0
 #define	VMA_BIOS	1
 #define VMA_RESERVED	2
