@@ -30,7 +30,7 @@ SECTIONS {
 		*(COMMON)
 		_bss = .;
 		*(.bss)
+		_end = .; 
 	}
-	_end = .; 
 }
 
