@@ -13,7 +13,9 @@ SOURCES	=	stdlib/abort.c \
 		string/memory.c \
 		string/string.c \
 		string/strlen.c \
-		string/strstr.c
+		string/strstr.c \
+		memory/heapBMmalloc.c \
+		memory/malloc.c
 
 OBJS	=	$(SOURCES:.c=.o)
 

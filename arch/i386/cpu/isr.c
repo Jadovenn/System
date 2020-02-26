@@ -10,8 +10,9 @@
 #include <kernel/stdio.h>
 #include <kernel/panic.h>
 
-#include "cpu/isr.h"
-#include "arch/ports.h"
+#include <cpu/cr.h>
+#include <cpu/isr.h>
+#include <arch/ports.h>
 
 isr_t	interrupt_handlers_map[256];
 
@@ -26,6 +27,9 @@ void	isr_handler(registers_t regs) {
 		handler(regs);
 	}
 	else {
+		uint32_t cr2 = read_cr2();
+		printk("cr2: %#x\n", cr2);
+		dump_regs_from_interrupt(regs);
 		PANIC("Unmanaged fault: %d", regs.interr_nb);
 	}
 }
