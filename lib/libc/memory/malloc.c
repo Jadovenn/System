@@ -25,7 +25,7 @@ void	*malloc(size_t size) {
 			+ sizeof(_heapBM_block_t)
 			+ (size % CHUNCK_SIZE ? size / CHUNCK_SIZE + 1 : size / CHUNCK_SIZE);
 		ptr = get_block(&new_blk_size, request);
-		if (!new_blk_size) {
+		if (!ptr || !new_blk_size) {
 			return NULL;
 		}
 		_heapBM_add_block(&heap, (uintptr_t)ptr, new_blk_size, CHUNCK_SIZE);
