@@ -22,20 +22,27 @@ vma_struct_t	_kernel_vma[] = {
 
 /**
  * Kernel Physical Memory Region
+ * start and end addr are included in the range
  * code type after 7 are free to use
  * Please list here special reservation:
- * 	1: bios aera
- * 	3: low memory
- * 	7: VGA Buffer
+ * 	-- MULTIBOOT --
+ * 	1: available RAM
+ * 	2: reserved aera
+ * 	3: ACPI aera
+ * 	4: reserved aera
+ * 	5: defective RAM
+ * 	-- System --
+ * 	6: BIOS aera
+ * 	7: kernel aera
+ * 	8: low memory
+ * 	9: VGA Buffer
  */
 pm_region_t	_kernel_pm_region[] = {
-	{ 0x00000000, 0x000B7FFF, 1 },
-	{ 0x000B8000, 0x000B8FFF, 7 },
-	{ 0x000B9000, 0x000FFFFF, 1 },
+	{ 0x000B8000, 0x000B8FFF, 9 },
 	{ VIRTUAL_ADDR_TO_PHYSICAL((uintptr_t)&_kernel_start),
-		VIRTUAL_ADDR_TO_PHYSICAL((uintptr_t)&_end), 3 },
-	{ VIRTUAL_ADDR_TO_PHYSICAL((uintptr_t)&_kernel_start),
-		0x01000000, 3},
-	{ 0x0, 0x0, -1}
+		VIRTUAL_ADDR_TO_PHYSICAL((uintptr_t)&_end), 7 },
+	{ VIRTUAL_ADDR_TO_PHYSICAL((uintptr_t)&_end),
+		0x00FFFFFF, 8},
+	{ 0x0, 0x0, 0x0}
 };
 

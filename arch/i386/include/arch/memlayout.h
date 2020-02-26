@@ -44,13 +44,8 @@ extern uint32_t _physical_mmap_end;
 /**
  * Managed by virtual memory manager
  */
-extern uint32_t	_page_directory_start;
-extern uint32_t	_page_directory_end;
-extern uint32_t _page_table_entries_start;
-extern uint32_t _page_table_entries_end;
-
-extern uint32_t _DMA_memory_region_start;
-extern uint32_t	_DMA_memory_region_end; // paddr: 0x01000000
+extern uint32_t	_page_directory;
+extern uint32_t _page_table_entries;
 
 #endif // MEMLAYOUT_H_
 
