@@ -41,16 +41,6 @@ void boot_page_fault_handler(registers_t regs);
  */
 uint32_t pg_translate_virtual(uint32_t virtual_addr);
 
-/**
- * Physical Memory Region
- */
-typedef struct		pm_region {
-	uint32_t	vstart;
-	uint32_t	vend;
-	int32_t		type;
-}			pm_region_t;
-
-extern pm_region_t	_kernel_pm_region[];
 extern vma_struct_t	_kernel_vma[];
 
 #endif // PAGING_H_
