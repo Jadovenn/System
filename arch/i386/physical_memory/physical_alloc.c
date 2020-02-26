@@ -8,30 +8,31 @@
 #include <stdint.h>
 #include <bitset.h>
 
-#include "arch/physical_memory.h"
+#include <api/mm.h>
+#include <arch/physical_memory.h>
 
 pmm_region_t	*physical_memory_map = NULL;
 
-uint32_t	pmm_set_page(const uint32_t p_addr, bool value) {
+uint32_t	pmm_set_page(const uintptr_t p_addr, bool value) {
 	pmm_region_t *region = NULL;
-	if (p_addr % 0x1000) { // check alignement
+	if (p_addr % 0x1000) {
 		return EXIT_FAILURE;
 	}
-	{ // find coresponding region
+	{
 		pmm_region_t *idx = physical_memory_map;
 		while (idx) {
-			if (p_addr - idx->physical_addr < idx->page_nb * 0x1000) {
+			if (idx->pstart <= p_addr && p_addr < idx->pend) {
 				region = idx;
 				break;
 			}
 			idx = idx->next;
 		}
-		if (!region) { // if addr not accessable
+		if (!region || region->bitset == NULL) { // if addr not accessable
 			return EXIT_FAILURE;
 		}
 	}
-	uint32_t offset = ((p_addr - region->physical_addr) / 0x1000) / 32;
-	uint32_t bit = ((p_addr - region->physical_addr) / 0x1000) % 32;
+	uint32_t offset = ((p_addr - region->pstart) / 0x1000) / 32;
+	uint32_t bit = ((p_addr - region->pstart) / 0x1000) % 32;
 	bit = 31 - bit;
 	if (value) {
 		_set_bit(region->bitset[offset], bit);
@@ -42,7 +43,7 @@ uint32_t	pmm_set_page(const uint32_t p_addr, bool value) {
 	return EXIT_SUCCESS;
 }
 
-uint32_t	pmm_set_region(const uint32_t p_start_addr, const uint32_t p_end_addr, bool value) {
+uint32_t	pmm_set_region(const uintptr_t p_start_addr, const uintptr_t p_end_addr, bool value) {
 	uint32_t offset = p_start_addr;
 	if (p_start_addr > p_end_addr) {
 		return EXIT_FAILURE;
@@ -54,20 +55,23 @@ uint32_t	pmm_set_region(const uint32_t p_start_addr, const uint32_t p_end_addr, 
 	return EXIT_SUCCESS;
 }
 
-void	pmm_free(void *addr) {
+void	pmm_release_page(uintptr_t addr) {
 	pmm_set_page((uint32_t)addr, false);
 }
 
-void	*__compute_addr_and_alloc(pmm_region_t *region, uint32_t offset, uint32_t bit, uint32_t bit_count) {
-	uint32_t addr = region->physical_addr + (offset * 32 * 0x1000) + (bit_count * 0x1000);
+uintptr_t	__compute_addr_and_alloc(pmm_region_t *region, uint32_t offset, uint32_t bit, uint32_t bit_count) {
+	uintptr_t addr = region->pstart + (offset * 32 * 0x1000) + (bit_count * 0x1000);
 	region->bitset[offset] |= bit;
-	return (void*)addr;
+	return addr;
 }
 
-void	*pmm_alloc(void) {
-	pmm_region_t *region = physical_memory_map;
-	while (region) { // search in region
+uintptr_t	pmm_get_page(uint8_t type) {
+	for (pmm_region_t *region = physical_memory_map;
+			region; region = region->next) {
 		unsigned idx = 0;
+		if (region->type != type || region->bitset == NULL) {
+			continue;
+		}
 		while (idx < region->page_nb / 32) { // search in bitset
 			if (region->bitset[idx] != 0xFFFFFFFF) {
 				uint32_t bit = 0x80000000;
@@ -82,8 +86,7 @@ void	*pmm_alloc(void) {
 			}
 			idx += 1;
 		}
-		region = region->next;
 	}
-	return NULL;
+	return 0x0;
 }
 
