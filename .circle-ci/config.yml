@@ -1,0 +1,21 @@
+version: 2.1
+orbs:
+  codecov: codecov/codecov@1.0.5
+
+executors:
+  ci-container:
+    docker:
+      - image: jadomage/ci-gcc-nasm-cmake-lcov:0.0.6
+
+jobs:
+  build:
+    executor: ci-container
+    steps:
+      - checkout
+      - run: make
+
+workflows:
+  version: 2
+  primary:
+    jobs:
+      - build
