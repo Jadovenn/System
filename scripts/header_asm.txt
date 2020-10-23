@@ -1,6 +1,0 @@
-:insert
-;; --------------------------------------
-;; <filename> - <description>
-;; System sources under license MIT
-;; --------------------------------------
-.

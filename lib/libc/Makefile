@@ -3,61 +3,60 @@
 ## System sources under license MIT
 ##
 
+include ../../build.config.mk
+include ../../tools/config/toolchain.config.mk
+include ../../tools/config/color.config.mk
+
 NAME	=	libc.a
 
 HEADERS	=	-Iinclude/
 
-SOURCES	=	stdlib/abort.c \
-		math/div.c \
-		string/memccpy.c \
-		string/memory.c \
-		string/string.c \
-		string/strlen.c \
-		string/strstr.c \
-		memory/heapBMmalloc.c \
-		memory/malloc.c
+OBJDIR  =   ../../out/dependency/libc
 
-OBJS	=	$(SOURCES:.c=.o)
+SOURCES =	stdlib/abort.c \
+			math/div.c \
+			string/memccpy.c \
+			string/memory.c \
+			string/string.c \
+			string/strlen.c \
+			string/strstr.c \
+			memory/heapBMmalloc.c \
+			memory/malloc.c
+
+OBJS	=	$(SOURCES:%.c=$(OBJDIR)/%.o)
 
 CFLAGS	:=	$(CFLAGS) \
-		$(HEADERS) \
-		-Wall \
-		-Wextra \
-		-nostdinc \
-		-nostdlib \
-		-nostartfiles \
-		-static-libgcc \
-		-fno-pic \
-		-fno-builtin \
-		-ffreestanding \
-		-g
-
-UNAME		:=	$(shell uname)
-ifeq ($(UNAME), Darwin)
-	CC	=	i386-elf-gcc
-	AR	=	i386-elf-ar
-	NASM	=	nasm
-endif
-ifeq ($(UNAME), Linux)
-	CFLAGS	+=	-fno-pie -fno-stack-protector
-	CC	=	gcc -m32 
-	AR	=	ar
-	NASM	=	nasm
-endif
+			$(HEADERS) \
+			-Wall \
+			-Werror \
+			-Wextra \
+			-nostdinc \
+			-nostdlib \
+			-nostartfiles \
+			-static-libgcc \
+			-fno-pic \
+			-fno-builtin \
+			-ffreestanding \
+			-g
 
 all:		$(NAME)
 
 $(NAME):	$(OBJS)
-	$(AR) rcs $(NAME) $(OBJS)
+	@$(AR) rcs $(NAME) $(OBJS) && \
+		$(ECHO) $(COLOR_GREEN) "[OK]" $(COLOR_YELLOW) "LINK" $(COLOR_TEAL) $(NAME) $(COLOR_DEFAULT) || \
+		$(ECHO) $(COLOR_RED) "[FAILED]" $(COLOR_TEAL) $(NAME) $(COLOR_DEFAULT)
 
 clean:
-	rm -f	$(NAME)
-	rm -f	$(OBJS)
+	@rm -f	$(NAME)
+	@rm -f	$(OBJS)
+	@rm -rf  $(OBJDIR)
 
 re:	clean all
 
-.c.o:
-	$(CC) $(CFLAGS) -c $< -o $@
+$(OBJS): $(OBJDIR)/%.o: %.c
+	@mkdir -p $(@D)
+	@$(CC) $(CFLAGS) -c $< -o $@  && \
+		$(ECHO) $(COLOR_GREEN) "[OK]" $(COLOR_TEAL) $< $(COLOR_DEFAULT) || \
+		$(ECHO) $(COLOR_RED) "[FAILED]" $(COLOR_TEAL) $< $(COLOR_DEFAULT)
 
 .PHONY:	all clean re .c.o
-
