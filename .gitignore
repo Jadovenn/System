@@ -1,17 +1,25 @@
+
+## Temporary
 *.swp
 *.o
 *.swp
 *~
+
+## Sessions
 *.DS_Store
 *.gdb_history
 *peda-session-*
-bin/
-*system.kern
+
+## Binaries
+out/*
+System_v*
 *.bin
 *.elf
 *.img
 *.iso
 *.a
+
+## Sysroot
+sysroot/boot/grub/grub.cfg
 sysroot/boot/*.kern
 sysroot/usr/include/*.h
-
