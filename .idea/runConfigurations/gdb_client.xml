@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="gdb-client" type="CLion_Remote" remoteCommand="localhost:1234" symbolFile="$PROJECT_DIR$/system.kern" sysroot="">
+  <configuration default="false" name="gdb-client" type="CLion_Remote" remoteCommand="localhost:1234" symbolFile="$PROJECT_DIR$/System_v0.0.3-bare_bones.sym" sysroot="">
     <method v="2" />
   </configuration>
 </component>
