@@ -4,5 +4,3 @@
  */
 
 #include <string.h>
-
-

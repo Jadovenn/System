@@ -5,9 +5,9 @@
 
 #include <string.h>
 
-char	*strstr(const char *s1, const char *s2) {
+char* strstr(const char* s1, const char* s2) {
 	unsigned idx, jdx;
-	char	*track = NULL;
+	char* track = NULL;
 	if (!s2) {
 		return (char*)s1;
 	}
@@ -30,4 +30,3 @@ char	*strstr(const char *s1, const char *s2) {
 	}
 	return NULL;
 }
-

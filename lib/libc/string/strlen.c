@@ -3,13 +3,13 @@
  * System sources under license MIT
  */
 
-#include <stdint.h>
 #include <bitset.h>
+#include <stdint.h>
 #include <string.h>
 
-size_t	strlen(const char *str) {
-	const uint32_t *word_ptr = NULL;
-	const char  *byte_ptr = str;
+size_t strlen(const char* str) {
+	const uint32_t* word_ptr = NULL;
+	const char* byte_ptr = str;
 
 	while ((((uint32_t)byte_ptr) % 4) != 0) {
 		if (*byte_ptr == '\0') {
@@ -21,7 +21,7 @@ size_t	strlen(const char *str) {
 	for (;;) {
 		uint32_t word = *word_ptr;
 		if (_has_zero(word)) {
-			const char *c = (const char *)word_ptr;
+			const char* c = (const char*)word_ptr;
 			if (c[0] == 0) {
 				return c - str;
 			}
@@ -38,4 +38,3 @@ size_t	strlen(const char *str) {
 		word_ptr += 1;
 	}
 }
-

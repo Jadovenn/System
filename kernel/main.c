@@ -5,7 +5,7 @@
 
 #include <kernel/stdio.h>
 
-int	main(int ac, char **av) {
+int main(int ac, char** av) {
 	(void)ac;
 	(void)av;
 	printk("-----------------------------------------------\n");
@@ -14,4 +14,3 @@ int	main(int ac, char **av) {
 	printk("-----------------------------------------------\n");
 	return 0;
 }
-

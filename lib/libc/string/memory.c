@@ -12,7 +12,7 @@
  * @param size {unsigned long} - number of byte to copy
  * @return {void*} - original value of dest
  */
-void	*memcpy(void *dest, const void *src, unsigned long size) {
+void* memcpy(void* dest, const void* src, unsigned long size) {
 	for (unsigned long count = 0; count < size; count++)
 		((unsigned char*)dest)[count] = ((unsigned char*)src)[count];
 	return dest;
@@ -25,9 +25,8 @@ void	*memcpy(void *dest, const void *src, unsigned long size) {
  * @param byte {int} - value of the byte, (converter in unsigned char)
  * @param size {unsigned long} - number of byte to set
  */
-void	*memset(void *dest, int byte, unsigned long size) {
+void* memset(void* dest, int byte, unsigned long size) {
 	for (unsigned long count = 0; count < size; count++)
 		((unsigned char*)dest)[count] = byte;
 	return dest;
 } // O(n) = n where n = size
-

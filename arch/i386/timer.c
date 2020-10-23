@@ -3,15 +3,16 @@
  * System sources under license MIT
  */
 
-#include <stdlib.h>
 #include <stddef.h>
+#include <stdlib.h>
+
 #include <kernel/stdio.h>
 
-#include "cpu/isr.h"
-#include "arch/ports.h"
 #include "arch/io.h"
+#include "arch/ports.h"
+#include "cpu/isr.h"
 
-uint32_t	tick = 0;
+uint32_t tick = 0;
 
 static void __timer_callback(registers_t regs) {
 	(void)regs;
@@ -31,15 +32,14 @@ static void __timer_callback(registers_t regs) {
  * bit [5-7] = 0: counter 0 select
  * @param frequency - freq for IRQ to be trigger by the PIT
  */
-void	init_timer(uint32_t frequency) {
+void init_timer(uint32_t frequency) {
 	int ret = register_interrupt_handler(IRQ_0, &__timer_callback);
 	if (ret == EXIT_FAILURE)
 		printk("register error\n");
 	uint32_t divisor = 1193180 / frequency;
 	port_write_byte(0x43, 0b00110110);
-	uint8_t	low = (uint8_t)(divisor & 0xff);
+	uint8_t low   = (uint8_t)(divisor & 0xff);
 	uint8_t hight = (uint8_t)((divisor >> 8) & 0xff);
 	port_write_byte(0x40, low);
 	port_write_byte(0x40, hight);
 }
-

@@ -4,7 +4,7 @@
  */
 
 #ifndef STRING_H_
-# define STRING_H_
+#define STRING_H_
 
 #include <stddef.h>
 
@@ -15,7 +15,7 @@
  * @param size {unsigned long} - number of byte to copy
  * @return {void*} - original value of dest
  */
-void	*memcpy(void *dest, const void *src, unsigned long size);
+void* memcpy(void* dest, const void* src, unsigned long size);
 
 /**
  * @details set n bytes with values byte to dest
@@ -24,7 +24,7 @@ void	*memcpy(void *dest, const void *src, unsigned long size);
  * @param byte {int} - value of the byte, (converter in unsigned char)
  * @param size {unsigned long} - number of byte to set
  */
-void	*memset(void *dest, int byte, unsigned long size);
+void* memset(void* dest, int byte, unsigned long size);
 
 /**
  * @details - shall copy bytes from memory area s2 into s1,
@@ -36,7 +36,7 @@ void	*memset(void *dest, int byte, unsigned long size);
  * @param n  {size_t} - max number of bytes to copy
  * @attention s1 and s2 shall not overlap, if it is, behavior is undefined
  */
-void	*memccpy(void *restrict s1, const void *restrict s2, int c, size_t n);
+void* memccpy(void* restrict s1, const void* restrict s2, int c, size_t n);
 
 /**
  * @brief shall compute the number of bytes in the string
@@ -44,7 +44,7 @@ void	*memccpy(void *restrict s1, const void *restrict s2, int c, size_t n);
  * @param s {const char *} - string
  * @return number of byte in string
  */
-size_t	strlen(const char *s);
+size_t strlen(const char* s);
 
 /**
  * @brief shall locate the first occurrence in the string
@@ -55,7 +55,6 @@ size_t	strlen(const char *s);
  * 	or a null pointer if the string is not found.
  * 	If s2 points to a string with zero length, the function shall return s1
  */
-char	*strstr(const char *s1, const char *s2);
+char* strstr(const char* s1, const char* s2);
 
 #endif // STRING_H_
-

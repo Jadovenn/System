@@ -76,7 +76,6 @@ endif ## END TEST
 ##                  OBJECTS                     ##
 ##################################################
 
-ASSEMBLY_OBJECT	+=	$(MULTIBOOT:%.s=$(OBJDIR)/%.o)
 ASSEMBLY_OBJECT	+=	$(ASM:%.s=$(OBJDIR)/%.o)
 C_OBJECT		=	$(SRCS:%.c=$(OBJDIR)/%.o)
 

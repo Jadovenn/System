@@ -3,20 +3,22 @@
  * System sources under license MIT
  */
 
-#include <system.h>
 #include <string.h>
 
+#include "arch/ports.h"
 #include "cpu/idt.h"
 #include "cpu/isr.h"
-#include "arch/ports.h"
 
-extern void	idt_flush(uint32_t);
-extern isr_t	interrupt_handlers_map[];
+#include <system.h>
 
-idt_entry_t	idt_entries[256];
-idt_ptr_t	idt_ptr;
+extern void idt_flush(uint32_t);
+extern isr_t interrupt_handlers_map[];
 
-static void	__idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags) {
+idt_entry_t idt_entries[256];
+idt_ptr_t idt_ptr;
+
+static void __idt_set_gate(uint8_t num, uint32_t base, uint16_t sel,
+                           uint8_t flags) {
 	idt_entries[num].base_lo = base & 0xffff;
 	idt_entries[num].base_hi = (base >> 16) & 0xffff;
 	idt_entries[num].sel = sel;
@@ -25,7 +27,7 @@ static void	__idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t fla
 	// idt_entries[num].flags = flags | 0x60; // uncoment for ring 3
 }
 
-void	idt_init() {
+void idt_init() {
 	idt_ptr.limit = sizeof(idt_entry_t) * 256 - 1;
 	idt_ptr.base = (uint32_t)&idt_entries;
 
@@ -94,4 +96,3 @@ void	idt_init() {
 	idt_flush((uint32_t)&idt_ptr);
 	memset(&interrupt_handlers_map, 0, sizeof(isr_t) * 256);
 }
-
