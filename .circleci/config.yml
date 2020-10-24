@@ -6,6 +6,8 @@ executors:
   ci-container:
     docker:
       - image: jadomage/kernel-build-tools:0.0.6
+    environment:
+      - TERM=xterm
 
 jobs:
   build:
