@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  ci:
+    environment:
+      - TERM=xterm
+    container_name: System-CI
+    image: jadomage/kernel-build-tools:0.0.6
+    volumes:
+      - .:/opt/System
+    command: bash -c "
+      rm -rf /opt/System/out
+      && cd /opt/System
+      && make"
+  shell:
+    environment:
+      - TERM=xterm
+    container_name: System-CI-shell
+    image: jadomage/kernel-build-tools:0.0.3
+    volumes:
+      - .:/opt/System
+    command: bash
