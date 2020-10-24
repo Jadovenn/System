@@ -5,7 +5,7 @@ orbs:
 executors:
   ci-container:
     docker:
-      - image: jadomage/ci-gcc-nasm-cmake-lcov:0.0.6
+      - image: jadomage/kernel-build-tools:0.0.6
 
 jobs:
   build:
