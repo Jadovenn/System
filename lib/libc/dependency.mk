@@ -9,4 +9,4 @@ DEPENDENCIES_HEADERS	+= -Ilib/libc/include
 
 DEPENDENCIES_TARGET		+= lib/libc/libc.a
 
-DEPENDENCIES_LD_FLAGS	+= -Wl,-Llib/libc -Wl,-lc
+DEPENDENCIES_LD_FLAGS	+= -Llib/libc -lc

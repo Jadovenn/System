@@ -90,17 +90,22 @@ CFLAGS		:=	$(CFLAGS) \
 				-Wall \
 				-Wextra \
 				-nostdinc \
+				-nostdlib \
 				-nostartfiles \
 				-fno-pic \
 				-fno-builtin \
 				-ffreestanding
 
 LDFLAGS		+=	-nostdlib \
+				-nostdinc \
 				-static-libgcc \
+				-nostartfiles \
 				-static \
 				-Wl,-static \
-				-Wl,-lgcc \
-				$(DEPENDENCIES_LD_FLAGS)
+				-Wl,--start-group \
+				-lgcc \
+				$(DEPENDENCIES_LD_FLAGS) \
+				-Wl,--end-group
 
 ##################################################
 ##                  RULES                       ##
