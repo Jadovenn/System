@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="System-i386" pattern="file[System]:.circleci/*||file[System]:.github/*||file[System]:arch/*||file[System]:kernel/*||file[System]:arch//*||file[System]:kernel//*||file[System]:lib//*||file:.gitignore||file:.clang-format||file:.bochsrc||file:build.config.mk||file:docker-compose.yml||file:LICENSE||file:Makefile||file:README.md||file[System]:tools//*||file[System]:sysroot//*||file[System]:.idea//*" />
+</component>
