@@ -9,6 +9,7 @@ ifeq ($(UNAME), Darwin) ## DARWIN
 	AR		=	i386-elf-ar
 	NASM	=	nasm
 endif ## END DARWIN
+
 ifeq ($(UNAME), Linux) ## LINUX BASED
 	CFLAGS	+=	-fno-pie -fno-stack-protector
 	CC		=	gcc -m32 -march=i386

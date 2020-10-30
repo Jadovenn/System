@@ -7,12 +7,14 @@
 ##  NAMING  ##
 ##############
 
-VERSION		= 0.0.3
-RELEASE_NAME	= bare_bones
+VERSION			= 0.0.3
+RELEASE_NAME	= BareBones
 
 ##############
 ##  MODES   ##
 ##############
+
+# Default mode and architecture
 
 MODE		= debug
 ARCH		= i386
