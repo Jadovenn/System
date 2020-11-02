@@ -9,7 +9,7 @@
 
 size_t strlen(const char* str) {
 	const uint32_t* word_ptr = NULL;
-	const char* byte_ptr = str;
+	const char*     byte_ptr = str;
 
 	while ((((uint32_t)byte_ptr) % 4) != 0) {
 		if (*byte_ptr == '\0') {
