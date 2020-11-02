@@ -9,8 +9,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include <api/mm.h>
 #include <cpu/isr.h>
+
 /**
  * @brief Map a physical page to a virtual page
  * @param physcial_addr - aligned physical page addr
@@ -45,7 +45,5 @@ void boot_page_fault_handler(Cpu_registers_t regs);
  * @return {uint32_t} - corresponding physical address
  */
 uint32_t pg_translate_virtual(uint32_t virtual_addr);
-
-extern vma_struct_t _kernel_vma[];
 
 #endif // PAGING_H_

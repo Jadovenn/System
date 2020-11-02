@@ -40,7 +40,7 @@ static void
 S_Create_physical_region(uint32_t len, uint32_t addr, uint32_t type) {
 	size_t bytes             = sizeof(Physical_memory_region_t);
 	size_t usable_page_count = 0;
-	if (type == MEMORY_AVAILABLE || type == MEMORY_LOWER_REGION) {
+	if (type ==  mt_AVAILABLE || type == mt_LOWER_REGION) {
 		size_t page_count = (len / 1024) / 4;
 		usable_page_count = page_count - (page_count % 32);
 		bytes += usable_page_count / 8;
@@ -71,7 +71,7 @@ S_Create_physical_region(uint32_t len, uint32_t addr, uint32_t type) {
 	new_region->type      = type;
 	new_region->bitset    = NULL;
 	new_region->next      = NULL;
-	if (type == MEMORY_AVAILABLE || type == MEMORY_LOWER_REGION) {
+	if (type == mt_AVAILABLE || type == mt_LOWER_REGION) {
 		new_region->bitset = (uint32_t*)&new_region[1];
 	}
 	if (!G_Physical_memory_map) {
@@ -91,14 +91,14 @@ S_Read_physical_memory_regions_block(Multiboot_mmap_region_t* mmap) {
 		return;
 	}
 	if (mmap->addr < 0x100000 && mmap->type == MULTIBOOT_MEMORY_AVAILABLE) {
-		S_Create_physical_region(mmap->len, mmap->addr, MEMORY_BIOS);
+		S_Create_physical_region(mmap->len, mmap->addr, mt_BIOS);
 	} else if (mmap->type == MULTIBOOT_MEMORY_AVAILABLE &&
 	           mmap->addr + mmap->len - 1 < 0x1000000) {
-		S_Create_physical_region(mmap->len, mmap->addr, MEMORY_AVAILABLE);
+		S_Create_physical_region(mmap->len, mmap->addr, mt_AVAILABLE);
 	} else if (mmap->type == MULTIBOOT_MEMORY_AVAILABLE &&
 	           mmap->addr < 0x1000000 && mmap->addr + mmap->len - 1 > 0x1000000) {
 		S_Create_physical_region(0x1000000 - mmap->addr, mmap->addr,
-		                         MEMORY_LOWER_REGION);
+		                         mt_LOWER_REGION);
 		S_Create_physical_region(mmap->len - (0x1000000 - mmap->addr),
 		                         mmap->addr + (0x1000000 - mmap->addr), mmap->type);
 	} else {
@@ -113,7 +113,7 @@ static __inline void S_Display_usable_physical_memory() {
 	     idx                           = idx->next) {
 		printk("   [%#x : %#x] type: %d, %d Kib of usable memory\n", idx->startAddr,
 		       idx->endAddr, idx->type, idx->page_nb * 4);
-		if (idx->type != MEMORY_AVAILABLE && idx->type != MEMORY_LOWER_REGION) {
+		if (idx->type != mt_AVAILABLE && idx->type != mt_LOWER_REGION) {
 			continue;
 		}
 		size += idx->page_nb * 4;

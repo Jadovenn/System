@@ -63,7 +63,7 @@ static __inline void S_set_section_rodata_ro() {
 static void S_heap_init() {
 	pg_add_pte(0xD0000000,
 	           VIRTUAL_ADDR_TO_PHYSICAL((uint32_t)&boot_page_directory));
-	uintptr_t page = Pmm_get_page(MEMORY_AVAILABLE);
+	uintptr_t page = Pmm_get_page(mt_AVAILABLE);
 	if (!page) {
 		PANIC("Not enought memory. Could not init virtual memory.");
 	}

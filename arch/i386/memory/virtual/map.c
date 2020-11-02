@@ -16,7 +16,6 @@
 #include "memory/physical.h"
 #include "memory/virtual.h"
 
-#include <api/mm.h>
 
 void pg_add_pte(uintptr_t vaddr, uintptr_t paddr) {
 	unsigned  offset    = vaddr >> 22;
@@ -42,7 +41,7 @@ uint32_t pg_map(uint32_t physical_addr,
 	unsigned pg_dir_offset          = virtual_addr >> 22;
 	uint32_t physical_pg_entry_addr = pg_dir[pg_dir_offset];
 	if (!(physical_pg_entry_addr & 0x1)) {
-		uintptr_t page = Pmm_get_page(MEMORY_AVAILABLE);
+		uintptr_t page = Pmm_get_page(mt_AVAILABLE);
 		if (!page) {
 			printk("ERROR ::: PAGING: Asked page is not present, could not add a new "
 			       "one\n");
