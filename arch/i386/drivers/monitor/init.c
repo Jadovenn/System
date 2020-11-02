@@ -3,14 +3,19 @@
  * System sources under license MIT
  */
 
+#include <hal/console.h>
 #include <kernel/stdio.h>
 #include <kernel/tty.h>
 
-#include <system.h>
+
+static struct Console_driver Monitor_driver;
 
 int monitor_driver_init() {
 	monitor_clear();
 	monitor_set_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
-	printk("kernel ver %s\n", VERSION);
+	Monitor_driver.height = 80;
+	Monitor_driver.width = 25;
+	Monitor_driver.write = &monitor_write;
+	Hal_register_console_driver(&Monitor_driver);
 	return 0;
 }

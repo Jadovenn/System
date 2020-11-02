@@ -14,12 +14,12 @@
 
 uint32_t tick = 0;
 
-static void __timer_callback(registers_t regs) {
+static void __timer_callback(Cpu_registers_t regs) {
 	(void)regs;
 	tick++;
 	printk("timer tick %d\n", tick);
 	if (tick == 15) {
-		register_interrupt_handler(IRQ_0, NULL);
+		Cpu_register_interrupt_handler(IRQ_0, NULL);
 	}
 }
 
@@ -33,7 +33,7 @@ static void __timer_callback(registers_t regs) {
  * @param frequency - freq for IRQ to be trigger by the PIT
  */
 void init_timer(uint32_t frequency) {
-	int ret = register_interrupt_handler(IRQ_0, &__timer_callback);
+	int ret = Cpu_register_interrupt_handler(IRQ_0, &__timer_callback);
 	if (ret == EXIT_FAILURE)
 		printk("register error\n");
 	uint32_t divisor = 1193180 / frequency;
