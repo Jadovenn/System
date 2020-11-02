@@ -27,7 +27,7 @@ IncludeCategories:
   - Regex:           '<((kernel)|(hal))\/([A-Za-z0-9.\/-_])+(.h)>'
     Priority:        2
   # Headers in <> from the architecture.
-  - Regex:           '<((arch))\/([A-Za-z0-9.\/-_])+(.h)>'
+  - Regex:           '<((arch)|(cpu))\/([A-Za-z0-9.\/-_])+(.h)>'
     Priority:        3
   # Headers in <> from external libraries.
   - Regex:           '<((kernel))\/([A-Za-z0-9.\/-_])+(.h)>'
