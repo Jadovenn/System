@@ -8,8 +8,9 @@
 int main(int ac, char** av) {
 	(void)ac;
 	(void)av;
+	printk("System - ExoKernel\n");
 	printk("-----------------------------------------------\n");
-	printk("Kernel Main function reached. Arch init passed.\n");
+	printk("Main function reached. Arch init passed.\n");
 	printk("System will now halt.\n");
 	printk("-----------------------------------------------\n");
 	return 0;
