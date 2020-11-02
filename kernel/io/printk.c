@@ -6,6 +6,7 @@
 #include <stdarg.h>
 #include <stdint.h>
 
+#include <hal/console.h>
 #include <kernel/tty.h>
 
 // TODO: This implementation could be improved in many way.
@@ -15,15 +16,15 @@
 
 void __print_string(char* str) {
 	for (char* c = str; *c; c++) {
-		monitor_write(*c);
+		Hal_console_write(*c);
 	}
 }
 
 void __print_decimal(int number) {
 	if (number == 0) {
-		monitor_write('0');
+		Hal_console_write('0');
 	} else if (number < 0) {
-		monitor_write('-');
+		Hal_console_write('-');
 		number = -1;
 	} else {
 		int digit = number % 10;
@@ -31,33 +32,33 @@ void __print_decimal(int number) {
 		if (next != 0) {
 			__print_decimal(next);
 		}
-		monitor_write((char)digit + 48);
+		Hal_console_write((char)digit + 48);
 	}
 }
 
 void __print_unsigned_decimal(unsigned number) {
 	if (number == 0) {
-		monitor_write('0');
+		Hal_console_write('0');
 	} else {
 		unsigned digit = number % 10;
 		unsigned next = number / 10;
 		if (next != 0) {
 			__print_decimal(next);
 		}
-		monitor_write((char)digit + 48);
+		Hal_console_write((char)digit + 48);
 	}
 }
 
 void __print_long_decimal(int64_t number) {
 	if (number == 0) {
-		monitor_write('0');
+		Hal_console_write('0');
 	} else {
 		uint64_t digit = number % 10;
 		uint64_t next = number / 10;
 		if (next != 0) {
 			__print_long_decimal(next);
 		}
-		monitor_write((char)digit + 48);
+		Hal_console_write((char)digit + 48);
 	}
 }
 
@@ -77,7 +78,7 @@ void __print_hexadecimal(uint32_t number) {
 	}
 	counter = 7;
 	while (counter >= 0) {
-		monitor_write(hex_char[counter]);
+		Hal_console_write(hex_char[counter]);
 		counter -= 1;
 	}
 }
@@ -96,7 +97,7 @@ int __print_formated(va_list* vl, const char* format) {
 		break;
 	case 'c':
 		character = va_arg(*vl, char);
-		monitor_write(character);
+		Hal_console_write(character);
 		break;
 	case 'd':
 		decimal_number = va_arg(*vl, int);
@@ -111,8 +112,8 @@ int __print_formated(va_list* vl, const char* format) {
 		__print_long_decimal(long_number);
 		break;
 	case '#':
-		monitor_write('0');
-		monitor_write('x');
+		Hal_console_write('0');
+		Hal_console_write('x');
 		format += 1;
 		if (*format == 'x') {
 			hexa_number = va_arg(*vl, uint32_t);
@@ -149,10 +150,10 @@ void printk(char const* format, ...) {
 		} else if (*c == '\\') {
 			c += 1;
 			if (*c != '\0') {
-				monitor_write(*c);
+				Hal_console_write(*c);
 			}
 		} else {
-			monitor_write(*c);
+			Hal_console_write(*c);
 		}
 	}
 	va_end(vl);
