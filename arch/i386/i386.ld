@@ -6,31 +6,41 @@
 ENTRY(_start)
 SECTIONS {
 
-	_kernel_space = 0xC0100000;
+	G_Kernel_space = 0xC0100000;
 
 	. = 0xC0100000;
 
-	_kernel_start = .;
-    	.text ALIGN (4K) : AT(ADDR(.text) - 0xC0000000) {
+	G_Start_kernel = .;
+
+   	.text ALIGN (4K) : AT(ADDR(.text) - 0xC0000000) {
 		*(.multiboot)
-		_code = .;
+		G_Start_code = .;
 		*(.text)
-    	}
-	_end_code = .;
-	_rodata = .;
+		G_End_code = .;
+    }
+
+	G_Start_rodata = .;
+
 	.rodata ALIGN (4K) : AT(ADDR(.rodata) - 0xC0000000) {
 		*(.rodata)
 	}
-	_end_rodata = .;
+
+	G_End_rodata = .;
+	G_Start_data = .;
+
 	.data ALIGN (4K) : AT(ADDR(.data) - 0xC0000000) {
 		*(.data)
 	}
-	_end_data = .;
+
+	G_End_data = .;
+	G_Start_bss = .;
+
 	.bss ALIGN (4K) : AT(ADDR(.bss) - 0xC0000000) {
 		*(COMMON)
-		_bss = .;
 		*(.bss)
-		_end = .; 
 	}
-}
 
+	G_End_bss = .;
+	G_End_kernel = .;
+
+}

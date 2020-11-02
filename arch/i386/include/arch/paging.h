@@ -36,7 +36,7 @@ void pg_add_pte(uint32_t vaddr, uint32_t paddr);
 /**
  * @brief boot page fault handler
  */
-void boot_page_fault_handler(registers_t regs);
+void boot_page_fault_handler(Cpu_registers_t regs);
 
 /**
  * @brief translate a virtual address to physical addr

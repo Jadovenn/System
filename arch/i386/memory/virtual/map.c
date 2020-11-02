@@ -10,30 +10,31 @@
 
 #include <kernel/stdio.h>
 
-#include <arch/memlayout.h>
-#include <arch/physical_memory.h>
+#include <arch/ld.h>
+#include <cpu/cr.h>
+
+#include "memory/physical.h"
+#include "memory/virtual.h"
 
 #include <api/mm.h>
-#include <cpu/cr.h>
-#include <cpu/mmu.h>
 
 void pg_add_pte(uintptr_t vaddr, uintptr_t paddr) {
 	unsigned  offset    = vaddr >> 22;
-	uint32_t* pg_dir    = (uint32_t*)PHYSICAL_ADDR_TO_VIRTUAL(read_cr3());
-	uint32_t* pte_pages = PHYSICAL_PTR_TO_VIRTUAL((uint32_t*)_page_table_entries);
+	uint32_t* pg_dir    = (uint32_t*)PHYSICAL_ADDR_TO_VIRTUAL(Cpu_read_cr3());
+	uint32_t* pte_pages = PHYSICAL_PTR_TO_VIRTUAL((uint32_t*)G_Page_table_entries);
 	pte_pages[offset]   = paddr | 0x3;
-	flush_tlb();
+	Cpu_flush_tlb();
 	uint32_t* pte = pte_pages + offset;
 	memset(pte, 0x1000, 0);
 	pg_dir[offset] = paddr | 0x3;
-	flush_tlb();
+	Cpu_flush_tlb();
 }
 
 uint32_t pg_map(uint32_t physical_addr,
                 uint32_t virtual_addr,
                 uint32_t flags,
                 bool     override) {
-	uint32_t* pg_dir = (uint32_t*)PHYSICAL_ADDR_TO_VIRTUAL(read_cr3());
+	uint32_t* pg_dir = (uint32_t*)PHYSICAL_ADDR_TO_VIRTUAL(Cpu_read_cr3());
 
 	if (virtual_addr % 0x1000 || physical_addr % 0x1000) {
 		return EXIT_FAILURE;
@@ -41,7 +42,7 @@ uint32_t pg_map(uint32_t physical_addr,
 	unsigned pg_dir_offset          = virtual_addr >> 22;
 	uint32_t physical_pg_entry_addr = pg_dir[pg_dir_offset];
 	if (!(physical_pg_entry_addr & 0x1)) {
-		uintptr_t page = pmm_get_page(MEMORY_AVAILABLE);
+		uintptr_t page = Pmm_get_page(MEMORY_AVAILABLE);
 		if (!page) {
 			printk("ERROR ::: PAGING: Asked page is not present, could not add a new "
 			       "one\n");
@@ -60,6 +61,6 @@ uint32_t pg_map(uint32_t physical_addr,
 		return EXIT_FAILURE;
 	}
 	*pte_ptr = physical_addr | flags;
-	flush_tlb();
+	Cpu_flush_tlb();
 	return EXIT_SUCCESS;
 }

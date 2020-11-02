@@ -23,15 +23,15 @@ static const char* PG_FAULT_KERNEL_011 =
 		"::: Kernel tried to write a page and caused a protection fault";
 static const char* PG_FAULT_DEFAULT = "::: Unexpected Page Fault Interrution";
 
-void boot_page_fault_handler(registers_t regs) {
-	uint32_t cr2  = read_cr2();
+void boot_page_fault_handler(Cpu_registers_t regs) {
+	uint32_t cr2  = Cpu_read_cr2();
 	uint32_t mask = regs.err_code & 0x00000007;
 	if (mask & 0x4) {
 		PANIC(PG_FAULT_USER_ALL);
 	}
 	printk("\n:::: INTERRUPT %d ::::\n", regs.interr_nb);
 	printk("Page Fault at: %#x\n", cr2);
-	dump_regs_from_interrupt(regs);
+	Cpu_dump_registers(regs);
 	if (!mask) {
 		PANIC(PG_FAULT_KERNEL_000);
 	}

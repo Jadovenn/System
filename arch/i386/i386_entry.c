@@ -7,20 +7,26 @@
 #include <stdint.h>
 #include <unistd.h>
 
+#include <kernel/multiboot.h>
 #include <kernel/panic.h>
 
 #include <arch/init.h>
 #include <arch/paging.h>
-
 #include <cpu/isr.h>
-#include <multiboot.h>
+#include <cpu/gdt.h>
+#include <cpu/idt.h>
+
+#include "memory/physical.h"
+#include "memory/virtual.h"
+
+#include <system.h>
 
 extern void main(int ac, char** av);
 
 /**
  * multiboot info header parser
  */
-void check_multiboot(multiboot_info* header, uint32_t magic) {
+void check_multiboot(Multiboot_info_t* header, uint32_t magic) {
 	if (magic != MULTIBOOT_BOOTLOADER_MAGIC) {
 		PANIC("Wrong multiboot magic number, multiboot header is not present");
 	}
@@ -37,18 +43,18 @@ void check_multiboot(multiboot_info* header, uint32_t magic) {
 }
 
 /**
- * @brief arch entrypoint called from
- * 	the multiboot header
+ * @brief Architecture entry point called from the init code
  */
-void i386_entry(multiboot_info* header, uint32_t magic) {
-	gdt_init();
-	idt_init();
+void I386_entry_point(Multiboot_info_t* header, uint32_t magic) {
+	Init_gdt();
+	Init_idt();
 	asm volatile("sti");
-	register_interrupt_handler(14, &boot_page_fault_handler);
+	Cpu_register_interrupt_handler(14, &boot_page_fault_handler);
 	monitor_driver_init();
+	printk("Booting i386_GENERIC init code ver %s\n", VERSION);
 	check_multiboot(header, magic);
-	physical_memory_init(header);
-	paging_init(header);
+	Init_physical_memory(header->mmap_addr, header->mmap_length);
+	Init_virtual_memory();
 	uint32_t* integer = malloc(sizeof(uint32_t));
 	printk("%#x\n", integer);
 	main(0, NULL);

@@ -9,20 +9,20 @@
 
 #include <stdint.h>
 
-typedef struct registers {
+typedef struct Cpu_registers {
 	uint32_t ds;                           // datasegment selector
 	uint32_t edi, esi, ebp, esp;           // pusha
 	uint32_t ebx, edx, ecx, eax;           // pusha
 	uint32_t interr_nb, err_code;          // interrupt nb and error
 	uint32_t eip, cs, eflags, useresp, ss; // pushed by the processor
-} registers_t;
+} Cpu_registers_t;
 
-typedef void (*isr_t)(registers_t);
+typedef void (*isr_t)(Cpu_registers_t);
 
-void  dump_regs_from_interrupt(registers_t regs);
-int   register_interrupt_handler(uint8_t, isr_t);
-isr_t get_interrupt_handler(uint32_t key);
-int   idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags);
+void  Cpu_dump_registers(Cpu_registers_t regs);
+int   Cpu_register_interrupt_handler(uint8_t, isr_t);
+isr_t Cpu_get_interrupt_handler(uint32_t key);
+int   Cpu_idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags);
 
 #define IRQ_0  32
 #define IRQ_1  33

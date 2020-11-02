@@ -4,12 +4,12 @@
 [GLOBAL boot_page_directory]
 [GLOBAL boot_page_table]
 ;; provided by the linker, see linker script
-[EXTERN _kernel_start]
-[EXTERN _code]
-[EXTERN _end_data]
-[EXTERN _end]
+[EXTERN G_Start_kernel]
+[EXTERN G_Start_code]
+[EXTERN G_End_data]
+[EXTERN G_End_kernel]
 ;; symbole from the kernel
-[EXTERN i386_entry]
+[EXTERN I386_entry_point]
 ;; ------------------------------------
 ;; multiboot.s - multiboot kernel entry point
 ;; System sources under license MIT
@@ -32,9 +32,9 @@ mboot:
 	dd	FLAGS
 	dd	CHECKSUM
 	dd	mboot
-	dd	_code
-	dd	_end_data
-	dd	_end
+	dd	G_Start_code
+	dd	G_End_data
+	dd	G_End_kernel
 	dd	V2P(_start)
 
 ;; boot page directory and table, 4KiB each
@@ -76,10 +76,10 @@ _start:
 	;; TODO: messy, improve this
 .kernel_maping:
 	;; while we are below the kernel inc esi
-	cmp	esi, V2P(_kernel_start)
+	cmp	esi, V2P(G_Start_kernel)
 	jl	.inc_esi
 	;; if we are after the kernel, go to vga mem mapping
-	cmp	esi, V2P(_end)
+	cmp	esi, V2P(G_End_kernel)
 	jge	.vga_mem_maping
 	mov	edx, esi
 	or	edx, 0x003
@@ -104,7 +104,7 @@ _start:
 	mov	cr0, ecx
 	;; even after paging enabled, PC is still related to physical address
 	;; that why we map this page to both 0x00... and 0xC01..., we must manualy jump to the higher half
-	;; and avoid page fault
+	;; to avoid page fault
 	mov	ecx, _start.higher_half_addr
 	jmp	ecx
 .higher_half_addr:
@@ -116,9 +116,8 @@ _start:
 	add	ebx, 0xC0000000
 	push	eax
 	push	ebx
-	call	i386_entry
+	call	I386_entry_point
 	cli
 .hang:	hlt
 	jmp .hang
 .end:
-

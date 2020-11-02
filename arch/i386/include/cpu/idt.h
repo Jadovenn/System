@@ -8,18 +8,20 @@
 
 #include <stdint.h>
 
-typedef struct idt_entry_struct {
+typedef struct Cpu_idt_entry {
 	uint16_t base_lo; // lowest 16 bit of the address to jump
 	uint16_t sel;     // kernel segment selector
 	uint8_t  always0; // always 0
 	uint8_t  flags;   // flags see all documentation
 	uint16_t base_hi; // upper 16bits of the addr to jump
-} __attribute__((packed)) idt_entry_t;
+} __attribute__((packed)) Cpu_idt_entry_t;
 
-typedef struct idt_pointer_struct {
+typedef struct Cpu_idt_ptr {
 	uint16_t limit;
 	uint32_t base;
-} __attribute__((packed)) idt_ptr_t;
+} __attribute__((packed)) Cpu_idt_ptr_t;
+
+void Init_idt();
 
 extern void isr0();
 extern void isr1();
