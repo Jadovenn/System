@@ -9,13 +9,11 @@
 #include "cpu/idt.h"
 #include "cpu/isr.h"
 
-#include <system.h>
-
 extern void idt_flush(uint32_t);
 extern isr_t interrupt_handlers_map[];
 
-idt_entry_t idt_entries[256];
-idt_ptr_t idt_ptr;
+Cpu_idt_entry_t idt_entries[256];
+Cpu_idt_ptr_t idt_ptr;
 
 static void __idt_set_gate(uint8_t num, uint32_t base, uint16_t sel,
                            uint8_t flags) {
@@ -27,11 +25,11 @@ static void __idt_set_gate(uint8_t num, uint32_t base, uint16_t sel,
 	// idt_entries[num].flags = flags | 0x60; // uncoment for ring 3
 }
 
-void idt_init() {
-	idt_ptr.limit = sizeof(idt_entry_t) * 256 - 1;
+void Init_idt() {
+	idt_ptr.limit = sizeof(Cpu_idt_entry_t) * 256 - 1;
 	idt_ptr.base = (uint32_t)&idt_entries;
 
-	memset(&idt_entries, 0, sizeof(idt_entry_t) * 256);
+	memset(&idt_entries, 0, sizeof(Cpu_idt_entry_t) * 256);
 
 	port_write_byte(0x20, 0x11);
 	port_write_byte(0xa0, 0x11);
