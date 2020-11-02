@@ -3,10 +3,11 @@
 ## System sources under license MIT
 ##
 
-KERNEL_INCLUDE_DIRS	=	kernel/include \
-						kernel/multiboot
+KERNEL_INCLUDE_DIRS	=	kernel/include
 
 KERNEL_ENTRY_POINT	=	kernel/main.c
 
-KERNEL_C_SRCS		=	kernel/io/printk.c \
-						kernel/multiboot/physical_memory.c
+KERNEL_C_SRCS		=	kernel/io/console.c \
+						kernel/io/printk.c \
+						kernel/memory/malloc.c \
+						kernel/memory/vmalloc.c
