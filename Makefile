@@ -17,7 +17,8 @@ include tools/config/color.config.mk
 ##                 CONSTANTS                    ##
 ##################################################
 
-NAME		=	System_v$(VERSION)-$(RELEASE_NAME)
+BOARD		=	Generic
+NAME		=	System_$(VERSION)-$(RELEASE_NAME)-$(ARCH)_$(BOARD)
 KERNEL		=	$(NAME)
 ISO			=	$(NAME).iso
 OBJDIR		=	out
@@ -178,7 +179,7 @@ run-with-gdb:	prompt symbols-files $(SYSTEM_ISO)
 
 run-with-gdb-server: prompt symbols-files $(SYSTEM_ISO)
 	@$(ECHO) $(COLOR_YELLOW) "*** QEMU RUN" $(COLOR_DEFAULT) "$(KERNEL) with gdb server only"
-	$(QEMU) -m $(PHYSICAL_MEM) -s -S -fda $(ISO)
+	$(QEMU) -m $(PHYSICAL_MEM) -s -S -fda $(ISO) &
 
 help:
 	@echo "Usage: make <rule> [OPTION]"
