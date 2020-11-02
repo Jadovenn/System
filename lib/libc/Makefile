@@ -19,9 +19,7 @@ SOURCES =	stdlib/abort.c \
 			string/memory.c \
 			string/string.c \
 			string/strlen.c \
-			string/strstr.c \
-			memory/heapBMmalloc.c \
-			memory/malloc.c
+			string/strstr.c
 
 OBJS	=	$(SOURCES:%.c=$(OBJDIR)/%.o)
 
