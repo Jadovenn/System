@@ -38,7 +38,7 @@ uint32_t G_Page_table_entries;
  **   Init static function     **
  ********************************/
 
-static __inline void S_set_section_text_ro() {
+static __inline void _set_section_text_ro() {
 	uint32_t text_end_addr = VIRTUAL_ADDR_TO_PHYSICAL(&G_End_code);
 	uint32_t vaddr         = (uint32_t)&G_Start_kernel;
 	uint32_t paddr         = VIRTUAL_ADDR_TO_PHYSICAL(&G_Start_kernel);
@@ -49,7 +49,7 @@ static __inline void S_set_section_text_ro() {
 	}
 }
 
-static __inline void S_set_section_rodata_ro() {
+static __inline void _set_section_rodata_ro() {
 	uint32_t rodata_end_addr = VIRTUAL_ADDR_TO_PHYSICAL(&G_End_rodata);
 	uint32_t vaddr           = (uint32_t)&G_Start_rodata;
 	uint32_t paddr           = VIRTUAL_ADDR_TO_PHYSICAL(&G_End_rodata);
@@ -60,7 +60,7 @@ static __inline void S_set_section_rodata_ro() {
 	}
 }
 
-static void S_heap_init() {
+static void _heap_init() {
 	pg_add_pte(0xD0000000,
 	           VIRTUAL_ADDR_TO_PHYSICAL((uint32_t)&boot_page_directory));
 	uintptr_t page = Physical_memory_get_page(mt_AVAILABLE);
@@ -71,7 +71,7 @@ static void S_heap_init() {
 	Hal_init_memory_allocator(0xD0000000, 0x1000);
 }
 
-static void S_vmap_page_directory() {
+static void _vmap_page_directory() {
 	// alloc page contiguously
 	G_Page_directory = G_Page_table_entries + 0x1000;
 	uint32_t* vstart = PHYSICAL_PTR_TO_VIRTUAL((uint32_t*)G_Page_directory);
@@ -83,7 +83,7 @@ static void S_vmap_page_directory() {
 	memcpy(vstart, pg_dir, 0x1000);
 }
 
-static void S_vmap_page_tables_entries() {
+static void _vmap_page_tables_entries() {
 	// alloc page contiguously
 	G_Page_table_entries = G_Physical_mmap_end + (0x1000 - G_Physical_mmap_end);
 	uint32_t* vstart = PHYSICAL_PTR_TO_VIRTUAL((uint32_t*)G_Page_table_entries);
@@ -100,11 +100,11 @@ static void S_vmap_page_tables_entries() {
  ********************************/
 
 void Init_virtual_memory() {
-	S_vmap_page_tables_entries();
-	S_vmap_page_directory();
+	_vmap_page_tables_entries();
+	_vmap_page_directory();
 	Cpu_write_cr3(G_Page_directory);
 	Cpu_flush_tlb();
-	S_set_section_text_ro();
-	S_set_section_rodata_ro();
-	S_heap_init();
+	_set_section_text_ro();
+	_set_section_rodata_ro();
+	_heap_init();
 }
