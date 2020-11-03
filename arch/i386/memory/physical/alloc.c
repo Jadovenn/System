@@ -12,8 +12,8 @@
 
 Physical_memory_region_t* G_Physical_memory_map = NULL;
 
-uint32_t Pmm_set_page(const uintptr_t         aPhysicalAddr,
-                      Physical_memory_state_e aState) {
+uint32_t Physical_memory_set_page(const uintptr_t         aPhysicalAddr,
+                                  Physical_memory_state_e aState) {
 	Physical_memory_region_t* region = NULL;
 	if (aPhysicalAddr % 0x1000) {
 		return EXIT_FAILURE;
@@ -42,35 +42,35 @@ uint32_t Pmm_set_page(const uintptr_t         aPhysicalAddr,
 	return EXIT_SUCCESS;
 }
 
-uint32_t Pmm_set_region(const uintptr_t         aPhysicalStartAddr,
-                        const uintptr_t         aPhysicalEndAddr,
-                        Physical_memory_state_e aState) {
+uint32_t Physical_memory_set_region(const uintptr_t         aPhysicalStartAddr,
+                                    const uintptr_t         aPhysicalEndAddr,
+                                    Physical_memory_state_e aState) {
 	uint32_t offset = aPhysicalStartAddr;
 	if (aPhysicalStartAddr > aPhysicalEndAddr) {
 		return EXIT_FAILURE;
 	}
 	while (offset <= aPhysicalEndAddr) {
-		Pmm_set_page(offset, aState);
+		Physical_memory_set_page(offset, aState);
 		offset += 0x1000;
 	}
 	return EXIT_SUCCESS;
 }
 
-void Pmm_release_page(uintptr_t aPhysicalAddress) {
-	Pmm_set_page((uint32_t)aPhysicalAddress, pms_NOT_PRESENT);
+void Physical_memory_release_page(uintptr_t aPhysicalAddress) {
+	Physical_memory_set_page((uint32_t)aPhysicalAddress, pms_NOT_PRESENT);
 }
 
-static uintptr_t S_Compute_addr_and_alloc(Physical_memory_region_t* aRegion,
-                                          uint32_t                  anOffset,
-                                          uint32_t                  aBitSet,
-                                          uint32_t                  aBitCount) {
+static uintptr_t _compute_addr_and_alloc(Physical_memory_region_t* aRegion,
+                                         uint32_t                  anOffset,
+                                         uint32_t                  aBitSet,
+                                         uint32_t                  aBitCount) {
 	uintptr_t addr =
 			aRegion->startAddr + (anOffset * 32 * 0x1000) + (aBitCount * 0x1000);
 	aRegion->bitset[anOffset] |= aBitSet;
 	return addr;
 }
 
-uintptr_t Pmm_get_page(Memory_type_e aMemoryType) {
+uintptr_t Physical_memory_get_page(Memory_type_e aMemoryType) {
 	for (Physical_memory_region_t* region = G_Physical_memory_map; region;
 	     region                           = region->next) {
 		unsigned idx = 0;
@@ -83,7 +83,7 @@ uintptr_t Pmm_get_page(Memory_type_e aMemoryType) {
 				uint32_t bit_count = 0;
 				while (bit) {                         // search in dword
 					if (!(region->bitset[idx] & bit)) { // free page found
-						return S_Compute_addr_and_alloc(region, idx, bit, bit_count);
+						return _compute_addr_and_alloc(region, idx, bit, bit_count);
 					}
 					bit = bit >> 1;
 					bit_count += 1;

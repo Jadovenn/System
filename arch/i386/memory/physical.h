@@ -66,7 +66,7 @@ void Init_physical_memory(uintptr_t aMultibootMmapAddr,
  * the free is performed via an offset computation so it is
  * pretty fast, O(1)
  */
-void Pmm_release_pages(uintptr_t addr);
+void Physical_memory_release_pages(uintptr_t);
 
 /**
  * @brief Allocate one physical page
@@ -74,7 +74,7 @@ void Pmm_release_pages(uintptr_t addr);
  * @return physical address to the allocated physical page
  * @details the allocator is implemented as a sequential search O(N)
  */
-uintptr_t Pmm_get_page(Memory_type_e type);
+uintptr_t Physical_memory_get_page(Memory_type_e type);
 
 /**
  * @brief Set value to physical page
@@ -82,7 +82,8 @@ uintptr_t Pmm_get_page(Memory_type_e type);
  * @param value - value to set true/false
  * @return EXIT_SUCCESS/FAILURE
  */
-uint32_t Pmm_set_page(uintptr_t p_addr, Physical_memory_state_e state);
+uint32_t Physical_memory_set_page(uintptr_t               aPhysicalAddr,
+                                  Physical_memory_state_e aState);
 
 /**
  * @brief Set value to physical region including p_end_addr
@@ -91,8 +92,7 @@ uint32_t Pmm_set_page(uintptr_t p_addr, Physical_memory_state_e state);
  * @param value - value to set true/false
  * @return EXIT_SUCCESS/FAILURE
  */
-uint32_t Pmm_set_region(const uintptr_t         p_start_addr,
-                        const uintptr_t         p_end_addr,
-                        Physical_memory_state_e state);
-
+uint32_t Physical_memory_set_region(uintptr_t               aPhysicalStartAddr,
+                                    uintptr_t               aPhysicalEndAddr,
+                                    Physical_memory_state_e aState);
 #endif // I386_PHYSICAL_H_

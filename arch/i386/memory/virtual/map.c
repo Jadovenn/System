@@ -41,7 +41,7 @@ uint32_t pg_map(uint32_t physical_addr,
 	unsigned pg_dir_offset          = virtual_addr >> 22;
 	uint32_t physical_pg_entry_addr = pg_dir[pg_dir_offset];
 	if (!(physical_pg_entry_addr & 0x1)) {
-		uintptr_t page = Pmm_get_page(mt_AVAILABLE);
+		uintptr_t page = Physical_memory_get_page(mt_AVAILABLE);
 		if (!page) {
 			printk("ERROR ::: PAGING: Asked page is not present, could not add a new "
 			       "one\n");

@@ -37,10 +37,10 @@ uint32_t G_Physical_mmap_end   = 0;
  ********************************/
 
 static void
-S_Create_physical_region(uint32_t len, uint32_t addr, uint32_t type) {
+_create_physical_region(uint32_t len, uint32_t addr, uint32_t type) {
 	size_t bytes             = sizeof(Physical_memory_region_t);
 	size_t usable_page_count = 0;
-	if (type ==  mt_AVAILABLE || type == mt_LOWER_REGION) {
+	if (type == mt_AVAILABLE || type == mt_LOWER_REGION) {
 		size_t page_count = (len / 1024) / 4;
 		usable_page_count = page_count - (page_count % 32);
 		bytes += usable_page_count / 8;
@@ -84,29 +84,28 @@ S_Create_physical_region(uint32_t len, uint32_t addr, uint32_t type) {
 	region->next = new_region;
 }
 
-static void
-S_Read_physical_memory_regions_block(Multiboot_mmap_region_t* mmap) {
+static void _read_physical_memory_regions_block(Multiboot_mmap_region_t* mmap) {
 	if (!(uint32_t)mmap->addr && (uint64_t)mmap->addr) {
 		printk("PAE not supported, physical region ignored\n");
 		return;
 	}
 	if (mmap->addr < 0x100000 && mmap->type == MULTIBOOT_MEMORY_AVAILABLE) {
-		S_Create_physical_region(mmap->len, mmap->addr, mt_BIOS);
+		_create_physical_region(mmap->len, mmap->addr, mt_BIOS);
 	} else if (mmap->type == MULTIBOOT_MEMORY_AVAILABLE &&
 	           mmap->addr + mmap->len - 1 < 0x1000000) {
-		S_Create_physical_region(mmap->len, mmap->addr, mt_AVAILABLE);
+		_create_physical_region(mmap->len, mmap->addr, mt_AVAILABLE);
 	} else if (mmap->type == MULTIBOOT_MEMORY_AVAILABLE &&
 	           mmap->addr < 0x1000000 && mmap->addr + mmap->len - 1 > 0x1000000) {
-		S_Create_physical_region(0x1000000 - mmap->addr, mmap->addr,
-		                         mt_LOWER_REGION);
-		S_Create_physical_region(mmap->len - (0x1000000 - mmap->addr),
-		                         mmap->addr + (0x1000000 - mmap->addr), mmap->type);
+		_create_physical_region(0x1000000 - mmap->addr, mmap->addr,
+		                        mt_LOWER_REGION);
+		_create_physical_region(mmap->len - (0x1000000 - mmap->addr),
+		                        mmap->addr + (0x1000000 - mmap->addr), mmap->type);
 	} else {
-		S_Create_physical_region(mmap->len, mmap->addr, mmap->type);
+		_create_physical_region(mmap->len, mmap->addr, mmap->type);
 	}
 }
 
-static __inline void S_Display_usable_physical_memory() {
+static __inline void _display_usable_physical_memory() {
 	size_t size = 0;
 	printk("Physical Memory Regions:\n");
 	for (Physical_memory_region_t* idx = G_Physical_memory_map; idx;
@@ -121,26 +120,27 @@ static __inline void S_Display_usable_physical_memory() {
 	size /= 1024;
 	size_t size_gb = size / 1024;
 	if (size_gb != 0) {
-		printk("Total usable physical memory: %d Gib and %d Mib\n", size_gb, size % 1024);
+		printk("Total usable physical memory: %d Gib and %d Mib\n", size_gb,
+		       size % 1024);
 	} else {
 		printk("Total usable physical memory: %d Mib\n", size);
 	}
 }
 
-static __inline void S_Map_used_physical_region() {
+static __inline void _map_used_physical_region() {
 	uint32_t kernel_start_addr =
 			VIRTUAL_ADDR_TO_PHYSICAL((uint32_t)&G_Start_kernel);
 	uint32_t kernel_end_addr = VIRTUAL_ADDR_TO_PHYSICAL((uint32_t)&G_End_kernel);
 	kernel_end_addr -= kernel_end_addr % 0x1000;
-	uint32_t result =
-			Pmm_set_region(kernel_start_addr, kernel_end_addr, pms_PRESENT);
+	uint32_t result = Physical_memory_set_region(kernel_start_addr,
+	                                             kernel_end_addr, pms_PRESENT);
 	if (result != EXIT_SUCCESS) {
-		PANIC("Could not map physical aera of the kernel");
+		PANIC("Could not map physical area of the kernel");
 	}
-	result = Pmm_set_region(G_Physical_mmap_start, G_Physical_mmap_end - 0x1000,
-	                        pms_PRESENT);
+	result = Physical_memory_set_region(
+			G_Physical_mmap_start, G_Physical_mmap_end - 0x1000, pms_PRESENT);
 	if (result != EXIT_SUCCESS) {
-		PANIC("Could not map physical aera of the bitset for physical memory "
+		PANIC("Could not map physical area of the bitset for physical memory "
 		      "manager");
 	}
 }
@@ -169,8 +169,8 @@ void Init_physical_memory(uintptr_t aMultibootMmapAddr,
 	     mmapRegion =
 	         (Multiboot_mmap_region_t*)((uint32_t)mmapRegion + mmapRegion->size +
 	                                    sizeof(mmapRegion->size))) {
-		S_Read_physical_memory_regions_block(mmapRegion);
+		_read_physical_memory_regions_block(mmapRegion);
 	}
-	S_Display_usable_physical_memory();
-	S_Map_used_physical_region();
+	_display_usable_physical_memory();
+	_map_used_physical_region();
 }

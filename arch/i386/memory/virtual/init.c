@@ -63,7 +63,7 @@ static __inline void S_set_section_rodata_ro() {
 static void S_heap_init() {
 	pg_add_pte(0xD0000000,
 	           VIRTUAL_ADDR_TO_PHYSICAL((uint32_t)&boot_page_directory));
-	uintptr_t page = Pmm_get_page(mt_AVAILABLE);
+	uintptr_t page = Physical_memory_get_page(mt_AVAILABLE);
 	if (!page) {
 		PANIC("Not enought memory. Could not init virtual memory.");
 	}
@@ -73,10 +73,10 @@ static void S_heap_init() {
 
 static void S_vmap_page_directory() {
 	// alloc page contiguously
-	G_Page_directory  = G_Page_table_entries + 0x1000;
+	G_Page_directory = G_Page_table_entries + 0x1000;
 	uint32_t* vstart = PHYSICAL_PTR_TO_VIRTUAL((uint32_t*)G_Page_directory);
 	uint32_t* pg_dir = PHYSICAL_PTR_TO_VIRTUAL(Cpu_read_cr3());
-	Pmm_set_page(G_Page_directory, pms_PRESENT);
+	Physical_memory_set_page(G_Page_directory, pms_PRESENT);
 	pg_map(G_Page_directory, (uint32_t)vstart, 0x003, false);
 	// init by copy of the boot page directory and remove itself from the boot
 	// table
@@ -86,8 +86,8 @@ static void S_vmap_page_directory() {
 static void S_vmap_page_tables_entries() {
 	// alloc page contiguously
 	G_Page_table_entries = G_Physical_mmap_end + (0x1000 - G_Physical_mmap_end);
-	uint32_t* vstart    = PHYSICAL_PTR_TO_VIRTUAL((uint32_t*)G_Page_table_entries);
-	Pmm_set_page(G_Page_table_entries, pms_PRESENT);
+	uint32_t* vstart = PHYSICAL_PTR_TO_VIRTUAL((uint32_t*)G_Page_table_entries);
+	Physical_memory_set_page(G_Page_table_entries, pms_PRESENT);
 	pg_map(G_Page_table_entries, (uint32_t)vstart, 0x003, false);
 	// init by adding manually the boot page directory
 	memset(vstart, 0x1000, 0x0);
