@@ -6,6 +6,7 @@
 #ifndef I386_VIRTUAL_H
 #define I386_VIRTUAL_H
 
+#include <stdbool.h>
 #include <stdint.h>
 
 #include <hal/memory.h>
@@ -44,6 +45,50 @@ extern Virtual_memory_area_t G_Kernel_vma[];
  **     Public functions       **
  ********************************/
 
+/**
+ * Initialise the heap
+ * @param anHeapBreak - the heap break
+ * @param aSize - a size if some page are already mapped or 0
+ */
+void Init_heap(uintptr_t anHeapBreak, size_t aSize);
+
+/**
+ * Initialize the virtual memory, physical memory must be initialized first
+ */
 void Init_virtual_memory();
+
+/**
+ * Initialize memory
+ * @param aMultibootMmapAddr
+ * @param aMultibootMmapLength
+ */
+void Init_memory(uintptr_t aMultibootMmapAddr, uint32_t aMultibootMmapLength);
+
+void Paging_set_page_directory(uintptr_t aVirtualAddr, uintptr_t aPhysicalAddr);
+void Paging_set_pte_database(uintptr_t aVirtualAddr, uintptr_t aPhysicalAddr);
+uintptr_t Paging_get_page_directory();
+uintptr_t Paging_get_pte_database();
+
+/**
+ * Add a new page table entry to support a new virtual address space
+ * @param aTargetVirtualAddr - the targeted virtual address space to manage
+ * @param aPhysicalAddr - a physical page to use for the pte
+ */
+void Paging_add_pte(uintptr_t aTargetVirtualAddr, uintptr_t aPhysicalAddr);
+
+/**
+ * Map a virtual page to a physical page
+ * @param aPhysicalAddr - the target physical page
+ * @param aVirtualAddr - the target virtual page
+ * @param somePageFlags - the pte flags to apply
+ * @param anOverrideFlag - a flag for overriding an existing mapping
+ * @return EXIT_SUCCESS or EXIT_FAILURE
+ */
+uint32_t Paging_map(uintptr_t aPhysicalAddr,
+                    uintptr_t aVirtualAddr,
+                    uint32_t  somePageFlags,
+                    bool      anOverrideFlag);
+
+uintptr_t Paging_find_physical_address(uintptr_t aVirtualAddr);
 
 #endif // I386_VIRTUAL_H

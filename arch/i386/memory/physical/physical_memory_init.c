@@ -15,7 +15,9 @@
 #include <arch/paging.h>
 #include <cpu/cr.h>
 
+#include "memory/boot/boot_memory.h"
 #include "memory/physical.h"
+#include "memory/virtual.h"
 
 /**
  * Physical Memory Init procedure
@@ -52,7 +54,7 @@ _create_physical_region(uint32_t len, uint32_t addr, uint32_t type) {
 				G_Physical_mmap_end + (0x1000 - G_Physical_mmap_end % 0x1000);
 		uintptr_t vaddr = PHYSICAL_ADDR_TO_VIRTUAL(paddr);
 		for (size_t nb_page = 0; nb_page < page_count; nb_page += 1) {
-			if (pg_map(paddr, vaddr, 0x3, false) == EXIT_FAILURE) {
+			if (Boot_paging_map(paddr, vaddr, 0x3, false) == EXIT_FAILURE) {
 				PANIC("Fatal error, could not map physical region, more RAM needed");
 			}
 			paddr += 0x1000;
@@ -156,9 +158,9 @@ void Init_physical_memory(uintptr_t aMultibootMmapAddr,
 		G_Physical_mmap_start += (0x1000 - (G_Physical_mmap_start % 0x1000));
 	}
 	G_Physical_mmap_end = G_Physical_mmap_start;
-	if (pg_map(G_Physical_mmap_start,
-	           PHYSICAL_ADDR_TO_VIRTUAL(G_Physical_mmap_start), 0x3,
-	           false) == EXIT_FAILURE) {
+	if (Boot_paging_map(G_Physical_mmap_start,
+	                    PHYSICAL_ADDR_TO_VIRTUAL(G_Physical_mmap_start), 0x3,
+	                    false) == EXIT_FAILURE) {
 		PANIC("Fatal error, could not map physical region, more RAM needed");
 	}
 	Multiboot_mmap_region_t* mmapRegion = NULL;

@@ -1,5 +1,5 @@
 /**
- * pagefault_handler.c - Handle PageFault interruption
+ * page_fault_handler.c - Handle PageFault interruption
  * System sources under license MIT
  */
 
@@ -21,7 +21,7 @@ static const char* PG_FAULT_KERNEL_010 =
 		"::: Kernel tried to write to a non-present page entry";
 static const char* PG_FAULT_KERNEL_011 =
 		"::: Kernel tried to write a page and caused a protection fault";
-static const char* PG_FAULT_DEFAULT = "::: Unexpected Page Fault Interrution";
+static const char* PG_FAULT_DEFAULT = "::: Unexpected Page Fault Interruption";
 
 void boot_page_fault_handler(Cpu_registers_t regs) {
 	uint32_t cr2  = Cpu_read_cr2();

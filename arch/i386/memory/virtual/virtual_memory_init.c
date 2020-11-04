@@ -15,7 +15,9 @@
 #include <arch/paging.h>
 #include <cpu/cr.h>
 
+#include "memory/boot/boot_memory.h"
 #include "memory/physical.h"
+#include "memory/virtual.h"
 
 /**
  * Virtual memory init sequence (paging):
@@ -44,7 +46,7 @@ static __inline void _set_section_text_ro() {
 	uint32_t paddr         = VIRTUAL_ADDR_TO_PHYSICAL(&G_Start_kernel);
 	unsigned page_mapped   = 0;
 	for (; paddr < text_end_addr; vaddr += 0x1000, paddr += 0x1000) {
-		pg_map(paddr, vaddr, 0x001, true);
+		Paging_map(paddr, vaddr, 0x001, true);
 		page_mapped += 1;
 	}
 }
@@ -55,20 +57,27 @@ static __inline void _set_section_rodata_ro() {
 	uint32_t paddr           = VIRTUAL_ADDR_TO_PHYSICAL(&G_End_rodata);
 	unsigned page_mapped     = 0;
 	for (; paddr < rodata_end_addr; vaddr += 0x1000, paddr += 0x1000) {
-		pg_map(paddr, vaddr, 0x001, true);
+		Paging_map(paddr, vaddr, 0x001, true);
 		page_mapped += 1;
 	}
 }
 
 static void _heap_init() {
-	pg_add_pte(0xD0000000,
-	           VIRTUAL_ADDR_TO_PHYSICAL((uint32_t)&boot_page_directory));
+	uintptr_t heapBreak = 0x00000000;
+	for (Virtual_memory_area_t* area = G_Kernel_vma; area; area++) {
+		if (area->type == vmt_HEAP) {
+			heapBreak = area->start;
+			break;
+		}
+	}
+	Paging_add_pte(heapBreak,
+	               VIRTUAL_ADDR_TO_PHYSICAL((uint32_t)&G_Boot_page_directory));
 	uintptr_t page = Physical_memory_get_page(mt_AVAILABLE);
 	if (!page) {
-		PANIC("Not enought memory. Could not init virtual memory.");
+		PANIC("Not enough memory. Could not init virtual memory.");
 	}
-	pg_map(page, 0xD0000000, 0x003, true);
-	Hal_init_memory_allocator(0xD0000000, 0x1000);
+	Paging_map(page, heapBreak, 0x003, true);
+	Init_heap(heapBreak, 0x1000);
 }
 
 static void _vmap_page_directory() {
@@ -77,7 +86,7 @@ static void _vmap_page_directory() {
 	uint32_t* vstart = PHYSICAL_PTR_TO_VIRTUAL((uint32_t*)G_Page_directory);
 	uint32_t* pg_dir = PHYSICAL_PTR_TO_VIRTUAL(Cpu_read_cr3());
 	Physical_memory_set_page(G_Page_directory, pms_PRESENT);
-	pg_map(G_Page_directory, (uint32_t)vstart, 0x003, false);
+	Boot_paging_map(G_Page_directory, (uint32_t)vstart, 0x003, false);
 	// init by copy of the boot page directory and remove itself from the boot
 	// table
 	memcpy(vstart, pg_dir, 0x1000);
@@ -88,11 +97,11 @@ static void _vmap_page_tables_entries() {
 	G_Page_table_entries = G_Physical_mmap_end + (0x1000 - G_Physical_mmap_end);
 	uint32_t* vstart = PHYSICAL_PTR_TO_VIRTUAL((uint32_t*)G_Page_table_entries);
 	Physical_memory_set_page(G_Page_table_entries, pms_PRESENT);
-	pg_map(G_Page_table_entries, (uint32_t)vstart, 0x003, false);
+	Boot_paging_map(G_Page_table_entries, (uint32_t)vstart, 0x003, false);
 	// init by adding manually the boot page directory
 	memset(vstart, 0x1000, 0x0);
-	unsigned offset = PHYSICAL_ADDR_TO_VIRTUAL((uint32_t)&boot_page_table) >> 22;
-	vstart[offset]  = (uint32_t)&boot_page_table | 0x003;
+	unsigned offset = PHYSICAL_ADDR_TO_VIRTUAL((uint32_t)&G_Boot_page_table) >> 22;
+	vstart[offset]  = (uint32_t)&G_Boot_page_table | 0x003;
 }
 
 /********************************
@@ -102,8 +111,10 @@ static void _vmap_page_tables_entries() {
 void Init_virtual_memory() {
 	_vmap_page_tables_entries();
 	_vmap_page_directory();
-	Cpu_write_cr3(G_Page_directory);
-	Cpu_flush_tlb();
+	Paging_set_page_directory(
+			PHYSICAL_ADDR_TO_VIRTUAL((uint32_t)G_Page_directory), G_Page_directory);
+	Paging_set_pte_database(PHYSICAL_ADDR_TO_VIRTUAL(G_Page_table_entries),
+													G_Page_table_entries);
 	_set_section_text_ro();
 	_set_section_rodata_ro();
 	_heap_init();

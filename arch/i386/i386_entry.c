@@ -11,7 +11,7 @@
 #include <kernel/panic.h>
 
 #include <arch/paging.h>
-#include <arch/physical_memory_init.h>
+#include <arch/init.h>
 #include <cpu/gdt.h>
 #include <cpu/idt.h>
 #include <cpu/isr.h>
