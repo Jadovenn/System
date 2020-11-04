@@ -170,16 +170,16 @@ iso:		$(ISO)
 
 run:			$(ISO)
 	@$(ECHO) $(COLOR_YELLOW) "*** QEMU RUN" $(COLOR_DEFAULT) "$(KERNEL)"
-	$(QEMU) -m $(PHYSICAL_MEM) -fda $(ISO)
+	$(QEMU) -m $(PHYSICAL_MEM) -drive file=$(ISO),format=raw
 
 run-with-gdb:	prompt symbols-files $(SYSTEM_ISO)
 	@$(ECHO) $(COLOR_YELLOW) "*** QEMU RUN" $(COLOR_DEFAULT) "$(KERNEL) with gdb"
-	$(QEMU) -m $(PHYSICAL_MEM) -s -S -fda $(ISO) &
+	$(QEMU) -m $(PHYSICAL_MEM) -s -S -drive file=$(ISO),format=raw &
 	gdb -ex "target remote localhost:1234" -ex "symbol-file $(KERNEL)"
 
 run-with-gdb-server: prompt symbols-files $(SYSTEM_ISO)
 	@$(ECHO) $(COLOR_YELLOW) "*** QEMU RUN" $(COLOR_DEFAULT) "$(KERNEL) with gdb server only"
-	$(QEMU) -m $(PHYSICAL_MEM) -s -S -fda $(ISO) &
+	$(QEMU) -m $(PHYSICAL_MEM) -s -S -drive file=$(ISO),format=raw &
 
 help:
 	@echo "Usage: make <rule> [OPTION]"
