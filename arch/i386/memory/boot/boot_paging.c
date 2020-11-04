@@ -1,6 +1,6 @@
 /**
- * map.c - map a physical address to a virtual addr
- * System sources under MIT license
+ * boot_memory.c - Boot time memory management
+ * System sources under license MIT
  */
 
 #include <stdbool.h>
@@ -8,20 +8,22 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <kernel/panic.h>
 #include <kernel/stdio.h>
 
 #include <arch/ld.h>
 #include <cpu/cr.h>
 
+#include "memory/boot/boot_memory.h"
 #include "memory/physical.h"
 #include "memory/virtual.h"
 
-
-void pg_add_pte(uintptr_t vaddr, uintptr_t paddr) {
-	unsigned  offset    = vaddr >> 22;
-	uint32_t* pg_dir    = (uint32_t*)PHYSICAL_ADDR_TO_VIRTUAL(Cpu_read_cr3());
-	uint32_t* pte_pages = PHYSICAL_PTR_TO_VIRTUAL((uint32_t*)G_Page_table_entries);
-	pte_pages[offset]   = paddr | 0x3;
+void Boot_paging_add_pte(uintptr_t vaddr, uintptr_t paddr) {
+	unsigned  offset = vaddr >> 22;
+	uint32_t* pg_dir = (uint32_t*)PHYSICAL_ADDR_TO_VIRTUAL(Cpu_read_cr3());
+	uint32_t* pte_pages =
+			PHYSICAL_PTR_TO_VIRTUAL((uint32_t*)G_Page_table_entries);
+	pte_pages[offset] = paddr | 0x3;
 	Cpu_flush_tlb();
 	uint32_t* pte = pte_pages + offset;
 	memset(pte, 0x1000, 0);
@@ -29,10 +31,10 @@ void pg_add_pte(uintptr_t vaddr, uintptr_t paddr) {
 	Cpu_flush_tlb();
 }
 
-uint32_t pg_map(uint32_t physical_addr,
-                uint32_t virtual_addr,
-                uint32_t flags,
-                bool     override) {
+uint32_t Boot_paging_map(uint32_t physical_addr,
+                         uint32_t virtual_addr,
+                         uint32_t flags,
+                         bool     override) {
 	uint32_t* pg_dir = (uint32_t*)PHYSICAL_ADDR_TO_VIRTUAL(Cpu_read_cr3());
 
 	if (virtual_addr % 0x1000 || physical_addr % 0x1000) {
@@ -43,11 +45,10 @@ uint32_t pg_map(uint32_t physical_addr,
 	if (!(physical_pg_entry_addr & 0x1)) {
 		uintptr_t page = Physical_memory_get_page(mt_AVAILABLE);
 		if (!page) {
-			printk("ERROR ::: PAGING: Asked page is not present, could not add a new "
-			       "one\n");
-			return EXIT_FAILURE;
+			PANIC("ERROR ::: Boot paging algorithm does not support new page table "
+			      "entry");
 		}
-		pg_add_pte(pg_dir_offset * 0x400000, page);
+		Boot_paging_add_pte(pg_dir_offset * 0x400000, page);
 	}
 	physical_pg_entry_addr &= 0xFFFFF000;
 	uint32_t* pg_table_entry =

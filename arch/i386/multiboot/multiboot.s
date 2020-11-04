@@ -1,8 +1,8 @@
 [BITS 32]
 [GLOBAL mboot]
 [GLOBAL _start]
-[GLOBAL boot_page_directory]
-[GLOBAL boot_page_table]
+[GLOBAL G_Boot_page_directory]
+[GLOBAL G_Boot_page_table]
 ;; provided by the linker, see linker script
 [EXTERN G_Start_kernel]
 [EXTERN G_Start_code]
@@ -40,9 +40,9 @@ mboot:
 ;; boot page directory and table, 4KiB each
 section .bss
 align	4096
-boot_page_directory:
+G_Boot_page_directory:
 resb	0x1000
-boot_page_table:
+G_Boot_page_table:
 resb	0x1000
 
 ;; Stack 16Kib
@@ -57,7 +57,7 @@ _start:
 	;; eax and ebx are reserved, do not alter them until they are saved
 	;; Map free space in lower half, this is where grub put the
 	;; multiboot header, so we need it
-	mov	edi, V2P(boot_page_table) + 0x7 * 0x4
+	mov	edi, V2P(G_Boot_page_table) + 0x7 * 0x4
 	mov	esi, 0x7000
 .free_lower_half_maping:
 	cmp	esi, 0x7FFFF
@@ -69,7 +69,7 @@ _start:
 	add	edi, 0x4
 	loop	.free_lower_half_maping
 .begin_kernel_maping:
-	mov	edi, V2P(boot_page_table)
+	mov	edi, V2P(G_Boot_page_table)
 	mov	esi, 0x00
 	mov	ecx, 0x3FF
 	;; Map the kernel 
@@ -90,13 +90,13 @@ _start:
 	loop	.kernel_maping
 .vga_mem_maping:
 	;; map vga memory to 0xC03FF000, present and writable
-	mov	DWORD [V2P(boot_page_table) + 0x3FF * 0x4], 0x000B8000 | 0x003
+	mov	DWORD [V2P(G_Boot_page_table) + 0x3FF * 0x4], 0x000B8000 | 0x003
 	;; Map page table for virtual address 0x00000000
-	mov	DWORD [V2P(boot_page_directory)], V2P(boot_page_table) + 0x003
+	mov	DWORD [V2P(G_Boot_page_directory)], V2P(G_Boot_page_table) + 0x003
 	;; Map page table for virtual adress 0xC0000000
-	mov	DWORD [V2P(boot_page_directory) + 768 * 4], V2P(boot_page_table) + 0x003 
+	mov	DWORD [V2P(G_Boot_page_directory) + 768 * 4], V2P(G_Boot_page_table) + 0x003
 	;; Set page directory
-	mov	ecx, V2P(boot_page_directory) 
+	mov	ecx, V2P(G_Boot_page_directory)
 	mov	cr3, ecx
 	;; enable paging
 	mov	ecx, cr0
@@ -109,7 +109,7 @@ _start:
 	jmp	ecx
 .higher_half_addr:
 	;; After this label, paging should be enable, and virtual address effective
-	mov	DWORD [boot_page_directory], 0
+	mov	DWORD [G_Boot_page_directory], 0
 	;; reload cr3 to force TLB flush, change take effect
 	invlpg	[0]
 	mov	esp, stack_top

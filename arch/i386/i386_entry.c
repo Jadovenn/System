@@ -10,13 +10,12 @@
 #include <kernel/multiboot.h>
 #include <kernel/panic.h>
 
-#include <arch/init.h>
 #include <arch/paging.h>
-#include <cpu/isr.h>
+#include <arch/physical_memory_init.h>
 #include <cpu/gdt.h>
 #include <cpu/idt.h>
+#include <cpu/isr.h>
 
-#include "memory/physical.h"
 #include "memory/virtual.h"
 
 #include <system.h>
@@ -53,9 +52,6 @@ void I386_entry_point(Multiboot_info_t* header, uint32_t magic) {
 	monitor_driver_init();
 	printk("Booting i386_GENERIC init code ver %s\n", VERSION);
 	check_multiboot(header, magic);
-	Init_physical_memory(header->mmap_addr, header->mmap_length);
-	Init_virtual_memory();
-	uint32_t* integer = malloc(sizeof(uint32_t));
-	printk("%#x\n", integer);
+	Init_memory(header->mmap_addr, header->mmap_length);
 	main(0, NULL);
 }
