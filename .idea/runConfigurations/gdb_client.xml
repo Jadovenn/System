@@ -1,7 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="gdb-client" type="CLion_Remote" remoteCommand="localhost:1234" symbolFile="$PROJECT_DIR$/System_0.0.3-BareBones-i386_Generic.sym" sysroot="">
     <method v="2">
-      <option name="RunConfigurationTask" enabled="true" run_configuration_name="iso" run_configuration_type="MAKEFILE_TARGET_RUN_CONFIGURATION" />
       <option name="RunConfigurationTask" enabled="true" run_configuration_name="run-with-gdb-server" run_configuration_type="MAKEFILE_TARGET_RUN_CONFIGURATION" />
     </method>
   </configuration>
