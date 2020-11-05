@@ -8,7 +8,7 @@ ARCH_LDFLAGS		=	-Wl,-T$(ARCH_DIR)/i386.ld
 ARCH_INCLUDE_DIRS	=	$(ARCH_DIR)/ \
 						$(ARCH_DIR)/include
 
-ARCH_ASM_SRCS	=		$(ARCH_DIR)/init_code/multiboot.s \
+ARCH_ASM_SRCS	=		$(ARCH_DIR)/multiboot/multiboot.s \
 						$(ARCH_DIR)/cpu/asm/interrupt.s \
 						$(ARCH_DIR)/cpu/asm/dt_flush.s
 
