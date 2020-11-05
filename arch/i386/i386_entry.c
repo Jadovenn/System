@@ -50,7 +50,7 @@ void I386_entry_point(Multiboot_info_t* header, uint32_t magic) {
 	asm volatile("sti");
 	Cpu_register_interrupt_handler(14, &boot_page_fault_handler);
 	monitor_driver_init();
-	printk("Booting i386_GENERIC init code ver %s\n", VERSION);
+	printk("Booting init code i386_GENERIC\n");
 	check_multiboot(header, magic);
 	Init_memory(header->mmap_addr, header->mmap_length);
 	main(0, NULL);
