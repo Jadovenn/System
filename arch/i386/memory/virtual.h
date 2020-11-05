@@ -64,9 +64,33 @@ void Init_virtual_memory();
  */
 void Init_memory(uintptr_t aMultibootMmapAddr, uint32_t aMultibootMmapLength);
 
+/**
+ * Activate given page directory
+ * @param aVirtualAddr - virtual address of the page directory
+ * @param aPhysicalAddr - physical address of the page directory
+ */
 void Paging_set_page_directory(uintptr_t aVirtualAddr, uintptr_t aPhysicalAddr);
-void Paging_set_pte_database(uintptr_t aVirtualAddr, uintptr_t aPhysicalAddr);
+
+/**
+ * Register the page table entries database
+ * @param aVirtualAddr - virtual address of the pte database
+ * @param aPhysicalAddr - physical address of the pte database
+ * @param aVirtualPteAddrOffset - virtual directory address of the pte database
+ */
+void Paging_set_pte_database(uintptr_t aVirtualAddr,
+                             uintptr_t aPhysicalAddr,
+                             uintptr_t aVirtualPteAddrOffset);
+
+/**
+ * Get the page directory address
+ * @return virtual address
+ */
 uintptr_t Paging_get_page_directory();
+
+/**
+ * Get the page table entry database address
+ * @return virtual address
+ */
 uintptr_t Paging_get_pte_database();
 
 /**
@@ -89,6 +113,11 @@ uint32_t Paging_map(uintptr_t aPhysicalAddr,
                     uint32_t  somePageFlags,
                     bool      anOverrideFlag);
 
+/**
+ * Lookup the physical address associated with the given virtual address
+ * @param aVirtualAddr - any virtual address
+ * @return physical address
+ */
 uintptr_t Paging_find_physical_address(uintptr_t aVirtualAddr);
 
 #endif // I386_VIRTUAL_H
