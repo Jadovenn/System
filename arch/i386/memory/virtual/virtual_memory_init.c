@@ -92,16 +92,28 @@ static void _vmap_page_directory() {
 	memcpy(vstart, pg_dir, 0x1000);
 }
 
-static void _vmap_page_tables_entries() {
+static uintptr_t _vmap_page_tables_entries() {
 	// alloc page contiguously
-	G_Page_table_entries = G_Physical_mmap_end + (0x1000 - G_Physical_mmap_end);
+	G_Page_table_entries = G_Physical_mmap_end + (0x1000 - G_Physical_mmap_end % 0x1000);
 	uint32_t* vstart = PHYSICAL_PTR_TO_VIRTUAL((uint32_t*)G_Page_table_entries);
 	Physical_memory_set_page(G_Page_table_entries, pms_PRESENT);
 	Boot_paging_map(G_Page_table_entries, (uint32_t)vstart, 0x003, false);
 	// init by adding manually the boot page directory
-	memset(vstart, 0x1000, 0x0);
-	unsigned offset = PHYSICAL_ADDR_TO_VIRTUAL((uint32_t)&G_Boot_page_table) >> 22;
-	vstart[offset]  = (uint32_t)&G_Boot_page_table | 0x003;
+	memset(vstart, 0x0, 0x1000);
+	size_t bootPteOffset = ((uintptr_t)&G_Boot_page_table) >> 22;
+	uintptr_t physicalBootPteAddr = VIRTUAL_ADDR_TO_PHYSICAL(((uintptr_t)&G_Boot_page_table));
+	vstart[bootPteOffset] = physicalBootPteAddr | 0x3;
+	vstart[0] = G_Page_table_entries | 0x3;
+
+	uintptr_t dataAddr = 0x00000000;
+	for (Virtual_memory_area_t* area = G_Kernel_vma; area; area++) {
+		if (area->type == vmt_DATA) {
+			dataAddr = area->start;
+			break;
+		}
+	}
+	Boot_paging_add_pte(dataAddr, G_Page_table_entries);
+	return dataAddr;
 }
 
 /********************************
@@ -109,12 +121,12 @@ static void _vmap_page_tables_entries() {
  ********************************/
 
 void Init_virtual_memory() {
-	_vmap_page_tables_entries();
+	uintptr_t pageTableEntriesDatabase = _vmap_page_tables_entries();
 	_vmap_page_directory();
 	Paging_set_page_directory(
 			PHYSICAL_ADDR_TO_VIRTUAL((uint32_t)G_Page_directory), G_Page_directory);
 	Paging_set_pte_database(PHYSICAL_ADDR_TO_VIRTUAL(G_Page_table_entries),
-													G_Page_table_entries);
+													G_Page_table_entries, pageTableEntriesDatabase);
 	_set_section_text_ro();
 	_set_section_rodata_ro();
 	_heap_init();
