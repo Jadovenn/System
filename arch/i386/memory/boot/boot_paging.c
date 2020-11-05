@@ -19,14 +19,19 @@
 #include "memory/virtual.h"
 
 void Boot_paging_add_pte(uintptr_t vaddr, uintptr_t paddr) {
+	if (vaddr % 0x400000) {
+		PANIC("PAGING ::: boot add pte error %#x is not divisible by 4Mib\n");
+	}
 	unsigned  offset = vaddr >> 22;
 	uint32_t* pg_dir = (uint32_t*)PHYSICAL_ADDR_TO_VIRTUAL(Cpu_read_cr3());
+	/*
 	uint32_t* pte_pages =
 			PHYSICAL_PTR_TO_VIRTUAL((uint32_t*)G_Page_table_entries);
 	pte_pages[offset] = paddr | 0x3;
 	Cpu_flush_tlb();
 	uint32_t* pte = pte_pages + offset;
-	memset(pte, 0x1000, 0);
+	memset(pte, 0x0, 0x1000);
+	*/
 	pg_dir[offset] = paddr | 0x3;
 	Cpu_flush_tlb();
 }
