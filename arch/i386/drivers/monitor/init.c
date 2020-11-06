@@ -5,8 +5,8 @@
 
 #include <hal/console.h>
 #include <kernel/stdio.h>
-#include <kernel/tty.h>
 
+#include "monitor.h"
 
 static struct Console_driver Monitor_driver;
 

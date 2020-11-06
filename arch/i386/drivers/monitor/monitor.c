@@ -3,32 +3,23 @@
  * System sources under license MIT
  */
 
+#include "monitor.h"
+
 #include <string.h>
 
-#include <kernel/tty.h>
-
-#include "arch/io.h"
-#include "arch/ports.h"
+#include <arch/io.h>
+#include <arch/ports.h>
 
 //#define VIDEO_MEMORY_BUFFER_PTR		((char*)0xb8000)
 #define VIDEO_MEMORY_BUFFER_PTR ((char*)0xC03FF000)
 
 #define VGA_CURSOR_POSITION_HIGHT 14
-#define VGA_CURSOR_POSITION_LOW 15
+#define VGA_CURSOR_POSITION_LOW   15
 
 #define COLONE_MAX 80
-#define ROW_MAX 25
+#define ROW_MAX    25
 
 static char cursor_color = 0x0f;
-
-/**
- * Note
- * This will need to be improve while files would be ready, so
- * we will implement this function as standard library function using
- * a kwrite function and connect this driver to a file and print the content
- * comming fromt the file. this file would be the standard output of our kernel,
- * maybe tty later?
- */
 
 static int get_offset_from_chartesian(int x, int y) {
 	return (2 * (y * COLONE_MAX + x));
@@ -61,10 +52,10 @@ static void scroll_down() {
 		       VIDEO_MEMORY_BUFFER_PTR + count + (COLONE_MAX << 1),
 		       COLONE_MAX << 1);
 	}
-	int offset = dest_offset;
+	int offset  = dest_offset;
 	dest_offset = (COLONE_MAX * ROW_MAX) << 1;
 	while (offset < dest_offset) {
-		VIDEO_MEMORY_BUFFER_PTR[offset] = 0x00;
+		VIDEO_MEMORY_BUFFER_PTR[offset]     = 0x00;
 		VIDEO_MEMORY_BUFFER_PTR[offset + 1] = 0x0f;
 		offset += 2;
 	}
@@ -93,14 +84,14 @@ void monitor_write(char c) {
 	    COLONE_MAX - 1) { // Special Case: border of the screen
 		if ((offset >> 1) / COLONE_MAX ==
 		    24) { // Special Case: bottom of the screen
-			VIDEO_MEMORY_BUFFER_PTR[offset] = '\\';
+			VIDEO_MEMORY_BUFFER_PTR[offset]     = '\\';
 			VIDEO_MEMORY_BUFFER_PTR[offset + 1] = cursor_color;
 			scroll_down();
 			offset = (COLONE_MAX * ROW_MAX - COLONE_MAX) * 2;
 			set_cursor_offset(offset);
 			monitor_write(c);
 		} else { // Special Case: border of the screen, perform carriage return
-			VIDEO_MEMORY_BUFFER_PTR[offset] = '\\';
+			VIDEO_MEMORY_BUFFER_PTR[offset]     = '\\';
 			VIDEO_MEMORY_BUFFER_PTR[offset + 1] = cursor_color;
 			set_cursor_offset(offset + 2);
 			monitor_write(c);
@@ -116,7 +107,7 @@ void monitor_write(char c) {
 			set_cursor_offset(offset + (2 * COLONE_MAX));
 		}
 	} else { // Regular Case
-		VIDEO_MEMORY_BUFFER_PTR[offset] = c;
+		VIDEO_MEMORY_BUFFER_PTR[offset]     = c;
 		VIDEO_MEMORY_BUFFER_PTR[offset + 1] = cursor_color;
 		set_cursor_offset(offset + 2);
 	}
@@ -128,7 +119,7 @@ void monitor_set_color(unsigned char fg, unsigned char bg) {
 
 void monitor_clear() {
 	for (int counter = 0; counter < COLONE_MAX * ROW_MAX; counter++) {
-		VIDEO_MEMORY_BUFFER_PTR[counter << 1] = 0x00;
+		VIDEO_MEMORY_BUFFER_PTR[counter << 1]       = 0x00;
 		VIDEO_MEMORY_BUFFER_PTR[(counter << 1) + 1] = 0x0f;
 	}
 	set_cursor_offset(0);
