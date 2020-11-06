@@ -66,7 +66,7 @@ void Init_physical_memory(uintptr_t aMultibootMmapAddr,
  * the free is performed via an offset computation so it is
  * pretty fast, O(1)
  */
-void Physical_memory_release_pages(uintptr_t);
+void Physical_memory_release_page(uintptr_t aPhysicalAddress);
 
 /**
  * @brief Allocate one physical page

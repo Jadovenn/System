@@ -114,10 +114,20 @@ uint32_t Paging_map(uintptr_t aPhysicalAddr,
                     bool      anOverrideFlag);
 
 /**
+ * Set page attribute
+ * @param aVirtualAddr -
+ * @param aPhysicalAddr - Physical address to map
+ * @param someFlags - paging flags
+ * @return EXIT_SUCCESS or EXIT_FAILURE
+ */
+uintptr_t Paging_set_page(uintptr_t aVirtualAddr,
+                          uintptr_t aPhysicalAddr,
+                          uint32_t  someFlags);
+/**
  * Lookup the physical address associated with the given virtual address
  * @param aVirtualAddr - any virtual address
  * @return physical address
  */
-uintptr_t Paging_find_physical_address(uintptr_t aVirtualAddr);
+void* Paging_find_physical_address(uintptr_t aVirtualAddr);
 
 #endif // I386_VIRTUAL_H
