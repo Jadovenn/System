@@ -17,6 +17,6 @@
 		printk(format __VA_OPT__(, ) __VA_ARGS__);                                 \
 		printk("\n!!!!!! KERNEL PANIC !!!!!!\n");                                  \
 		abort();                                                                   \
-	} while (0);
+	} while (0)
 
 #endif // PANIC_H_
