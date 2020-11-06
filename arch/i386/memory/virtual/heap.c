@@ -11,12 +11,28 @@
 #include "memory/physical.h"
 #include "memory/virtual.h"
 
-static uintptr_t S_HeapBreak  = 0x00000000;
-static uintptr_t S_HeapCursor = 0x00000000;
+static uintptr_t S_HeapStart  = 0x00000000;
+static uintptr_t S_HeapBreak = 0x00000000;
+static uintptr_t S_HeapEnd = 0x00000000;
 
 /********************************
  ** Heap private function      **
  ********************************/
+
+void _reduce_heap_size() {
+	if (S_HeapEnd - S_HeapBreak >= 0x1000) {
+		uintptr_t cursor = S_HeapBreak + (0x1000 - (S_HeapBreak % 0x1000));
+		while (cursor != S_HeapEnd) {
+			void* physicalAddr = Paging_find_physical_address(cursor);
+			if (physicalAddr == (void*)-1) {
+				return;
+			}
+			Paging_set_page(cursor, 0x0, 0x0);
+			Physical_memory_release_page((uintptr_t)physicalAddr);
+			cursor += 0x1000;
+		}
+	}
+}
 
 /********************************
  ** Heap public init function  **
@@ -26,8 +42,9 @@ void Init_heap(uintptr_t anHeapBreak, size_t aSize) {
 	if (aSize % 0x1000) {
 		PANIC("Size provided for the heap must be page_size aligned.");
 	}
-	S_HeapBreak  = anHeapBreak;
-	S_HeapCursor = anHeapBreak + aSize;
+	S_HeapStart = anHeapBreak;
+	S_HeapBreak = anHeapBreak;
+	S_HeapEnd = anHeapBreak + aSize;
 }
 
 /********************************
@@ -36,22 +53,48 @@ void Init_heap(uintptr_t anHeapBreak, size_t aSize) {
 
 size_t Hal_get_page_size() { return 0x1000; }
 
-uintptr_t Hal_increase_heap_break(size_t aSize) {
+void *Hal_sbrk(size_t aSize) {
+	if (aSize == 0) {
+		return (void*)S_HeapBreak;
+	}
+	if (S_HeapEnd - S_HeapBreak > aSize) {
+		void* heapBreak = (void*)S_HeapBreak;
+		S_HeapBreak += aSize;
+		return heapBreak;
+	}
 	size_t pageAlignedRequest = aSize;
 	pageAlignedRequest += 0x1000 - (aSize % 0x1000);
 	for (size_t allocated = 0; allocated < pageAlignedRequest;
-	     allocated += 0x1000) {
+			 allocated += 0x1000) {
 		uintptr_t physicalPage = Physical_memory_get_page(mt_AVAILABLE);
 		if (!physicalPage) {
-			return S_HeapCursor;
+			return (void*)-1;
 		}
-		uint32_t result = Paging_map(physicalPage, S_HeapCursor, 0x3, false);
+		uint32_t result = Paging_map(physicalPage, S_HeapEnd, 0x3, false);
 		if (result == EXIT_FAILURE) {
-			return S_HeapCursor;
+			return (void*)-1;
 		}
-		S_HeapCursor += 0x1000;
+		S_HeapEnd += 0x1000;
 	}
-	return S_HeapCursor;
+	void* heapBreak = (void*)S_HeapBreak;
+	S_HeapBreak += aSize;
+	return heapBreak;
 }
 
-uintptr_t Hal_set_break(uintptr_t aBreakAddr) { (void)aBreakAddr; return 0; }
+int Hal_brk(void* anAddress) {
+	if ((uintptr_t)anAddress >= S_HeapBreak) {
+		void* result = Hal_sbrk((uintptr_t)anAddress - S_HeapBreak);
+		if (result == NULL) {
+			return EXIT_FAILURE;
+		}
+		return EXIT_SUCCESS;
+	}
+	else {
+		if ((uintptr_t)anAddress < S_HeapStart) {
+			return EXIT_FAILURE;
+		}
+		S_HeapBreak = (uintptr_t)anAddress;
+		_reduce_heap_size();
+	}
+	return EXIT_SUCCESS;
+}
