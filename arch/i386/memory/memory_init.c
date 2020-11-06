@@ -4,7 +4,6 @@
  */
 
 #include <arch/ld.h>
-#include <cpu/cr.h>
 
 #include "memory/physical.h"
 #include "memory/virtual.h"
