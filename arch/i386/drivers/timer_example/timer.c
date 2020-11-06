@@ -17,7 +17,7 @@ uint32_t tick = 0;
 static void __timer_callback(Cpu_registers_t regs) {
 	(void)regs;
 	tick++;
-	printk("timer tick %d\n", tick);
+	printf("timer tick %d\n", tick);
 	if (tick == 15) {
 		Cpu_register_interrupt_handler(IRQ_0, NULL);
 	}
@@ -35,7 +35,7 @@ static void __timer_callback(Cpu_registers_t regs) {
 void init_timer(uint32_t frequency) {
 	int ret = Cpu_register_interrupt_handler(IRQ_0, &__timer_callback);
 	if (ret == EXIT_FAILURE)
-		printk("register error\n");
+		printf("register error\n");
 	uint32_t divisor = 1193180 / frequency;
 	port_write_byte(0x43, 0b00110110);
 	uint8_t low   = (uint8_t)(divisor & 0xff);

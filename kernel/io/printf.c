@@ -13,13 +13,13 @@
 // match lu) second, __print_format should be improve to accept easly more than
 // one arguments third, print hexa could be better, others too
 
-void __print_string(char* str) {
+void _print_string(char* str) {
 	for (char* c = str; *c; c++) {
 		Hal_console_write(*c);
 	}
 }
 
-void __print_decimal(int number) {
+void _print_decimal(int number) {
 	if (number == 0) {
 		Hal_console_write('0');
 	} else if (number < 0) {
@@ -29,39 +29,39 @@ void __print_decimal(int number) {
 		int digit = number % 10;
 		int next = number / 10;
 		if (next != 0) {
-			__print_decimal(next);
+			_print_decimal(next);
 		}
 		Hal_console_write((char)digit + 48);
 	}
 }
 
-void __print_unsigned_decimal(unsigned number) {
+void _print_unsigned_decimal(unsigned number) {
 	if (number == 0) {
 		Hal_console_write('0');
 	} else {
 		unsigned digit = number % 10;
 		unsigned next = number / 10;
 		if (next != 0) {
-			__print_decimal(next);
+			_print_decimal(next);
 		}
 		Hal_console_write((char)digit + 48);
 	}
 }
 
-void __print_long_decimal(int64_t number) {
+void _print_long_decimal(int64_t number) {
 	if (number == 0) {
 		Hal_console_write('0');
 	} else {
 		uint64_t digit = number % 10;
 		uint64_t next = number / 10;
 		if (next != 0) {
-			__print_long_decimal(next);
+			_print_long_decimal(next);
 		}
 		Hal_console_write((char)digit + 48);
 	}
 }
 
-void __print_hexadecimal(uint32_t number) {
+void _print_hexadecimal(uint32_t number) {
 	int counter = 0;
 	char hex_char[8] = {'0', '0', '0', '0', '0', '0', '0', '0'};
 	while (number != 0 && counter < 8) {
@@ -82,7 +82,7 @@ void __print_hexadecimal(uint32_t number) {
 	}
 }
 
-int __print_formated(va_list* vl, const char* format) {
+int _print_formated(va_list* vl, const char* format) {
 	char* string;
 	char character;
 	int decimal_number;
@@ -92,7 +92,7 @@ int __print_formated(va_list* vl, const char* format) {
 	switch (*format) {
 	case 's':
 		string = va_arg(*vl, char*);
-		__print_string(string);
+		_print_string(string);
 		break;
 	case 'c':
 		character = va_arg(*vl, char);
@@ -100,15 +100,15 @@ int __print_formated(va_list* vl, const char* format) {
 		break;
 	case 'd':
 		decimal_number = va_arg(*vl, int);
-		__print_decimal(decimal_number);
+		_print_decimal(decimal_number);
 		break;
 	case 'u':
 		unsigned_number = va_arg(*vl, unsigned);
-		__print_unsigned_decimal(unsigned_number);
+		_print_unsigned_decimal(unsigned_number);
 		break;
 	case 'l':
 		long_number = va_arg(*vl, uint64_t);
-		__print_long_decimal(long_number);
+		_print_long_decimal(long_number);
 		break;
 	case '#':
 		Hal_console_write('0');
@@ -116,13 +116,13 @@ int __print_formated(va_list* vl, const char* format) {
 		format += 1;
 		if (*format == 'x') {
 			hexa_number = va_arg(*vl, uint32_t);
-			__print_hexadecimal(hexa_number);
+			_print_hexadecimal(hexa_number);
 			return 1;
 		}
 		break;
 	case 'x':
 		decimal_number = va_arg(*vl, int);
-		__print_hexadecimal(decimal_number);
+		_print_hexadecimal(decimal_number);
 		break;
 	default:
 		return 0;
@@ -137,14 +137,14 @@ int __print_formated(va_list* vl, const char* format) {
  * @param format - the formated sequence
  * @param ... - variadic argument list to print use by the format description
  */
-void printk(char const* format, ...) {
+void printf(char const* format, ...) {
 	va_list vl;
 	va_start(vl, format);
 	for (const char* c = format; *c; c++) {
 		if (*c == '%') {
 			c += 1;
 			if (*c != '\0') {
-				c += __print_formated(&vl, c);
+				c += _print_formated(&vl, c);
 			}
 		} else if (*c == '\\') {
 			c += 1;

@@ -88,7 +88,7 @@ _create_physical_region(uint32_t len, uint32_t addr, uint32_t type) {
 
 static void _read_physical_memory_regions_block(Multiboot_mmap_region_t* mmap) {
 	if (!(uint32_t)mmap->addr && (uint64_t)mmap->addr) {
-		printk("PAE not supported, physical region ignored\n");
+		printf("PAE not supported, physical region ignored\n");
 		return;
 	}
 	if (mmap->addr < 0x100000 && mmap->type == MULTIBOOT_MEMORY_AVAILABLE) {
@@ -109,10 +109,10 @@ static void _read_physical_memory_regions_block(Multiboot_mmap_region_t* mmap) {
 
 static __inline void _display_usable_physical_memory() {
 	size_t size = 0;
-	printk("Physical Memory Regions:\n");
+	printf("Physical Memory Regions:\n");
 	for (Physical_memory_region_t* idx = G_Physical_memory_map; idx;
 	     idx                           = idx->next) {
-		printk("   [%#x : %#x] type: %d, %d Kib of usable memory\n", idx->startAddr,
+		printf("   [%#x : %#x] type: %d, %d Kib of usable memory\n", idx->startAddr,
 		       idx->endAddr, idx->type, idx->page_nb * 4);
 		if (idx->type != mt_AVAILABLE && idx->type != mt_LOWER_REGION) {
 			continue;
@@ -122,10 +122,10 @@ static __inline void _display_usable_physical_memory() {
 	size /= 1024;
 	size_t size_gb = size / 1024;
 	if (size_gb != 0) {
-		printk("Total usable physical memory: %d Gib and %d Mib\n", size_gb,
+		printf("Total usable physical memory: %d Gib and %d Mib\n", size_gb,
 		       size % 1024);
 	} else {
-		printk("Total usable physical memory: %d Mib\n", size);
+		printf("Total usable physical memory: %d Mib\n", size);
 	}
 }
 

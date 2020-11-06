@@ -61,7 +61,7 @@ uint32_t Boot_paging_map(uint32_t physical_addr,
 	uint32_t  pte_offset = virtual_addr >> 12 & 0x03FF;
 	uint32_t* pte_ptr    = &pg_table_entry[pte_offset];
 	if (*pte_ptr & 0x1 && !override) {
-		printk("ERROR ::: PAGING: A pte is already present for this virtual "
+		printf("ERROR ::: PAGING: A pte is already present for this virtual "
 		       "address\n");
 		return EXIT_FAILURE;
 	}

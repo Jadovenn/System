@@ -28,7 +28,7 @@ void isr_handler(Cpu_registers_t regs) {
 		handler(regs);
 	} else {
 		uint32_t cr2 = Cpu_read_cr2();
-		printk("cr2: %#x\n", cr2);
+		printf("cr2: %#x\n", cr2);
 		Cpu_dump_registers(regs);
 		PANIC("Unmanaged fault: %d", regs.interr_nb);
 	}

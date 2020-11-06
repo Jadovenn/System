@@ -29,8 +29,8 @@ void boot_page_fault_handler(Cpu_registers_t regs) {
 	if (mask & 0x4) {
 		PANIC(PG_FAULT_USER_ALL);
 	}
-	printk("\n:::: INTERRUPT %d ::::\n", regs.interr_nb);
-	printk("Page Fault at: %#x\n", cr2);
+	printf("\n:::: INTERRUPT %d ::::\n", regs.interr_nb);
+	printf("Page Fault at: %#x\n", cr2);
 	Cpu_dump_registers(regs);
 	if (!mask) {
 		PANIC(PG_FAULT_KERNEL_000);

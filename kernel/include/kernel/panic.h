@@ -12,10 +12,10 @@
 
 #define PANIC(format, ...)                                                     \
 	do {                                                                         \
-		printk(">>>>>>>>> PANIC <<<<<<<<<<\n");                                    \
-		printk("System panic in %s at line %d\n", __FILE__, __LINE__);             \
-		printk(format __VA_OPT__(, ) __VA_ARGS__);                                 \
-		printk("\n!!!!!! KERNEL PANIC !!!!!!\n");                                  \
+		printf(">>>>>>>>> PANIC <<<<<<<<<<\n");                                    \
+		printf("System panic in %s at line %d\n", __FILE__, __LINE__);             \
+		printf(format __VA_OPT__(, ) __VA_ARGS__);                                 \
+		printf("\n!!!!!! KERNEL PANIC !!!!!!\n");                                  \
 		abort();                                                                   \
 	} while (0)
 

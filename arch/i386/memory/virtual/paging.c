@@ -91,7 +91,7 @@ uint32_t Paging_map(uintptr_t aPhysicalAddr,
 	uint32_t  pteOffset = aVirtualAddr >> 12 & 0x03FF;
 	uint32_t* pageEntry = &pageTableEntry[pteOffset];
 	if (*pageEntry & 0x1 && !anOverrideFlag) {
-		printk("ERROR ::: PAGING: A pte is already present for this virtual "
+		printf("ERROR ::: PAGING: A pte is already present for this virtual "
 		       "address\n");
 		return EXIT_FAILURE;
 	}
