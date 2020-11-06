@@ -47,18 +47,18 @@ typedef struct Hal_memory_region {
 
 size_t Hal_get_page_size();
 
-void      Hal_init_memory_allocator(uintptr_t vstart, size_t size);
-uintptr_t Hal_increase_heap_break(size_t aSize);
-uintptr_t Hal_set_break(uintptr_t aBreakAddr);
+/**
+ * Set the heap break address
+ * @param anAddress - a target address
+ * @return EXIT_FAILURE or EXIT_SUCCESS if request is not valid
+ */
+int   Hal_brk(void* anAddress);
 
-Hal_memory_area_t* Hal_alloc_pages(size_t count, size_t flags);
-
-void Hal_free_page(Hal_memory_page_t* page);
-void Hal_free_pages(Hal_memory_area_t* area);
-
-Hal_memory_area_t* Hal_mmap(uintptr_t                aPhysicalAddr,
-                            uintptr_t                aVirtualAddr,
-                            Hal_memory_access_flag_e aFlag);
-void               Hal_unmap(Hal_memory_area_t* area);
+/**
+ * increase the heap, return the previous break address
+ * @param aSize - a requested size
+ * @return return the previous break address
+ */
+void* Hal_sbrk(size_t aSize);
 
 #endif // HAL_MEMORY_H_
