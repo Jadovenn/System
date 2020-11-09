@@ -9,8 +9,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include <hal/error.h>
-
 #define MAP_FAILED ((void*)-1)
 
 /********************************

@@ -3,6 +3,8 @@
  * System sources under license MIT
  */
 
+#include <stdlib.h>
+
 #include <hal/memory.h>
 
 #include "memory/physical.h"
