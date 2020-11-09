@@ -16,15 +16,15 @@
  ********************************/
 
 typedef enum Virtual_memory_type {
-	vmt_USERSPACE    = 0x00000001,
-	vmt_BIOS         = 0x00000010,
-	vmt_RESERVED     = 0x00000100,
-	vmt_KERNEL_IMAGE = 0x00001000,
-	vmt_LOW_MEMORY   = 0x00010000,
-	vmt_HEAP         = 0x00100000,
-	vmt_DATA         = 0x01000000,
-	vmt_DAEMON       = 0x10000000,
-	vmt_END
+	vmt_USERSPACE    = 0x0001,
+	vmt_BIOS         = 0x0002,
+	vmt_RESERVED     = 0x0004,
+	vmt_KERNEL_IMAGE = 0x0008,
+	vmt_LOW_MEMORY   = 0x0010,
+	vmt_HEAP         = 0x0020,
+	vmt_DATA         = 0x0040,
+	vmt_DAEMON       = 0x0080,
+	vmt_END          = 0x0100,
 } Virtual_memory_type_e;
 
 typedef struct Virtual_memory_area {
