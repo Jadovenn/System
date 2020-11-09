@@ -28,6 +28,7 @@ ARCH_C_SRCS	=	$(ARCH_DIR)/i386_entry.c \
 				$(ARCH_DIR)/memory/virtual/virtual_memory_init.c \
 				$(ARCH_DIR)/memory/virtual/heap.c \
 				$(ARCH_DIR)/memory/virtual/paging.c \
+				$(ARCH_DIR)/memory/virtual/mmap.c \
 				$(ARCH_DIR)/memory/virtual/page_fault_handler.c \
 				$(ARCH_DIR)/drivers/monitor/init.c \
 				$(ARCH_DIR)/drivers/monitor/monitor.c \

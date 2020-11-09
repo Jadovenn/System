@@ -82,6 +82,12 @@ void Paging_set_pte_database(uintptr_t aVirtualAddr,
                              uintptr_t aVirtualPteAddrOffset);
 
 /**
+ * Request a pte for the given virtual address
+ * @param aVirtualAddr - a 4Kib aligned virtual address
+ * @return - NULL if no pte found or the virtual address of the pte
+ */
+uint32_t* Paging_request_from_pte_database(uintptr_t aVirtualAddr);
+/**
  * Get the page directory address
  * @return virtual address
  */
@@ -101,28 +107,32 @@ uintptr_t Paging_get_pte_database();
 void Paging_add_pte(uintptr_t aTargetVirtualAddr, uintptr_t aPhysicalAddr);
 
 /**
- * Map a virtual page to a physical page
- * @param aPhysicalAddr - the target physical page
- * @param aVirtualAddr - the target virtual page
- * @param somePageFlags - the pte flags to apply
- * @param anOverrideFlag - a flag for overriding an existing mapping
- * @return EXIT_SUCCESS or EXIT_FAILURE
- */
-uint32_t Paging_map(uintptr_t aPhysicalAddr,
-                    uintptr_t aVirtualAddr,
-                    uint32_t  somePageFlags,
-                    bool      anOverrideFlag);
-
-/**
- * Set page attribute
- * @param aVirtualAddr -
+ * Set page attributes
+ * @param aVirtualAddr - 4Kib aligned virtual address
  * @param aPhysicalAddr - Physical address to map
  * @param someFlags - paging flags
  * @return EXIT_SUCCESS or EXIT_FAILURE
  */
-uintptr_t Paging_set_page(uintptr_t aVirtualAddr,
+int Paging_add_page_entry(uintptr_t aVirtualAddr,
                           uintptr_t aPhysicalAddr,
                           uint32_t  someFlags);
+
+/**
+ * Clear page attributes
+ * @param aVirtualAddr - 4Kib aligned virtual address
+ * @return EXIT_SUCCESS or EXIT_FAILURE
+ */
+int Paging_clear_page_entry(uintptr_t aVirtualAddr);
+
+/**
+ * Update page attributes
+ * @param aVirtualAddr - 4Kib aligned virtual address
+ * @param flags - flags on the first 12 bits, if the bitset is overflowing it
+ * 								fails
+ * @return EXIT_SUCCESS or EXIT_FAILURE
+ */
+int Paging_update_page_entry_flags(uint32_t aVirtualAddr, uint32_t flags);
+
 /**
  * Lookup the physical address associated with the given virtual address
  * @param aVirtualAddr - any virtual address
