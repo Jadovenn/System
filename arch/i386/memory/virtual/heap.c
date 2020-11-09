@@ -27,7 +27,7 @@ void _reduce_heap_size() {
 			if (physicalAddr == (void*)-1) {
 				return;
 			}
-			Paging_set_page(cursor, 0x0, 0x0);
+			Paging_clear_page_entry(cursor);
 			Physical_memory_release_page((uintptr_t)physicalAddr);
 			cursor += 0x1000;
 		}
@@ -70,7 +70,7 @@ void *Hal_sbrk(size_t aSize) {
 		if (!physicalPage) {
 			return (void*)-1;
 		}
-		uint32_t result = Paging_map(physicalPage, S_HeapEnd, 0x3, false);
+		uint32_t result = Paging_add_page_entry(physicalPage, S_HeapEnd, 0x3);
 		if (result == EXIT_FAILURE) {
 			return (void*)-1;
 		}

@@ -55,8 +55,7 @@ uint32_t* Paging_request_from_pte_database(uintptr_t aVirtualAddr) {
 uintptr_t Paging_get_pte_database() { return S_VirtualPteDatabaseAddr; }
 
 void Paging_add_pte(uintptr_t aTargetVirtualAddr, uintptr_t aPhysicalAddr) {
-	unsigned offset = aTargetVirtualAddr >> 22;
-	// uint32_t* pg_dir = (uint32_t*)PHYSICAL_ADDR_TO_VIRTUAL(Cpu_read_cr3());
+	unsigned  offset    = aTargetVirtualAddr >> 22;
 	uint32_t* pg_dir    = (uint32_t*)Paging_get_page_directory();
 	uint32_t* pte_pages = (uint32_t*)Paging_get_pte_database();
 	pte_pages[offset]   = aPhysicalAddr | 0x3;
@@ -67,10 +66,9 @@ void Paging_add_pte(uintptr_t aTargetVirtualAddr, uintptr_t aPhysicalAddr) {
 	Cpu_flush_tlb();
 }
 
-uint32_t Paging_map(uintptr_t aPhysicalAddr,
-                    uintptr_t aVirtualAddr,
-                    uint32_t  somePageFlags,
-                    bool      anOverrideFlag) {
+int Paging_add_page_entry(uintptr_t aVirtualAddr,
+                          uintptr_t aPhysicalAddr,
+                          uint32_t  someFlags) {
 	if (aVirtualAddr % 0x1000 || aPhysicalAddr % 0x1000) {
 		return EXIT_FAILURE;
 	}
@@ -90,39 +88,43 @@ uint32_t Paging_map(uintptr_t aPhysicalAddr,
 	}
 	uint32_t  pteOffset = aVirtualAddr >> 12 & 0x03FF;
 	uint32_t* pageEntry = &pageTableEntry[pteOffset];
-	if (*pageEntry & 0x1 && !anOverrideFlag) {
-		printf("ERROR ::: PAGING: A pte is already present for this virtual "
-		       "address\n");
+	if (*pageEntry & 0x1) {
 		return EXIT_FAILURE;
 	}
-	*pageEntry = aPhysicalAddr | somePageFlags;
+	*pageEntry          = aPhysicalAddr | someFlags;
 	Cpu_flush_tlb();
 	return EXIT_SUCCESS;
 }
 
-uintptr_t Paging_set_page(uintptr_t aVirtualAddr,
-													uintptr_t aPhysicalAddr,
-													uint32_t  someFlags) {
-	if (aVirtualAddr % 0x1000 || aPhysicalAddr % 0x1000) {
+int Paging_clear_page_entry(uintptr_t aVirtualAddr) {
+	if (aVirtualAddr % 0x1000) {
+		return EXIT_FAILURE;
+	}
+	uint32_t* pageTableEntry = Paging_request_from_pte_database(aVirtualAddr);
+	if (!pageTableEntry) {
+		return EXIT_FAILURE;
+	}
+	uint32_t  pteOffset = aVirtualAddr >> 12 & 0x03FF;
+	uint32_t* pageEntry = &pageTableEntry[pteOffset];
+	*pageEntry          = 0x0;
+	Cpu_flush_tlb();
+	return EXIT_SUCCESS;
+}
+
+int Paging_update_page_entry_flags(uintptr_t aVirtualAddr, uint32_t flags) {
+	if (aVirtualAddr % 0x1000) {
+		return EXIT_FAILURE;
+	}
+	if (flags >> 12) {
 		return EXIT_FAILURE;
 	}
 	uint32_t* pageTableEntry = Paging_request_from_pte_database(aVirtualAddr);
 	if (!pageTableEntry) { // This region does not exist in the pages directory
-		uint32_t  pteDatabaseOffset = aVirtualAddr >> 22;
-		uintptr_t physicalPage      = Physical_memory_get_page(mt_AVAILABLE);
-		if (!physicalPage) {
-			PANIC("PAGING: could not create a new page table entry\n");
-			return EXIT_FAILURE;
-		}
-		Paging_add_pte(pteDatabaseOffset * 0x400000, physicalPage);
-		pageTableEntry = Paging_request_from_pte_database(aVirtualAddr);
-		if (!pageTableEntry) {
-			PANIC("PAGING: Failed to update pte database for %#x", aVirtualAddr);
-		}
+		return EXIT_FAILURE;
 	}
 	uint32_t  pteOffset = aVirtualAddr >> 12 & 0x03FF;
 	uint32_t* pageEntry = &pageTableEntry[pteOffset];
-	*pageEntry = aPhysicalAddr | someFlags;
+	*pageEntry |= flags;
 	Cpu_flush_tlb();
 	return EXIT_SUCCESS;
 }

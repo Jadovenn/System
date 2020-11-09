@@ -46,7 +46,7 @@ static __inline void _set_section_text_ro() {
 	uint32_t paddr         = VIRTUAL_ADDR_TO_PHYSICAL(&G_Start_kernel);
 	unsigned page_mapped   = 0;
 	for (; paddr < text_end_addr; vaddr += 0x1000, paddr += 0x1000) {
-		Paging_map(paddr, vaddr, 0x001, true);
+		Paging_update_page_entry_flags(vaddr, 0x1);
 		page_mapped += 1;
 	}
 }
@@ -57,7 +57,7 @@ static __inline void _set_section_rodata_ro() {
 	uint32_t paddr           = VIRTUAL_ADDR_TO_PHYSICAL(&G_End_rodata);
 	unsigned page_mapped     = 0;
 	for (; paddr < rodata_end_addr; vaddr += 0x1000, paddr += 0x1000) {
-		Paging_map(paddr, vaddr, 0x001, true);
+		Paging_update_page_entry_flags(vaddr, 0x1);
 		page_mapped += 1;
 	}
 }
@@ -76,7 +76,8 @@ static void _heap_init() {
 	if (!page) {
 		PANIC("Not enough memory. Could not init virtual memory.");
 	}
-	Paging_map(page, heapBreak, 0x003, true);
+	Paging_clear_page_entry(heapBreak);
+	Paging_add_page_entry(page, heapBreak, 0x003);
 	Init_heap(heapBreak, 0x1000);
 }
 
