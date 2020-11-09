@@ -9,37 +9,22 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include <hal/error.h>
+
+#define MAP_FAILED ((void*)-1)
+
 /********************************
  **     Structure and Enum     **
  ********************************/
 
-typedef enum Hal_memory_page_flag {
-	OWNER     = 0x01,
-	ACCESS    = 0x02,
-	ANONYMOUS = 0x04,
-} Hal_memory_page_flag_e;
-
-typedef enum Hal_memory_access_flag {
-	READ_ONLY  = 0,
-	READ_WRITE = 1
-} Hal_memory_access_flag_e;
-
-typedef struct Hal_memory_page { // to delete
-	uintptr_t* virtualAddr;
-	uintptr_t* physicalAddr;
-	uint8_t    flags;
-} Hal_memory_page_t;
-
-typedef struct Hal_memory_area { // to delete
-	struct Hal_memory_page* pages;
-	size_t                  pageCount;
-} Hal_memory_area_t;
-
-typedef struct Hal_memory_region {
-	uintptr_t                start;
-	uintptr_t                end;
-	Hal_memory_access_flag_e flag;
-} Hal_memory_region_t;
+typedef enum Hal_memory_mode {
+	map_READWRITE = 0x0001,
+	map_READONLY  = 0x0002,
+	map_EXECUTE   = 0x0004,
+	map_ANONYMOUS = 0x0008,
+	map_POPULATE  = 0x0010,
+	map_DATA      = 0x0012, // default
+} Hal_memory_mode_e;
 
 /********************************
  **  Public functions          **
@@ -52,7 +37,7 @@ size_t Hal_get_page_size();
  * @param anAddress - a target address
  * @return EXIT_FAILURE or EXIT_SUCCESS if request is not valid
  */
-int   Hal_brk(void* anAddress);
+int Hal_brk(void* anAddress);
 
 /**
  * increase the heap, return the previous break address
@@ -60,5 +45,31 @@ int   Hal_brk(void* anAddress);
  * @return return the previous break address
  */
 void* Hal_sbrk(size_t aSize);
+
+/**
+ * Map physical memory to virtual memory
+ * @param aPhysicalAddr - 4Kib aligned physical address
+ * @param aPageCount - the number of contiguous page to map
+ * @param aMode - some map modes
+ * @return NULL or a usable pointer
+ */
+void* Hal_mmap(uintptr_t         aPhysicalAddr,
+               size_t            aPageCount,
+               Hal_memory_mode_e aMode);
+
+/**
+ * Clear memory mapping
+ * @param aVirtualAddr - 4Kib aligned virtual address
+ * @param aPageCount - the number of contiguous page to unmap
+ * @return EXIT_SUCCESS or EXIT_FAILURE
+ */
+int Hal_munmap(void* aVirtualAddr, size_t aPageCount);
+
+/**
+ * Retrieve an associated physical memory address
+ * @param aVirtualAddr - any mapped virtual address
+ * @return MAP_FAILED or a pointer to the physical address
+ */
+void* Hal_get_associated_addr(uintptr_t aVirtualAddr);
 
 #endif // HAL_MEMORY_H_
