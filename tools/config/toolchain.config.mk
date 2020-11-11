@@ -6,7 +6,7 @@ ifeq ($(ARCH), i386) ## i386
 ifeq ($(UNAME), Darwin) ## DARWIN
 	CC		=	i386-elf-gcc
 	LD		=	$(CC)
-	AR		=	i386-elf-ar
+	AR		=	i386-elf-a
 	NASM	=	nasm
 endif ## END DARWIN
 

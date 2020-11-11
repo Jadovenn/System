@@ -3,6 +3,8 @@
 ## System sources under license MIT
 ##
 
+ARCH_DEPENDENCIES	= libc
+
 ARCH_LDFLAGS		=	-Wl,-T$(ARCH_DIR)/i386.ld
 
 ARCH_INCLUDE_DIRS	=	$(ARCH_DIR)/ \
