@@ -23,7 +23,7 @@ add_custom_target(${KERNEL_ISO}
         COMMAND
             ${GRUB_MKRESCUE} -o ${KERNEL_ISO} sysroot
         DEPENDS
-            ${KERNEL_NAME} ${GRUB_CFG}
+            ${KERNEL_NAME}
         COMMENT
             "Generate ISO file")
 else()
