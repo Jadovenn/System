@@ -5,21 +5,12 @@ services:
     environment:
       - TERM=xterm
     container_name: System-CI
-    image: jadomage/kernel-build-tools:0.0.6
+    image: jadomage/kernel-build-tools:0.0.7
     volumes:
       - .:/opt/System
     command: bash -c "
       rm -rf /opt/System/output
-      && mkdir output
-      && cd output
-      && cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=../tools/toolchains/i386/macos-toolchains.cmake ..
-      && make
-
-  shell:
-    environment:
-      - TERM=xterm
-    container_name: System-CI-shell
-    image: jadomage/kernel-build-tools:0.0.3
-    volumes:
-      - .:/opt/System
-    command: bash
+      && mkdir /opt/System/output
+      && cd /opt/System/output
+      && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../tools/toolchains/i386/linux-toolchain.cmake ..
+      && make"

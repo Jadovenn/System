@@ -5,7 +5,7 @@ orbs:
 executors:
   ci-container:
     docker:
-      - image: jadomage/kernel-build-tools:0.0.6
+      - image: jadomage/kernel-build-tools:0.0.7
     environment:
       - TERM=xterm
 
@@ -16,7 +16,7 @@ jobs:
       - checkout
       - run: mkdir output
       - run: cd output
-      - run: cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=../tools/toolchains/i386/macos-toolchains.cmake ..
+      - run: cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../tools/toolchains/i386/linux-toolchain.cmake ..
       - run: make
 
 workflows:
