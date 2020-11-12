@@ -9,9 +9,12 @@ services:
     volumes:
       - .:/opt/System
     command: bash -c "
-      rm -rf /opt/System/out
-      && cd /opt/System
-      && make"
+      rm -rf /opt/System/output
+      && mkdir output
+      && cd output
+      && cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=../tools/toolchains/i386/macos-toolchains.cmake ..
+      && make
+
   shell:
     environment:
       - TERM=xterm

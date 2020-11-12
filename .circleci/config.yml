@@ -10,14 +10,17 @@ executors:
       - TERM=xterm
 
 jobs:
-  build:
+  build-i386:
     executor: ci-container
     steps:
       - checkout
+      - run: mkdir output
+      - run: cd output
+      - run: cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=../tools/toolchains/i386/macos-toolchains.cmake ..
       - run: make
 
 workflows:
   version: 2
   primary:
     jobs:
-      - build
+      - build-i386
