@@ -19,7 +19,8 @@ set(SRCS
         memory/vmalloc.c
         main.c)
 
-add_executable(${KERNEL_NAME} ${SRCS})
+add_executable(${KERNEL_NAME} ${arch_CERT0} ${SRCS})
+
 add_dependencies(${KERNEL_NAME}
         Kernel::hal
         Dependencies::libc)
@@ -38,3 +39,7 @@ target_link_libraries(${KERNEL_NAME}
 target_link_options(${KERNEL_NAME}
         PRIVATE
         -T${arch_LINKER_SCRIPT})
+
+set_target_properties(${KERNEL_NAME}
+        PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY "../sysroot/boot")

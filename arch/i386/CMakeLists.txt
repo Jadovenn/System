@@ -1,3 +1,8 @@
+##
+## build.config.cmake - Build configuration
+## System sources under license MIT
+##
+
 cmake_minimum_required(VERSION 3.11...3.16)
 project(libi386
         VERSION 1.0
@@ -5,10 +10,9 @@ project(libi386
         LANGUAGES C ASM_NASM)
 
 SET(SOURCES
-        multiboot/multiboot.s
         i386_entry.c
-        cpu/asm/dt_flush.s
-        cpu/asm/interrupt.s
+        cpu/asm/dt_flush.asm
+        cpu/asm/interrupt.asm
         cpu/pic/pic.c
         cpu/pic/ports.c
         cpu/cr.c
@@ -34,6 +38,8 @@ SET(SOURCES
         drivers/monitor/monitor.c
         drivers/timer_example/timer.c)
 
+
+
 add_library(i386 ${SOURCES})
 add_dependencies(i386 Dependencies::libc)
 target_include_directories(i386
@@ -44,6 +50,10 @@ target_include_directories(i386
             include
             ${CMAKE_CURRENT_SOURCE_DIR})
 
-set(arch_LINKER_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/generic.ld CACHE INTERNAL "")
-message("ici: ${arch_LINKER_SCRIPT}")
 add_library(Kernel::hal ALIAS i386)
+
+add_library(cert0 OBJECT init/cert0.asm)
+target_include_directories(cert0 PUBLIC init)
+
+set(arch_LINKER_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/generic.ld CACHE INTERNAL "")
+set(arch_CERT0 $<TARGET_OBJECTS:cert0> CACHE INTERNAL "")

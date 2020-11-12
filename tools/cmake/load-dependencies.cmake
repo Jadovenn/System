@@ -1,3 +1,7 @@
+##
+## build.config.cmake - Build configuration
+## System sources under license MIT
+##
 
 function(load_if_arch_present  PATH)
     if (NOT EXISTS "${PATH}/dependency.config")

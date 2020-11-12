@@ -29,7 +29,13 @@ set(CMAKE_CXX_COMPILER ${BIN_PATH}/i386-elf-g++)
 set(CMAKE_NASM /usr/local/bin/nasm)
 
 set(CMAKE_AR /usr/local/bin/i386-elf-ar)
-SET(CMAKE_C_ARCHIVE_CREATE "<CMAKE_AR> rcs <TARGET> <LINK_FLAGS> <OBJECTS>")
+set(CMAKE_C_ARCHIVE_CREATE "<CMAKE_AR> rcs <TARGET> <LINK_FLAGS> <OBJECTS>")
+
+## Other tools
+set(CMAKE_OBJCOPY /usr/local/bin/i386-elf-objcopy)
+set(CMAKE_NM /usr/local/bin/i386-elf-nm)
+set(CMAKE_GDB gdb)
+set(CMAKE_AWK awk)
 
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY NEVER)
