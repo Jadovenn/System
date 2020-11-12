@@ -1,5 +1,5 @@
 ##
-## build.config.cmake - Build configuration
+## qemu-run.cmake - iso creation target's config
 ## System sources under license MIT
 ##
 

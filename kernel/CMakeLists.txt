@@ -1,8 +1,16 @@
+##
+## kernel/CMakeLists.txt - Kernel project
+## System sources under license MIT
+##
+
 cmake_minimum_required(VERSION 3.11...3.16)
 project(Kernel
         VERSION 1.0
         DESCRIPTION "Kernel"
         LANGUAGES C)
+###########################
+## Common kernel sources ##
+###########################
 
 set(SRCS
         include/hal/console.h
@@ -18,6 +26,10 @@ set(SRCS
         memory/malloc.c
         memory/vmalloc.c
         main.c)
+
+###########################
+## Kernel binary target  ##
+###########################
 
 add_executable(${KERNEL_NAME} ${arch_CERT0} ${SRCS})
 

@@ -1,5 +1,5 @@
 ##
-## build.config.cmake - Build configuration
+## load-dependencies.cmake - lib dependencies loader
 ## System sources under license MIT
 ##
 

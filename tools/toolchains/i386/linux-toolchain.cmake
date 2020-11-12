@@ -1,5 +1,5 @@
 ##
-## build.config.cmake - Build configuration
+## i386/linux-toolchain.cmake - linux toolchain config file
 ## System sources under license MIT
 ##
 

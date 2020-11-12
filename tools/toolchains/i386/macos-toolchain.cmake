@@ -1,5 +1,5 @@
 ##
-## build.config.cmake - Build configuration
+## i386/macos-toolchain.cmake - macos toolchain config
 ## System sources under license MIT
 ##
 

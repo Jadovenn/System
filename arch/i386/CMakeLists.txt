@@ -1,5 +1,5 @@
 ##
-## build.config.cmake - Build configuration
+## arch/i386/CMakeLists.txt - i386 project
 ## System sources under license MIT
 ##
 
@@ -9,7 +9,11 @@ project(libi386
         DESCRIPTION "Minimal hardware abstract layer."
         LANGUAGES C ASM_NASM)
 
-SET(SOURCES
+###############################
+## i386 architecture sources ##
+###############################
+
+set(SOURCES
         i386_entry.c
         cpu/asm/dt_flush.asm
         cpu/asm/interrupt.asm
@@ -38,7 +42,9 @@ SET(SOURCES
         drivers/monitor/monitor.c
         drivers/timer_example/timer.c)
 
-
+############################
+## libi386 target         ##
+############################
 
 add_library(i386 ${SOURCES})
 add_dependencies(i386 Dependencies::libc)
@@ -50,10 +56,18 @@ target_include_directories(i386
             include
             ${CMAKE_CURRENT_SOURCE_DIR})
 
+############################
+## crt0 object            ##
+############################
+
 add_library(Kernel::hal ALIAS i386)
 
 add_library(cert0 OBJECT init/cert0.asm)
 target_include_directories(cert0 PUBLIC init)
+
+############################
+## Exported variables     ##
+############################
 
 set(arch_LINKER_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/generic.ld CACHE INTERNAL "")
 set(arch_CERT0 $<TARGET_OBJECTS:cert0> CACHE INTERNAL "")

@@ -1,5 +1,5 @@
 ##
-## build.config.cmake - Build configuration
+## build-header.cmake - fancy useless build header
 ## System sources under license MIT
 ##
 
@@ -19,5 +19,4 @@ add_custom_target(build-header ALL
         COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --cyan "           VERSION: ${KERNEL_VERSION}\t\tRELEASE NAME: ${RELEASE_NAME}"
         COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --cyan "      ARCHITECTURE: ${ARCH}\t\t       BOARD: ${BOARD}"
         COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --magenta " "
-
         VERBATIM)
