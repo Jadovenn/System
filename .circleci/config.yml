@@ -14,8 +14,6 @@ jobs:
     executor: ci-container
     steps:
       - checkout
-      - run: mkdir output
-      - run: cd output
       - run: cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../tools/toolchains/i386/linux-toolchain.cmake ..
       - run: make
 
