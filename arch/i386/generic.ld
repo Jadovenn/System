@@ -1,5 +1,5 @@
 /**
- * link.ld - linker srcipt, define sctions and txt start addr
+ * link.ld - linker script
  * System sources under license MIT
  */
 

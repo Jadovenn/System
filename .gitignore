@@ -20,6 +20,7 @@ System_v*
 *.a
 
 ## Sysroot
+output/
 sysroot/boot/grub/grub.cfg
 sysroot/boot/*.kern
 sysroot/usr/include/*.h
