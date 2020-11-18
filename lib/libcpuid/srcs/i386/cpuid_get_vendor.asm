@@ -89,6 +89,8 @@ global cpuid_get_vendor:function (cpuid_get_vendor.end - cpuid_get_vendor)
 cpuid_get_vendor:
     push ebp
     mov  ebp, esp
+    push ebx
+    push ecx
 
     mov eax, 0x0
     cpuid
@@ -106,15 +108,15 @@ cpuid_get_vendor:
     cmp edi, ebx
     jne cpuid_get_vendor.loop_continue
 
-    mov edi, [eax + 4]
+    mov edi, DWORD[eax + 4]
     cmp edi, edx
     jne cpuid_get_vendor.loop_continue
 
-    mov edi, [eax + 8]
+    mov edi, DWORD[eax + 8]
     cmp edi, ecx
     jne cpuid_get_vendor.loop_continue
 
-    mov eax, [eax + 12]
+    mov eax, DWORD[eax + 12]
     jmp cpuid_get_vendor.exit_success
 
 .loop_continue:
@@ -124,6 +126,8 @@ cpuid_get_vendor:
 .exit_error:
     mov eax, -1
 .exit_success:
+    pop ecx
+    pop ebx
     mov esp, ebp
     pop ebp
     ret
