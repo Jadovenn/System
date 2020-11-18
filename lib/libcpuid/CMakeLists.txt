@@ -17,7 +17,9 @@ set(HEADERS
         include/cpuid/cpuid.h)
 
 set(SRCS
-        i386/cpuid_is_supported.asm)
+        srcs/i386/cpuid_get_vendor.asm
+        srcs/i386/cpuid_is_supported.asm
+        srcs/get_vendor_string.c)
 
 ################
 ## Targets    ##
