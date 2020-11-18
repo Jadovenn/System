@@ -17,12 +17,9 @@ int main(int ac, char** av) {
 	printf("System will now halt.\n");
 	printf("-----------------------------------------------\n");
 	int result = cpuid_is_supported();
-	printf("cpuid result: %#x\n", result);
 	if (result) {
-		printf("cpuid is supported\n");
-	}
-	else {
-    printf("cpuid is not supported\n");
+    Cpuid_processor_vendor_t vendor = cpuid_get_vendor();
+    printf("cpu vendor: %s\n", cpuid_get_vendor_string(vendor));
 	}
 	return 0;
 }
