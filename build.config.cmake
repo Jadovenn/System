@@ -21,5 +21,9 @@ set(KERNEL_NAME System_${KERNEL_VERSION}-${RELEASE_NAME}-${ARCH}_${BOARD})
 
 set(QEMU qemu-system-${ARCH})
 set(QEMU_PHYSICAL_MEM 128M)
-set(QEMU_ARGS -accel tcg -cpu base)
-##set(QEMU_ARGS -accel tcg -cpu coreduo,+sse)
+## CPU qemu
+##set(QEMU_ARGS -accel tcg -cpu base)
+## CPU intel
+set(QEMU_ARGS -accel tcg -cpu coreduo,+sse)
+## CPU AMD
+##set(QEMU_ARGS -accel tcg -cpu Opteron_G1,+sse)
