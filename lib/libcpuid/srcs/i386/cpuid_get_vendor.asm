@@ -60,6 +60,9 @@ microsoft_hv:   db "Microsoft Hv"
 parallel:       db " lrpepyh vr "
                 dd 15
 
+qemu:           db "TCGTCGTCGTCG"
+                dd 16
+
 vendor_name: dd old_amd, \
                 amd, \
                 intel, \

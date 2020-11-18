@@ -8,9 +8,9 @@
 #include <cpuid/cpuid.h>
 
 const char* vendor_strings[cpu_vendor_COUNT] = {
-		"unknown", "amd", "intel",        "transmeta", "cyrix",  "nexgen",
-		"umc",     "sis", "nsc",          "rise",      "vortex", "via",
-		"vmware",  "xen", "microsoft_hv", "parallel",
+		"unknown", "AMD", "Intel",        "Transmeta", "Cyrix",  "NexGen",
+		"UMC",     "SiS", "NationalSemiconductor",          "Rise",      "Vortex", "VIA",
+		"VMware",  "Xen", "Microsoft_hv", "Parallels", "Qemu"
 };
 
 const char* cpuid_get_vendor_string(Cpuid_processor_vendor_t aVendorCode) {

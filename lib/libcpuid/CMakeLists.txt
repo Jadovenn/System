@@ -17,8 +17,10 @@ set(HEADERS
         include/cpuid/cpuid.h)
 
 set(SRCS
-        srcs/i386/cpuid_get_vendor.asm
         srcs/i386/cpuid_is_supported.asm
+        srcs/i386/cpuid_max.asm
+        srcs/i386/cpuid_get_vendor.asm
+        srcs/i386/cpuid_get_model_string.asm
         srcs/get_vendor_string.c)
 
 ################

@@ -26,13 +26,16 @@ typedef enum Cpuid_processor_vendor_e {
 	cpu_vendor_XEN          = 13,
 	cpu_vendor_MICROSOFT_HV = 14,
 	cpu_vendor_PARALLEL     = 15,
+	cpu_vendor_QEMU = 16,
 	cpu_vendor_END,
 	cpu_vendor_COUNT = cpu_vendor_END + 1,
 } Cpuid_processor_vendor_t;
 
 int cpuid_is_supported();
+int cpuid_max();
 
 Cpuid_processor_vendor_t cpuid_get_vendor();
 const char*              cpuid_get_vendor_string(Cpuid_processor_vendor_t);
+const char*              cpuid_get_model_string();
 
 #endif // _CPUID_H
