@@ -52,41 +52,50 @@ vortex:         db "Vortex86 SoC"
 via:            db "VIA VIA VIA "
                 dd 11
 
-vmware:         db "VMwareVMware"
+zhaoxin:        db "  Shanghai  "
                 dd 12
 
-xen:            db "XenVMMXenVMM"
+hygon:          db "HygonGenuine"
                 dd 13
 
-microsoft_hv:   db "Microsoft Hv"
+elbrus:         db "E2K MACHINE "
                 dd 14
 
-parallel:       db " lrpepyh vr "
+
+;; Virtual machine CPU
+vmware:         db "VMwareVMware"
                 dd 15
 
-qemu:           db "TCGTCGTCGTCG"
+xen:            db "XenVMMXenVMM"
                 dd 16
 
-vendor_name: dd old_amd, \
-                amd, \
-                intel, \
-                centaur, \
-                old_transmeta, \
-                transmeta, \
-                cyrix, \
-                centaur, \
-                nexgen, \
-                umc, \
-                sis, \
-                nsc, \
-                rise, \
-                vortex, \
-                via, \
-                vmware, \
-                xen, \
-                microsoft_hv, \
-                parallel, \
-                0
+microsoft_hv:   db "Microsoft Hv"
+                dd 17
+
+parallels:       db " lrpepyh vr "
+                dd 18
+
+qemu:           db "TCGTCGTCGTCG"
+                dd 19
+
+bhyve:          db "bhyve bhyve "
+                dd 20
+
+kvm:            db " KVMKVMKVM  "
+                dd 21
+
+acrn:           db "ACRNACRNACRN"
+                dd 22
+
+qnx:            db " QNXQVMBSQG "
+                dd 23
+
+apple_rosetta:  db "VirtualApple"
+                dd 24
+
+vendor_name: dd old_amd, amd, intel, centaur, old_transmeta, transmeta, cyrix, \
+                centaur, nexgen, umc, sis, nsc, rise, vortex, via, zhaoxin, hygon, elbrus, \
+                vmware, xen, microsoft_hv, parallels, bhyve, kvm, acrn, qnx, apple_rosetta, 0
 
 section .text
 
