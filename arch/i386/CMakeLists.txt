@@ -48,6 +48,9 @@ set(SOURCES
 
 add_library(i386 ${SOURCES})
 add_dependencies(i386 Dependencies::libc)
+target_link_libraries(i386
+        PUBLIC
+            Dependencies::libc)
 target_include_directories(i386
         PUBLIC
             ${kernel_INCLUDE_DIRS}

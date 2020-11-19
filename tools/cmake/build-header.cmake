@@ -3,7 +3,7 @@
 ## System sources under license MIT
 ##
 
-add_custom_target(build-header ALL
+add_custom_target(show-build-header ALL
         COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --magenta "      ___                       ___                         ___           ___ "
         COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --magenta "     /\\__\\                     /\\__\\                       /\\__\\         /\\  \\ "
         COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --magenta "    /:/ _/_         ___       /:/ _/_         ___         /:/ _/_       |::\\  \\ "
@@ -18,5 +18,6 @@ add_custom_target(build-header ALL
         COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --magenta " "
         COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --cyan "           VERSION: ${KERNEL_VERSION}\t\tRELEASE NAME: ${RELEASE_NAME}"
         COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --cyan "      ARCHITECTURE: ${ARCH}\t\t       BOARD: ${BOARD}"
+        COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --cyan "        BUILD MODE: ${CMAKE_BUILD_TYPE}"
         COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --magenta " "
         VERBATIM)
