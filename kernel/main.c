@@ -18,8 +18,8 @@ int main(int ac, char** av) {
 	printf("-----------------------------------------------\n");
 	int result = cpuid_is_supported();
 	if (result) {
-    Cpuid_processor_vendor_t vendor = cpuid_get_vendor();
-    printf("cpu vendor: %s\n", cpuid_get_vendor_string(vendor));
+		Cpuid_processor_vendor_t vendor = cpuid_get_vendor();
+		printf("cpu vendor: %s\n", cpuid_get_vendor_string(vendor));
 		const char* model = cpuid_get_model_string();
 		if (model) {
 			printf("cpu model:  %s\n", model);
