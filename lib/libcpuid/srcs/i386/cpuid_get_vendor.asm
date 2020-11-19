@@ -1,5 +1,9 @@
-[BITS 32]
+;; ------------------------------------
+;; cpuid_get_vendor.asm - get cpu vendor
+;; System sources under license MIT
+;; ------------------------------------
 
+[BITS 32]
 [GLOBAL cpuid_get_vendor]
 
 section .data
@@ -84,9 +88,9 @@ vendor_name: dd old_amd, \
                 parallel, \
                 0
 
-cpuid_max_cap: db 0x0
-
 section .text
+
+;; Cpuid_processor_vendor_t STDCALL cpuid_get_vendor();
 
 global cpuid_get_vendor:function (cpuid_get_vendor.end - cpuid_get_vendor)
 cpuid_get_vendor:
@@ -97,7 +101,6 @@ cpuid_get_vendor:
 
     mov eax, 0x0
     cpuid
-    mov [cpuid_max_cap], eax
 
     xor esi, esi
 

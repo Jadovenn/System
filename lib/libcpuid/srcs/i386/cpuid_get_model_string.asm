@@ -1,5 +1,9 @@
-[BITS 32]
+;; ------------------------------------
+;; cpuid_get_model_string.asm - get cpu model
+;; System sources under license MIT
+;; ------------------------------------
 
+[BITS 32]
 [GLOBAL cpuid_get_model_string]
 [EXTERN cpuid_max]
 
@@ -9,6 +13,8 @@ model_string:
     resb 48
 
 section .text
+
+;; const char* STDCALL cpuid_get_model_string();
 
 global cpuid_get_model_string:function (cpuid_get_model_string.end - cpuid_get_model_string)
 cpuid_get_model_string:
