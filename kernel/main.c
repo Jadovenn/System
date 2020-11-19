@@ -24,6 +24,13 @@ int main(int ac, char** av) {
 		if (model) {
 			printf("cpu model:  %s\n", model);
 		}
+		Cpuid_capabilities_t cpuidCap = cpuid_get_capabilities();
+		if (cpuidCap.SSE) {
+			printf("cpuid sse feature present\n");
+		}
+		if (cpuidCap.PAE) {
+			printf("cpuid pea feature present");
+		}
 	}
 	return 0;
 }
