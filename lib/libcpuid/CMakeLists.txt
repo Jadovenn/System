@@ -21,6 +21,7 @@ set(SRCS
         srcs/i386/cpuid_max.asm
         srcs/i386/cpuid_get_vendor.asm
         srcs/i386/cpuid_get_model_string.asm
+        srcs/i386/cpuid_get_capabilities.asm
         srcs/get_vendor_string.c)
 
 ################
