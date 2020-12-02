@@ -36,12 +36,14 @@ add_executable(${KERNEL_NAME} ${arch_CERT0} ${SRCS})
 add_dependencies(${KERNEL_NAME}
         Kernel::hal
         Dependencies::libc
-        Dependencies::libcpuid)
+        Dependencies::libcpuid
+        Dependencies::libkalgotils)
 
 target_include_directories(${KERNEL_NAME}
         PUBLIC
             ${libc_INCLUDE_DIRS}
             ${libcpuid_INCLUDE_DIRS}
+            ${libkalgotils_INCLUDE_DIRS}
         PRIVATE
             ${kernel_INCLUDE_DIRS})
 
@@ -49,6 +51,7 @@ target_link_libraries(${KERNEL_NAME}
         PUBLIC
             Dependencies::libc
             Dependencies::libcpuid
+            Dependencies::libkalgotils
         PRIVATE
             Kernel::hal
             gcc)
