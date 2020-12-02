@@ -5,7 +5,7 @@ libkalgotils stand for "The kernel's utils and algorithms library".
 
 ## List
 
-Create your structure with the an LIST_HEAD member to use the list's function.
+Create your structure with the LIST_HEAD member to use the list's functions.
 
 ```C
 typedef struct Number_s {
