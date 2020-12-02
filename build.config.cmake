@@ -29,9 +29,9 @@ elseif(UNIX AND NOT APPLE)
 endif()
 
 ## CPU unknown, cool to check with absolutely no features
-##set(QEMU_ARGS -accel ${QEMU_ACCEL} -cpu base,+sse)
+##set(QEMU_ARGS -accel ${QEMU_ACCEL} -cpu base)
 ## CPU qemu
-##set(QEMU_ARGS -accel ${QEMU_ACCEL} -cpu qemu32,+sse)
+##set(QEMU_ARGS -accel ${QEMU_ACCEL} -cpu qemu32,+apic)
 ## CPU intel
 set(QEMU_ARGS -accel ${QEMU_ACCEL} -cpu coreduo)
 ## CPU AMD
