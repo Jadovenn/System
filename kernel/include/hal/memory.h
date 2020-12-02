@@ -21,7 +21,7 @@ typedef enum Hal_memory_mode {
 	map_EXECUTE   = 0x0004,
 	map_ANONYMOUS = 0x0008,
 	map_POPULATE  = 0x0010,
-	map_DATA      = 0x0012, // default
+	map_DATA      = 0x0020, // default
 } Hal_memory_mode_e;
 
 /********************************
