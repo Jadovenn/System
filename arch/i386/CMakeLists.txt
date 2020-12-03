@@ -17,10 +17,14 @@ set(SOURCES
         i386_entry.c
         cpu/asm/dt_flush.asm
         cpu/asm/interrupt.asm
+        cpu/apic/apic.h
+        cpu/apic/apic.c
         cpu/pic/pic.c
         cpu/pic/ports.c
-        cpu/cr.c
-        cpu/dump_regs.c
+        cpu/registers/msr.c
+        cpu/registers/msr.h
+        cpu/registers/cr.c
+        cpu/registers/dump_regs.c
         cpu/gdt.c
         cpu/idt.c
         cpu/isr.c
@@ -40,20 +44,22 @@ set(SOURCES
         drivers/monitor/init.c
         drivers/monitor/monitor.h
         drivers/monitor/monitor.c
-        drivers/timer_example/timer.c)
+        drivers/timer_example/timer.c cpu/apic/apic.c cpu/registers/msr.c cpu/registers/msr.h)
 
 ############################
 ## libi386 target         ##
 ############################
 
 add_library(i386 ${SOURCES})
-add_dependencies(i386 Dependencies::libc)
+add_dependencies(i386 Dependencies::libc Dependencies::libcpuid)
 target_link_libraries(i386
         PUBLIC
+            Dependencies::libcpuid
             Dependencies::libc)
 target_include_directories(i386
         PUBLIC
             ${kernel_INCLUDE_DIRS}
+            ${libcpuid_INCLUDE_DIRS}
             ${libc_INCLUDE_DIRS}
         PRIVATE
             include
