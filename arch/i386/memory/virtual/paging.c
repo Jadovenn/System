@@ -91,7 +91,7 @@ int Paging_add_page_entry(uintptr_t aVirtualAddr,
 	if (*pageEntry & 0x1) {
 		return EXIT_FAILURE;
 	}
-	*pageEntry          = aPhysicalAddr | someFlags;
+	*pageEntry = aPhysicalAddr | someFlags;
 	Cpu_flush_tlb();
 	return EXIT_SUCCESS;
 }

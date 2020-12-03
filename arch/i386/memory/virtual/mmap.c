@@ -24,6 +24,7 @@ static void* _find_virtual_addr(Hal_memory_mode_e aMode, size_t aPageCount) {
 		if (area->type == memoryType) {
 			break;
 		}
+		area++;
 	}
 	if (area->type == vmt_END) {
 		return MAP_FAILED;
@@ -60,6 +61,9 @@ static void* _find_virtual_addr(Hal_memory_mode_e aMode, size_t aPageCount) {
 				offset = vend >> 12 & 0x03FF;
 			}
 			vstart = vend;
+			if (vstart > area->end) {
+				return MAP_FAILED;
+			}
 			continue;
 		}
 
@@ -69,7 +73,7 @@ static void* _find_virtual_addr(Hal_memory_mode_e aMode, size_t aPageCount) {
 		}
 		vend += 0x1000;
 	}
-	return NULL;
+	return (void*)vstart;
 } // O(N)
 
 static uint32_t _compute_page_entry_flags(Hal_memory_mode_e aMode) {
@@ -118,7 +122,7 @@ void* Hal_mmap(uintptr_t         aPhysicalAddr,
 			Hal_munmap(vstart, mapped);
 			return MAP_FAILED;
 		}
-		Paging_add_page_entry(physicalAddr, (uintptr_t)vstart + 0x1000 * mapped,
+		Paging_add_page_entry((uintptr_t)vstart + 0x1000 * mapped, physicalAddr,
 		                      flags);
 	}
 	return (void*)vstart;

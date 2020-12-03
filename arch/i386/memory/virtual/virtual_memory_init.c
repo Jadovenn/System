@@ -113,7 +113,9 @@ static uintptr_t _vmap_page_tables_entries() {
 			break;
 		}
 	}
+
 	Boot_paging_add_pte(dataAddr, G_Page_table_entries);
+	vstart[dataAddr >> 22] = G_Page_table_entries | 0x3;
 	return dataAddr;
 }
 
