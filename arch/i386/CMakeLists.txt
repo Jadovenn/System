@@ -20,6 +20,7 @@ set(SOURCES
         cpu/apic/apic.h
         cpu/apic/apic.c
         cpu/pic/pic.c
+        cpu/pic/pic_disable.asm
         cpu/pic/ports.c
         cpu/registers/msr.c
         cpu/registers/msr.h

@@ -4,11 +4,15 @@
  */
 
 #include "cpu/apic/apic.h"
-#include "cpu/registers/msr.h"
 
-#include <kernel/stdio.h>
-#include <kernel/panic.h>
 #include <hal/memory.h>
+#include <kernel/panic.h>
+#include <kernel/stdio.h>
+
+#include <arch/ports.h>
+#include <cpu/pic.h>
+
+#include "cpu/registers/msr.h"
 
 #include <cpuid/cpuid.h>
 
@@ -28,13 +32,13 @@ void Init_apic() {
 	uint32_t hi, lo;
 	Cpu_read_msr(IA32_APIC_BASE_MSR, &hi, &lo);
 
-  uintptr_t msrBase = (lo & 0xfffff000);
-	printf("MSR base: %#x\n", msrBase);
-
+	uintptr_t msrBase = (lo & 0xfffff000);
 	void* msr = Hal_mmap(msrBase, 1, map_ANONYMOUS | map_DATA | map_READONLY);
 	if (msr == MAP_FAILED) {
 		PANIC("MSR base mapping failed :(\n");
 	}
-	printf("MSR ptr: %#x\n", msr);
 
+  port_write_byte(0xF0, port_read_byte(0xF0) | 0x100);
+  Pic_disable();
+	printf("APIC is ready.\n");
 }
