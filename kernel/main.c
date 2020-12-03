@@ -29,7 +29,7 @@ int main(int ac, char** av) {
 			printf("cpuid sse feature present\n");
 		}
 		if (cpuidCap.PAE) {
-			printf("cpuid pea feature present");
+			printf("cpuid pea feature present\n");
 		}
 	}
 	return 0;
