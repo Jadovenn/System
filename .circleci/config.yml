@@ -1,24 +1,29 @@
 version: 2.1
-orbs:
-  codecov: codecov/codecov@1.0.5
 
 executors:
-  ci-container:
+  kernel-build-tools:
     docker:
-      - image: jadomage/kernel-build-tools:0.0.7
+      - image: jadomage/kernel-build-tools:latest
     environment:
       - TERM=xterm
-
 jobs:
-  build-i386:
-    executor: ci-container
+
+  build:
+    executor: kernel-build-tools
     steps:
       - checkout
-      - run: cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=tools/toolchains/i386/linux-toolchain.cmake .
-      - run: make
+      - run: tools/create_build_dir i386
+      - run: make -C build/i386
+      - store_artifacts:
+          path: build
+
+  hosted_tests:
+    executor: kernel-build-tools
+    steps:
+      - run: make -C build/i386 test
 
 workflows:
   version: 2
-  primary:
+  Pipeline:
     jobs:
-      - build-i386
+      - build

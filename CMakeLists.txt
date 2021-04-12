@@ -9,37 +9,39 @@ project(System
 		DESCRIPTION "Hobby Kernel project"
 		LANGUAGES C)
 
+## Uncomment this flags to have verbosity on make
 ##set(CMAKE_VERBOSE_MAKEFILE ON)
 
-############################
-## Project config         ##
-############################
+####################################
+## Project early config and check ##
+####################################
 
+## Load user config
 include(build.config.cmake)
-include(tools/cmake/build-header.cmake)
 
-## If no toolchain manually provided then cmake fail
+## Include cmake tools required to build System
+include(tools/cmake/build-header.cmake)
+include(tools/cmake/load-libraries.cmake)
+include(tools/cmake/iso-generation.cmake)
+include(tools/cmake/qemu-run.cmake)
+
+## If no toolchain manually provided then cmake generation must fail
 if (NOT CMAKE_TOOLCHAIN_FILE)
     message(FATAL_ERROR " -- You must specify a toolchain configuration file, please read the documentation")
 endif(NOT CMAKE_TOOLCHAIN_FILE)
 
+## Compile option based on the CMAKE_BUILD_TYPE
 add_compile_options("$<$<CONFIG:RELEASE>:-O3>")
 add_compile_options("$<$<CONFIG:DEBUG>:-g>")
 
-############################
-## Project sources        ##
-############################
+#####################
+## Project targets ##
+#####################
 
-include(tools/cmake/load-dependencies.cmake)
-set(kernel_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/kernel/include)
+## Load libraries that are agnostic from the kernel
+add_subdirectory(lib/c_abi)
+add_subdirectory(lib/system)
+add_subdirectory(lib/cpuid)
 
-load_dependencies(lib)
-add_subdirectory(arch/${ARCH})
+## Load the kernel project
 add_subdirectory(kernel)
-
-############################
-## Run target             ##
-############################
-
-include(tools/cmake/iso-generation.cmake)
-include(tools/cmake/qemu-run.cmake)

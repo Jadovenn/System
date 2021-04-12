@@ -2,7 +2,6 @@
 ## Temporary
 *.swp
 *.o
-*.swp
 *~
 
 ## Sessions
@@ -20,6 +19,7 @@ System_v*
 *.a
 
 ## Sysroot
+build/
 output/
 sysroot/boot/grub/grub.cfg
 sysroot/boot/*.kern

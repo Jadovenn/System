@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CMakeSharedSettings">
+    <configurations>
+      <configuration PROFILE_NAME="i386-debug" CONFIG_NAME="Debug" GENERATION_OPTIONS="-DCMAKE_TOOLCHAIN_FILE=/opt/System/i386/current/toolchain.cmake" GENERATION_DIR="build/i386" ENABLED="true" />
+      <configuration PROFILE_NAME="i386-release" CONFIG_NAME="MinSizeRel" GENERATION_OPTIONS="-DCMAKE_TOOLCHAIN_FILE=/opt/System/current/toolchain.cmake" GENERATION_DIR="build/release/i386" ENABLED="false" />
+    </configurations>
+  </component>
+</project>

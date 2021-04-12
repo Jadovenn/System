@@ -6,10 +6,11 @@
 #ifndef CONSOLE_H
 #define CONSOLE_H
 
-struct Console_driver {
+struct Console_driver
+{
 	unsigned height;
 	unsigned width;
-	void	(*write)(char);
+	void (*write)(char);
 };
 
 void Hal_register_console_driver(struct Console_driver* driver);

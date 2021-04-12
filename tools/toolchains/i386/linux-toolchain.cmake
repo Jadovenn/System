@@ -3,6 +3,8 @@
 ## System sources under license MIT
 ##
 
+## Use this toolchain config file with gcc multilib installed
+
 set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_SYSTEM_PROCESSOR i386)
 set(UNIX True CACHE INTERNAL "" FORCE)

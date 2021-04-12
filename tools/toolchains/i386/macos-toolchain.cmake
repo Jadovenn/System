@@ -3,6 +3,8 @@
 ## System sources under license MIT
 ##
 
+## Use this toolchain file with i386-elf-gcc package installed
+
 set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_SYSTEM_PROCESSOR i386)
 set(APPLE True CACHE INTERNAL "" FORCE)

@@ -1,0 +1,80 @@
+#!/usr/bin/tclsh
+
+set architecture     [lindex $argv 0]
+set toolchains_path  [lindex $argv 1]
+
+if { [string length $toolchains_path] == 0 } {
+  set toolchains_path "/opt/System"
+} else {
+  set toolchains_path "$toolchains_path/System"
+}
+
+if { $argc < 1 || $argc > 2 } {
+    puts "Error missing arguments"
+    puts "Expecting exactly one arguments"
+    puts "try: tool/toolchains/install -h"
+    exit 1
+}
+
+if { [lindex $argv 0] == "-h" }  {
+    puts "usage: tool/toolchains/install <ARG1> \[ARG2\] \[-h\]"
+    puts "    ARG1         target architecture"
+    puts "    ARG2         custom path to install the toolchain"
+    puts "    --arch-list  print list of supported architecture by the tool"
+    puts "    -h           print this help"
+    exit 0
+}
+
+if { [lindex $argv 0] == "--arch-list" }  {
+    puts "i386"
+    exit 0
+}
+
+proc create_system_opt_if_needed { arch toolchains_path } {
+  if { [file exists $toolchains_path/$arch] == 0 } {
+      exec mkdir -p $toolchains_path/$arch
+  }
+}
+
+proc downloadFromSourceForge { file version } {
+  set url "https://sourceforge.net/projects/system-kernel/files/Toolchains/$version/$file"
+
+  file mkdir .cache
+  puts "Downloading $file"
+  if { [catch {exec wget -O .cache/$file --quiet $url } result] } {
+    puts "Download failed:"
+    puts $result
+    exit 1
+  }
+}
+
+proc extractToolchain { file version arch toolchains_path } {
+    downloadFromSourceForge $file $version
+    if { [catch { exec tar xvf .cache/$file -C $toolchains_path 2> .cache/log.txt } result] } {
+        puts "Extract failed:"
+        puts $result
+        exit 1
+    }
+}
+
+
+if { $architecture == "i386" } {
+    create_system_opt_if_needed $architecture $toolchains_path
+
+    if { $tcl_platform(os) == "Darwin" } {
+        extractToolchain System-toolchain-MacOSX_x86-10.3.0-i386.tar.gz 10.3.0 $architecture $toolchains_path
+    }
+    if { $tcl_platform(os) == "Linux" } {
+        extractToolchain System-toolchain-Linux_x86-11.0.0-i386.tar.gz 11.0.0 $architecture $toolchains_path
+    } else {
+        puts "Host platform $tcl_platform(os) unknown or not supported."
+        exit 1
+    }
+    exec rm -rf .cache
+    puts "System $architecture toolchain installed in $toolchains_path"
+    exit 0
+}
+
+puts "Unsupported or unknown architecture \"$architecture\""
+puts "try: tool/toolchains/install --arch-list"
+exit 1

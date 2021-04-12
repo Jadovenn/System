@@ -1,0 +1,38 @@
+#!/usr/bin/tclsh
+
+variable myLocation [file normalize [info script]]
+
+proc getResourceDirectory {} {
+    variable myLocation
+    return [file dirname $myLocation]
+}
+
+if { $argc != 1 } {
+    puts "Error missing arguments"
+    puts "Expecting exactly one arguments"
+    puts "try: tool/create_build_dir -h"
+    exit 1
+}
+
+if { [lindex $argv 0] == "-h" }  {
+    puts "usage: tool/create_build_dir ARG1 \[-h\]"
+    puts "    ARG1         target architecture"
+    puts "    -h           print this help"
+    exit 0
+}
+set architecture [lindex $argv 0 ]
+
+if { $architecture == "i386" } {
+    exec mkdir -p [getResourceDirectory]/../build/$architecture
+    cd [getResourceDirectory]/../build/$architecture
+    if { [catch { exec cmake ../.. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=/opt/System/i386/current/toolchain.cmake } result] } {
+        puts "cmake failed:"
+        puts $result
+        exit 1
+    }
+    exit 0
+}
+
+puts "Unsupported or unknown architecture $architecture"
+puts "try: tool/toolchains/install --arch-list"
+exit 1

@@ -6,10 +6,11 @@
 set(GRUB_CFG sysroot/boot/grub/grub.cfg)
 
 file(GENERATE OUTPUT ${GRUB_CFG} CONTENT "
-menuentry \"System ${RELEASE_NAME} (${KERNEL_VERSION})\" {
-    multiboot /boot/${KERNEL_NAME}
-    boot
-}
+GRUB_TIMEOUT=0.1
+
+multiboot /boot/${KERNEL_NAME}
+boot
+
 ")
 
 set(GRUB_MKRESCUE grub-mkrescue)

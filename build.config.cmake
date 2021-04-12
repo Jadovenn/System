@@ -15,9 +15,9 @@ set(BOARD Generic)
 
 set(KERNEL_NAME System_${KERNEL_VERSION}-${RELEASE_NAME}-${ARCH}_${BOARD})
 
-############################
-## qemu run config        ##
-############################
+#####################
+## qemu run config ##
+#####################
 
 set(QEMU qemu-system-${ARCH})
 set(QEMU_PHYSICAL_MEM 128M)
@@ -28,7 +28,7 @@ elseif(UNIX AND NOT APPLE)
     set(QEMU_ACCEL kvm)
 endif()
 
-## CPU unknown, cool to check with absolutely no features
+## CPU base, cool to check undefined behavior while some hardware is not detected
 ##set(QEMU_ARGS -accel ${QEMU_ACCEL} -cpu base)
 ## CPU qemu
 ##set(QEMU_ARGS -accel ${QEMU_ACCEL} -cpu qemu32,+apic)

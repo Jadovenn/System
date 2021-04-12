@@ -15,7 +15,8 @@
  **     Structure and Enum     **
  ********************************/
 
-typedef enum Hal_memory_mode {
+typedef enum Hal_memory_mode
+{
 	map_READWRITE = 0x0001,
 	map_READONLY  = 0x0002,
 	map_EXECUTE   = 0x0004,
@@ -51,9 +52,7 @@ void* Hal_sbrk(size_t aSize);
  * @param aMode - some map modes
  * @return NULL or a usable pointer
  */
-void* Hal_mmap(uintptr_t         aPhysicalAddr,
-               size_t            aPageCount,
-               Hal_memory_mode_e aMode);
+void* Hal_mmap(uintptr_t aPhysicalAddr, size_t aPageCount, Hal_memory_mode_e aMode);
 
 /**
  * Clear memory mapping

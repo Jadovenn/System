@@ -8,6 +8,20 @@ project(Kernel
         VERSION 1.0
         DESCRIPTION "Kernel"
         LANGUAGES C)
+
+####################################################
+## Export cmake's variable for the kernel project ##
+####################################################
+
+set(kernel_FOUND True CACHE INTERNAL "")
+set(kernel_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/include" CACHE INTERNAL "" FORCE)
+
+###################################################
+## Include the corresponding architecture loader ##
+###################################################
+
+add_subdirectory(arch/${ARCH})
+
 ###########################
 ## Common kernel sources ##
 ###########################
@@ -20,45 +34,41 @@ set(SRCS
         include/kernel/multiboot.h
         include/kernel/panic.h
         include/kernel/stdio.h
-        include/system.h
-        io/console.c
-        io/printf.c
-        memory/malloc.c
-        memory/vmalloc.c
-        main.c)
+        srcs/io/console.c
+        srcs/io/printf.c
+        srcs/memory/malloc.c
+        srcs/main.c)
 
 ###########################
 ## Kernel binary target  ##
 ###########################
 
-add_executable(${KERNEL_NAME} ${arch_CERT0} ${SRCS})
+add_executable(${KERNEL_NAME} $<TARGET_OBJECTS:c_RUNTIME> ${SRCS})
 
 add_dependencies(${KERNEL_NAME}
-        Kernel::hal
-        Dependencies::libc
-        Dependencies::libcpuid
-        Dependencies::libkalgotils)
+        Kernel::arch
+        Library::c_abi
+        Library::system
+        Library::cpuid)
 
 target_include_directories(${KERNEL_NAME}
         PUBLIC
-            ${libc_INCLUDE_DIRS}
-            ${libcpuid_INCLUDE_DIRS}
-            ${libkalgotils_INCLUDE_DIRS}
+            ${c_abi_INCLUDE_DIRS}
+            ${system_INCLUDE_DIRS}
+            ${cpuid_INCLUDE_DIRS}
         PRIVATE
             ${kernel_INCLUDE_DIRS})
 
 target_link_libraries(${KERNEL_NAME}
-        PUBLIC
-            Dependencies::libc
-            Dependencies::libcpuid
-            Dependencies::libkalgotils
         PRIVATE
-            Kernel::hal
+            Kernel::arch
+            Library::c_abi
+            Library::cpuid
             gcc)
 
 target_link_options(${KERNEL_NAME}
         PRIVATE
-        -T${arch_LINKER_SCRIPT})
+        -T${loader_LINKER_SCRIPT})
 
 set_target_properties(${KERNEL_NAME}
         PROPERTIES
