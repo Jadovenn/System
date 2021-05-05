@@ -1,0 +1,38 @@
+﻿---
+Language: Cpp
+BasedOnStyle: LLVM
+AccessModifierOffset: '0'
+ColumnLimit: 80
+AlignAfterOpenBracket: Align
+PointerAlignment: Left
+TabWidth: '2'
+UseTab: AlignWithSpaces
+AlignConsecutiveAssignments: 'true'
+AlignConsecutiveBitFields: 'true'
+AlignConsecutiveDeclarations: 'true'
+AlignConsecutiveMacros: 'true'
+AlignTrailingComments: 'true'
+AllowShortBlocksOnASingleLine: Always
+SpaceAfterCStyleCast: 'false'
+AllowAllParametersOfDeclarationOnNextLine: 'false'
+AllowAllArgumentsOnNextLine: 'false'
+BinPackParameters: 'false'
+IncludeBlocks: Regroup
+SortIncludes: 'true'
+IncludeCategories:
+  # Headers in <> from the libc.
+  - Regex:           '<((std)|(bitset)|(string)|(unistd))([A-Za-z0-9.\/-_])*(.h)>'
+    Priority:        1
+  # Headers in <> from the kernel common.
+  - Regex:           '<((kernel)|(hal))\/([A-Za-z0-9.\/-_])+(.h)>'
+    Priority:        2
+  # Headers in <> from the architecture.
+  - Regex:           '<((arch)|(cpu))\/([A-Za-z0-9.\/-_])+(.h)>'
+    Priority:        3
+  # Headers in <> from external libraries.
+  - Regex:           '<((kernel))\/([A-Za-z0-9.\/-_])+(.h)>'
+    Priority:        4
+  # Headers in "" with extension.
+  - Regex:           '"([A-Za-z0-9.\/-_])+"'
+    Priority:        5
+...
